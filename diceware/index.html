@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#667eea">
+<meta name="description" content="Gere frases-senha Diceware localmente, com aleatoriedade criptograficamente segura.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>Gerador Diceware PT-BR</title>
+<style>
+:root{--primary:#667eea;--secondary:#764ba2;--success:#10b981}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,var(--primary) 0%,var(--secondary) 100%);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
+.container{background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.3);padding:40px;max-width:920px;width:100%}
+h1{color:var(--primary);text-align:center;margin-bottom:8px;font-size:2.2em}
+.badge{display:inline-block;background:var(--success);color:#fff;padding:4px 12px;border-radius:12px;font-size:.75em;font-weight:bold;margin-left:8px;vertical-align:middle}
+.subtitle{text-align:center;color:#666;margin-bottom:30px;font-size:.92em}
+.controls{background:#f8f9fa;padding:22px;border-radius:15px;margin-bottom:28px}
+.control-group{display:flex;align-items:center;gap:18px;margin-bottom:16px}
+.control-group:last-child{margin-bottom:0}
+.control-label{font-weight:600;color:#444;min-width:170px}
+input[type=range]{flex:1;height:8px;border-radius:5px;background:#ddd;outline:none;-webkit-appearance:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--primary);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--primary);cursor:pointer;border:none}
+.value-badge{background:var(--primary);color:#fff;padding:7px 16px;border-radius:14px;font-weight:bold;min-width:55px;text-align:center}
+.separator-group{display:flex;gap:10px}
+.sep-btn{padding:9px 16px;border:2px solid #ddd;background:#fff;border-radius:10px;cursor:pointer;font-weight:600}
+.sep-btn.active{border-color:var(--primary);background:var(--primary);color:#fff}
+.file-btn{padding:9px 16px;border:2px dashed var(--primary);border-radius:10px;cursor:pointer;font-weight:600;color:var(--primary);font-size:.92em;white-space:nowrap}
+.file-btn:hover{background:#eef2ff}
+.restore-list{padding:9px 14px;border:2px solid #cbd5e0;background:#fff;border-radius:10px;cursor:pointer;font-weight:600;color:#4a5568}
+.restore-list:hover{background:#f1f5f9}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+button:focus-visible,input:focus-visible,.file-btn:focus-within{outline:3px solid #111827;outline-offset:3px}
+.load-status{font-size:.85em;color:#718096;font-style:italic}
+.load-status.ok{color:var(--success);font-style:normal;font-weight:600}
+.dice-area{min-height:150px;background:linear-gradient(#fff,#f9fafb);border:3px dashed #cbd5e0;border-radius:16px;padding:30px 20px;margin:25px 0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.dice-row{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.dice-row.discreet{filter:blur(10px);opacity:.55;pointer-events:none}
+.discreet-toggle{display:flex;align-items:center;gap:8px;font-size:.88em;color:#718096;font-weight:600;cursor:pointer;margin-bottom:16px}
+.dice{width:70px;height:70px;background:#fff;border:3px solid var(--primary);border-radius:14px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);padding:10px;gap:4px;box-shadow:0 6px 14px rgba(102,126,234,.25)}
+.dice.rolling{animation:shake .4s ease-in-out infinite}
+@keyframes shake{0%,100%{transform:rotate(0) scale(1)}25%{transform:rotate(14deg) scale(1.08)}50%{transform:rotate(0) scale(.95)}75%{transform:rotate(-14deg) scale(1.08)}}
+.dot{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.dot::before{content:'';width:10px;height:10px;background:var(--primary);border-radius:50%;opacity:0;transition:opacity .12s}
+.dot.show::before{opacity:1}
+.word-status{font-size:1.3em;font-weight:bold;color:var(--primary);min-height:40px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s}
+.word-status.visible{opacity:1}
+.password-display{background:#f8f9fa;border:3px solid #e2e8f0;border-radius:15px;padding:28px;margin:25px 0;text-align:center;transition:.3s}
+.password-display.active{border-color:var(--primary);background:#fff;box-shadow:0 0 0 5px rgba(102,126,234,.12)}
+.password-text{font-size:1.5em;font-weight:700;color:#1a202c;font-family:'Courier New',monospace;word-break:break-word;line-height:1.6;user-select:all}
+.password-text.password-hidden{filter:blur(12px);user-select:none}
+.password-placeholder{color:#a0aec0;font-style:italic;font-family:'Segoe UI',sans-serif}
+.actions{display:grid;grid-template-columns:2.5fr 1fr;gap:15px;margin:25px 0}
+button{padding:18px;font-size:1.08em;font-weight:bold;border:none;border-radius:13px;cursor:pointer;transition:.25s;text-transform:uppercase;letter-spacing:.8px}
+.btn-generate{background:linear-gradient(135deg,var(--primary) 0%,var(--secondary) 100%);color:#fff;box-shadow:0 5px 18px rgba(102,126,234,.4)}
+.btn-generate:hover:not(:disabled){transform:translateY(-3px);box-shadow:0 8px 26px rgba(102,126,234,.5)}
+.btn-copy{background:#fff;border:3px solid var(--primary);color:var(--primary)}
+.btn-copy:hover:not(:disabled){background:#eef2ff}
+.btn-copy.copied{background:#10b981;border-color:#10b981;color:#fff}
+button:disabled{opacity:.6;cursor:not-allowed;transform:none!important}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;padding:24px 0;border-top:2px solid #e2e8f0;border-bottom:2px solid #e2e8f0;margin:22px 0}
+.stat{text-align:center}
+.stat-val{display:block;font-size:1.4em;font-weight:bold;color:var(--primary);margin-bottom:5px}
+.stat-label{font-size:.82em;color:#718096;text-transform:uppercase;font-weight:600}
+.info{background:linear-gradient(135deg,#eef2ff 0%,#e0e7ff 100%);border-left:5px solid var(--primary);padding:20px;margin:20px 0;border-radius:10px}
+.info h3{color:var(--primary);margin-bottom:12px;font-size:1.1em}
+.info p{color:#4a5568;font-size:.94em;line-height:1.65}
+.info strong{color:#2d3748}
+.panel{border:2px solid #e2e8f0;border-radius:15px;margin:18px 0;padding:0 18px}
+.panel>summary{cursor:pointer;font-weight:700;color:#4a5568;padding:16px 0;list-style-position:inside}
+.panel[open]>summary{border-bottom:1px solid #e2e8f0;margin-bottom:16px}
+.panel .controls{background:none;padding:0 0 18px;margin:0}
+.panel .separator-group{flex-wrap:wrap}
+.panel input[type=range]{align-self:stretch}
+.strength-line{text-align:center;color:#4a5568;margin:-8px 0 8px}
+.strength-line strong{color:var(--primary)}
+.dice-area{min-height:0;padding:18px 20px}
+@media (max-width:750px){.container{padding:24px}h1{font-size:1.6em}.actions{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.dice{width:55px;height:55px}.control-group{flex-direction:column;align-items:flex-start;gap:10px}.control-label{min-width:auto}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🎲 Gerador de Frase-Senha</h1>
+<p class="subtitle">Cria uma senha forte e fácil de lembrar, feita de palavras sorteadas.<br><small>Tudo acontece no seu aparelho: nada é enviado à internet.</small></p>
+
+<div class="password-display" id="passBox">
+<div class="password-text" id="passText" aria-label="Frase-senha gerada"><span class="password-placeholder">Toque em "Gerar senha" para começar</span></div>
+</div>
+
+<div class="actions">
+<button class="btn-generate" id="genBtn">🎲 Gerar senha</button>
+<button class="btn-copy" id="copyBtn" disabled>📋 Copiar</button>
+</div>
+
+<p class="strength-line" id="strengthLine" hidden>Força: <strong id="strength">-</strong> · <span id="words">0</span> palavras · <span id="chars">0</span> caracteres</p>
+
+<div class="dice-area">
+<div class="dice-row" id="diceRow"></div>
+<div class="word-status" id="status"></div>
+</div>
+
+<details class="panel" id="optionsPanel">
+<summary>⚙️ Opções</summary>
+<div class="controls">
+<div class="control-group">
+<span class="control-label">Número de palavras:</span>
+<input type="range" id="wordSlider" min="4" max="12" value="7" aria-label="Número de palavras da frase-senha" aria-valuemin="4" aria-valuemax="12" aria-valuenow="7">
+<span class="value-badge" id="wordValue">7</span>
+</div>
+<div class="control-group">
+<span class="control-label">Separador:</span>
+<div class="separator-group">
+<button class="sep-btn active" data-sep=" ">Espaço</button>
+<button class="sep-btn" data-sep="-">Hífen</button>
+<button class="sep-btn" data-sep="">Nenhum</button>
+</div>
+</div>
+<div class="control-group">
+<span class="control-label">Site exige:</span>
+<div class="separator-group">
+<label style="display:flex;align-items:center;gap:6px;font-weight:600;cursor:pointer;"><input type="checkbox" id="reqUpper"> Maiúscula</label>
+<label style="display:flex;align-items:center;gap:6px;font-weight:600;cursor:pointer;"><input type="checkbox" id="reqNumber"> Número</label>
+<label style="display:flex;align-items:center;gap:6px;font-weight:600;cursor:pointer;"><input type="checkbox" id="reqSpecial"> Símbolo</label>
+</div>
+</div>
+<div class="control-group">
+<span class="control-label">Privacidade:</span>
+<label class="discreet-toggle"><input type="checkbox" id="discreetMode" aria-controls="diceRow passText"> 🙈 Modo discreto (esconde os dados e a senha na tela)</label>
+</div>
+<div class="control-group">
+<span class="control-label">Lista de palavras:</span>
+<select id="listPreset" aria-label="Selecionar lista de palavras" style="padding:9px 12px;border:1px solid #cbd5e0;border-radius:9px;max-width:100%;font-weight:600"><option value="audit7776">Completa — 7.776 palavras (recomendada)</option><option value="audit1296">Curta — 1.296 palavras</option><option value="custom">Lista personalizada</option></select>
+</div>
+<p id="listNotice" role="note" aria-live="polite" style="margin:-6px 0 16px;font-size:.88em;color:#4a5568"></p>
+<div class="control-group">
+<span class="control-label">Usar minha própria lista:</span>
+<label class="file-btn">📂 Carregar arquivo .txt
+<input type="file" id="wordlistFile" accept=".txt,text/plain" aria-label="Carregar lista de palavras em arquivo de texto" class="sr-only">
+</label>
+<button class="restore-list" id="restoreListBtn" type="button">↩ Voltar à lista selecionada</button>
+<span id="loadStatus" class="load-status" role="status" aria-live="polite"></span>
+</div>
+</div>
+</details>
+
+<details class="panel">
+<summary>ℹ️ Como funciona</summary>
+
+<div class="info">
+<h3>🔐 Por que é seguro</h3>
+<p>Cada palavra é sorteada com o gerador aleatório criptográfico do navegador (<code>crypto.getRandomValues()</code>), com todas as palavras igualmente prováveis. A senha é gerada no seu aparelho e não é enviada a nenhum servidor. O que torna a senha forte é o número de palavras: com a lista completa, 6 palavras já passam de 77 bits; o padrão de 7 dá cerca de 90 bits.</p>
+</div>
+
+<div class="info">
+<h3>🎲 Como os dados funcionam</h3>
+<p>Cada palavra corresponde a uma combinação de dados: <strong id="diceInfo">5</strong> dados por palavra com a lista selecionada. As faces são lidas como um número na base 6, que aponta a palavra na lista. As listas embutidas têm exatamente 6⁵ = 7.776 ou 6⁴ = 1.296 palavras, então toda rolagem vale. Numa lista personalizada de outro tamanho, as rolagens que caem fora da lista são refeitas (<strong id="rejectInfo">0%</strong> nesta lista), o que mantém o sorteio justo.</p>
+</div>
+
+<div class="info">
+<h3>⚠️ Cuidado com a tela</h3>
+<p>Quem vir os dados e conhecer a lista consegue reconstruir a senha. Evite gerar senhas com a tela compartilhada, gravada ou à vista de outras pessoas, ou ligue o modo discreto em Opções.</p>
+</div>
+
+<div class="info">
+<h3>📚 Sobre as listas</h3>
+<p>A lista <strong>completa</strong> (7.776 palavras) e a <strong>curta</strong> (1.296 palavras, 4–7 letras) foram geradas por um processo reproduzível: só palavras sem acento, nenhum par que difira por uma única letra, nenhuma palavra que seja o começo de outra e remoção de termos ofensivos. São <strong>auditadas (estrutural) + curadoria semântica por proxy automático</strong>: a revisão de conteúdo foi feita por modelos de IA, não por falante nativo. A lista curta tem critérios próprios e não é parte da completa. Detalhes em <code>AUDITORIA-LISTAS.md</code>.</p>
+</div>
+
+<div class="info">
+<h3>📊 Números da lista selecionada</h3>
+<p>Lista com <strong id="listSizeInfo">N</strong> palavras, ou <strong id="bitsPerWordInfo">N</strong> bits por palavra. Para chegar a ~77 bits, use pelo menos <strong id="recommendedWords">N</strong> palavras. A última senha gerada tem <strong id="entropy">0</strong> bits. Maiúscula, número e símbolo exigidos por sites não contam como ganho de força.</p>
+</div>
+</details>
+</div>
+
+<script src="wordlists.js"></script>
+<script>
+// Listas locais: audit7776/audit1296 auditadas (ver AUDITORIA-LISTAS.md).
+const DEFAULT_LIST = 'audit7776';
+// Avisos em linguagem simples; o detalhe técnico (selo da auditoria) fica em "Como funciona".
+const LIST_NOTICES = {
+  audit7776: '✓ Lista auditada: 7.776 palavras sem acento, sem palavras parecidas entre si.',
+  audit1296: '✓ Lista auditada de 1.296 palavras curtas (4–7 letras). Cada palavra vale menos, então use pelo menos 8 palavras.'
+};
+let activeListId = DEFAULT_LIST;
+let activeListName = '';
+let lastPresetId = DEFAULT_LIST;
+
+
+// ─── Estado da wordlist (recalculado a cada carga) ───
+let WORDS = [], N = 0, bitsPerWord = 0, DICE_COUNT = 5;
+
+// Normaliza, remove duplicatas e recalcula toda a matemática derivada.
+function loadWordlist(raw){
+  const clean = [...new Set(
+    raw.map(w => w.trim().toLowerCase()).filter(Boolean)
+  )];
+  if(clean.length < 2){ return false; }
+
+  WORDS = clean;
+  N = WORDS.length;
+  bitsPerWord = Math.log2(N);
+  DICE_COUNT = 0;
+  let diceSpace = 1;
+  while (diceSpace < N) { diceSpace *= 6; DICE_COUNT++; }
+
+  document.title = 'Gerador Diceware PT-BR';
+  document.getElementById('listSizeInfo').textContent = N.toLocaleString('pt-BR');
+  document.getElementById('bitsPerWordInfo').textContent = bitsPerWord.toFixed(2);
+  document.getElementById('recommendedWords').textContent = Math.ceil(77 / bitsPerWord);
+  document.getElementById('diceInfo').textContent = DICE_COUNT;
+  document.getElementById('rejectInfo').textContent =
+    (100 * (1 - N / Math.pow(6, DICE_COUNT))).toFixed(1) + '%';
+
+  initDice();
+  return true;
+}
+
+// Rola os dados e converte o resultado em índice da lista.
+// Códigos que caem fora da lista são rejeitados e rolados novamente,
+// preservando a distribuição uniforme.
+function rollWord(){
+  let faces, index;
+  do {
+    faces = Array.from({length: DICE_COUNT}, () => secureInt(6) + 1);
+    index = faces.reduce((acc, f) => acc * 6 + (f - 1), 0);
+  } while (index >= N);
+  return { word: WORDS[index], faces };
+}
+
+// ─── RNG: inteiro uniforme em [0, max) com rejeição de amostragem ───
+// Espaço amostral de Uint32 = 2^32 (não 0xFFFFFFFF, que é 2^32 - 1).
+const UINT32_SPACE = 0x100000000;
+const RNG_BUF = new Uint32Array(1);
+
+function secureInt(max){
+  const limit = Math.floor(UINT32_SPACE / max) * max;
+  let x;
+  do {
+    crypto.getRandomValues(RNG_BUF);
+    x = RNG_BUF[0];
+  } while (x >= limit);
+  return x % max;
+}
+
+const UI = {
+  diceRow: document.getElementById('diceRow'),
+  status: document.getElementById('status'),
+  passBox: document.getElementById('passBox'),
+  passText: document.getElementById('passText'),
+  genBtn: document.getElementById('genBtn'),
+  copyBtn: document.getElementById('copyBtn'),
+  wordSlider: document.getElementById('wordSlider'),
+  wordValue: document.getElementById('wordValue'),
+  entropy: document.getElementById('entropy'),
+  strength: document.getElementById('strength'),
+  chars: document.getElementById('chars'),
+  wordsStat: document.getElementById('words'),
+  reqUpper: document.getElementById('reqUpper'),
+  reqNumber: document.getElementById('reqNumber'),
+  reqSpecial: document.getElementById('reqSpecial'),
+  sepBtns: document.querySelectorAll('.sep-btn')
+};
+let separator = ' ';
+
+const DOT_PATTERNS = {1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
+
+function createDice(){
+  const d = document.createElement('div');
+  d.className = 'dice';
+  d.innerHTML = '<div class="dot"></div>'.repeat(9);
+  return d;
+}
+function setDiceValue(dice, val){
+  const dots = dice.querySelectorAll('.dot');
+  dots.forEach((dot, i)=> dot.classList.toggle('show', DOT_PATTERNS[val].includes(i)));
+}
+let DICE = [];
+function initDice(){
+  UI.diceRow.innerHTML = '';
+  DICE = Array.from({length: DICE_COUNT}, () => {
+    const d = createDice();
+    setDiceValue(d, 6);
+    UI.diceRow.appendChild(d);
+    return d;
+  });
+}
+
+async function animateRoll(finalFaces){
+  DICE.forEach(d => d.classList.add('rolling'));
+  for(let s=0; s<9; s++){
+    DICE.forEach(d => setDiceValue(d, secureInt(6)+1));
+    await new Promise(r => setTimeout(r, 70));
+  }
+  DICE.forEach((d, i) => {
+    d.classList.remove('rolling');
+    setDiceValue(d, finalFaces[i]);
+  });
+}
+// Limiares de força (convenção própria desta ferramenta, não um padrão universal)
+const STRENGTH_TIERS = [
+  [128, 'Extrema'],
+  [100, 'Excelente'],
+  [70,  'Forte'],
+  [50,  'Razoável'],
+  [0,   'Fraca']
+];
+
+function updateStats(wordCount, totalChars){
+  // Apenas a entropia da seleção aleatória de palavras conta para a força.
+  // Bits vindos de requisitos de site são deliberadamente excluídos.
+  const wordBits = wordCount * bitsPerWord;
+  UI.entropy.textContent = wordBits.toFixed(1);
+  UI.chars.textContent = totalChars;
+  UI.wordsStat.textContent = wordCount;
+  UI.strength.textContent = STRENGTH_TIERS.find(([min]) => wordBits >= min)[1];
+  document.getElementById('strengthLine').hidden = false;
+}
+
+const SPECIAL_CHARS = '!#$%&*+.:;?@';
+
+// Modificações puramente para compatibilidade com sites que exigem
+// regras de composição. Não aumentam a força fundamental da frase-senha
+// (NIST SP 800-63B desaconselha exigir essas regras).
+function applyRequirements(words){
+  const w = words.slice();
+  const pick = () => secureInt(w.length);
+
+  if(UI.reqUpper.checked){
+    const i = pick();
+    w[i] = w[i].charAt(0).toUpperCase() + w[i].slice(1);
+  }
+  if(UI.reqNumber.checked){
+    const i = pick();
+    w[i] += secureInt(10);
+  }
+  if(UI.reqSpecial.checked){
+    const i = pick();
+    w[i] += SPECIAL_CHARS[secureInt(SPECIAL_CHARS.length)];
+  }
+  return w;
+}
+
+async function generatePassword(){
+  const count = parseInt(UI.wordSlider.value);
+  UI.genBtn.disabled = true;
+  UI.copyBtn.disabled = true;
+  UI.passBox.classList.remove('active');
+  UI.passText.innerHTML = '<span class="password-placeholder">Gerando...</span>';
+  UI.status.classList.remove('visible');
+
+  const chosen = [];
+  for(let i=0;i<count;i++){
+    UI.status.textContent = `Rolando ${DICE_COUNT} dados para a palavra ${i+1}/${count}...`;
+    UI.status.classList.add('visible');
+
+    const { word, faces } = rollWord();
+    await animateRoll(faces);
+
+    chosen.push(word);
+
+    UI.status.textContent = `Palavra ${i+1}/${count} sorteada ✓`;
+    UI.passText.textContent = '•'.repeat(chosen.join(separator).length);
+    await new Promise(r=>setTimeout(r,350));
+  }
+
+  const pass = applyRequirements(chosen).join(separator);
+  UI.passText.textContent = pass;
+  UI.passBox.classList.add('active');
+  UI.status.textContent = '✅ Senha gerada com sucesso!';
+  updateStats(chosen.length, pass.length);
+  UI.genBtn.disabled = false;
+  UI.copyBtn.disabled = false;
+}
+
+UI.wordSlider.addEventListener('input', e=>{ UI.wordValue.textContent = e.target.value; UI.wordSlider.setAttribute('aria-valuenow', e.target.value); });
+UI.genBtn.addEventListener('click', generatePassword);
+UI.copyBtn.addEventListener('click', async ()=>{
+  try {
+    const value = UI.passText.textContent;
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(value);
+    } else {
+      const field = document.createElement('textarea');
+      field.value = value;
+      field.setAttribute('readonly', '');
+      field.style.position = 'fixed'; field.style.opacity = '0';
+      document.body.appendChild(field); field.select();
+      const copied = document.execCommand('copy');
+      field.remove();
+      if (!copied) throw new Error('Clipboard indisponível');
+    }
+    UI.copyBtn.textContent = '✓ COPIADO!';
+    UI.copyBtn.classList.add('copied');
+    setTimeout(()=>{
+      UI.copyBtn.textContent = '📋 Copiar';
+      UI.copyBtn.classList.remove('copied');
+    }, 2200);
+  } catch {
+    UI.copyBtn.textContent = '✗ FALHOU';
+    setTimeout(()=>{ UI.copyBtn.textContent = '📋 Copiar'; }, 2200);
+  }
+});
+UI.sepBtns.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    UI.sepBtns.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    separator = btn.dataset.sep;
+  });
+});
+
+document.getElementById('discreetMode').addEventListener('change', e => {
+  const hidden = e.target.checked;
+  UI.diceRow.classList.toggle('discreet', hidden);
+  UI.passText.classList.toggle('password-hidden', hidden);
+  UI.passText.setAttribute('aria-label', hidden ? 'Frase-senha oculta pelo modo discreto' : 'Frase-senha gerada');
+  UI.passText.setAttribute('aria-hidden', hidden ? 'true' : 'false');
+});
+
+function restoreSelectedList(){
+  let id = document.getElementById('listPreset').value;
+  if(id === 'custom') { id = lastPresetId; document.getElementById('listPreset').value = id; }
+  lastPresetId = id;
+  if(!window.DICEWARE_LISTS[id]) { id = DEFAULT_LIST; document.getElementById('listPreset').value = id; lastPresetId = id; }
+  const preset = window.DICEWARE_LISTS[id];
+  document.getElementById('listNotice').textContent = LIST_NOTICES[id] || '';
+  activeListId = id;
+  activeListName = preset.name;
+  loadWordlist(preset.words);
+  const status = document.getElementById('loadStatus');
+  status.textContent = '';
+  status.classList.remove('ok');
+  document.getElementById('wordlistFile').value = '';
+}
+document.getElementById('listPreset').addEventListener('change', restoreSelectedList);
+document.getElementById('restoreListBtn').addEventListener('click', restoreSelectedList);
+
+// Importa uma wordlist externa (.txt, uma palavra por linha).
+// O arquivo é lido localmente pelo navegador — nada é enviado a servidores.
+document.getElementById('wordlistFile').addEventListener('change', async e => {
+  const file = e.target.files[0];
+  const status = document.getElementById('loadStatus');
+  if(!file) return;
+  try {
+    const text = await file.text();
+    const raw = text.split(/[\r\n,;]+/);
+    if(loadWordlist(raw)){
+      document.getElementById('listPreset').value = 'custom';
+      activeListId = 'custom'; activeListName = file.name;
+      document.getElementById('listNotice').textContent = '';
+      status.textContent = `✓ ${file.name} — ${N.toLocaleString('pt-BR')} palavras únicas`;
+      status.classList.add('ok');
+    } else {
+      status.textContent = '✗ arquivo sem palavras válidas';
+      status.classList.remove('ok');
+    }
+  } catch {
+    status.textContent = '✗ falha ao ler o arquivo';
+    status.classList.remove('ok');
+  }
+});
+
+restoreSelectedList();
+</script>
+<script>
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(console.error));
+}
+</script>
+</body>
+</html>
