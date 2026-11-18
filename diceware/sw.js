@@ -1,4 +1,4 @@
-const CACHE_NAME = 'diceware-pwa-v6-portal';
+const CACHE_NAME = 'diceware-pwa-v7-portal';
 const APP_SHELL = ['./', './index.html', './manifest.webmanifest', './icon.svg', './wordlists.js', './AUDITORIA-LISTAS.md'];
 
 self.addEventListener('install', (event) => {
