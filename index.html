@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101d32">
+  <meta name="description" content="Ferramentas e projetos digitais de engenharia de Roberto Milet.">
+  <title>Ferramentas | QUEBEC</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background:#0b1424; color:#eaf1f8; }
+    * { box-sizing:border-box; }
+    body { margin:0; line-height:1.55; }
+    a { color:inherit; }
+    .wrap { max-width:1120px; margin:auto; padding:0 24px; }
+    header { border-bottom:1px solid #263951; background:#101d32; }
+    header .wrap { display:flex; align-items:center; justify-content:space-between; min-height:76px; gap:16px; }
+    .brand { font-weight:800; letter-spacing:.16em; text-decoration:none; font-size:1.25rem; }
+    .brand span { color:#55c5da; }
+    nav a { text-decoration:none; color:#b9c9d8; margin-left:24px; font-size:.94rem; }
+    nav a:hover, a:focus-visible { color:#71d8e8; }
+    .hero { padding:84px 0 76px; background:radial-gradient(circle at 80% 0%, #164568 0, transparent 36%), linear-gradient(160deg,#122540,#0b1424 72%); }
+    .eyebrow { color:#62d0df; font-weight:700; letter-spacing:.14em; text-transform:uppercase; font-size:.75rem; }
+    h1 { font-size:clamp(2.2rem,5vw,4.2rem); letter-spacing:-.045em; line-height:1.08; max-width:800px; margin:18px 0 24px; }
+    .lead { color:#b8c8d7; font-size:1.14rem; max-width:680px; margin:0 0 32px; }
+    .button { display:inline-block; background:#5bc8da; color:#071525; padding:12px 20px; border-radius:9px; font-weight:700; text-decoration:none; }
+    .button:hover { background:#91e2ec; }
+    section { padding:66px 0; }
+    section h2 { margin:0 0 9px; font-size:2rem; letter-spacing:-.03em; }
+    .intro { margin:0 0 29px; color:#aebfd0; }
+    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
+    .card, .tool { border:1px solid #2b4058; background:#14243a; border-radius:16px; padding:26px; }
+    .card .tag { font-size:.74rem; color:#70d3e1; letter-spacing:.08em; text-transform:uppercase; font-weight:700; }
+    .card h3 { font-size:1.25rem; margin:12px 0; }
+    .card p { color:#b8c8d7; margin:0 0 22px; }
+    .card a { color:#86dbe7; font-weight:650; }
+    .muted { color:#8da5b8; }
+    .tool { max-width:800px; }
+    .fields { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+    label { display:block; color:#c3d1dd; font-size:.9rem; font-weight:600; }
+    input { width:100%; background:#0b192b; color:#f1f6fa; border:1px solid #426078; border-radius:8px; padding:12px; margin-top:7px; font:inherit; }
+    input:focus { outline:2px solid #5bc8da; outline-offset:2px; }
+    output { display:block; margin-top:22px; padding:17px; background:#0b192b; border-radius:9px; font-size:1.2rem; font-weight:700; }
+    #error { color:#ffb4a9; min-height:1.5em; }
+    footer { border-top:1px solid #263951; padding:28px 0; color:#93a8ba; font-size:.9rem; }
+    @media(max-width:760px) { .grid,.fields { grid-template-columns:1fr; } nav a { margin-left:12px; } .hero { padding:60px 0; } }
+  </style>
+</head>
+<body>
+  <header><div class="wrap"><a class="brand" href="#inicio" aria-label="QUEBEC, início">QUE<span>BEC</span></a><nav aria-label="Navegação"><a href="#projetos">Projetos</a><a href="#conversor">Conversor</a></nav></div></header>
+  <main id="inicio">
+    <div class="hero"><div class="wrap"><div class="eyebrow">Engenharia aplicada · ferramentas digitais</div><h1>Ferramentas para transformar cálculos em decisões.</h1><p class="lead">Um portal de projetos e utilitários de engenharia de instrumentação, automação e software, desenvolvido por Roberto Milet.</p><a class="button" href="#projetos">Explorar projetos</a></div></div>
+    <section id="projetos" class="wrap"><h2>Projetos</h2><p class="intro">Projetos publicados e ferramentas em desenvolvimento.</p><div class="grid">
+      <article class="card"><div class="tag">Código aberto</div><h3>Klipper</h3><p>Aplicação de organização financeira pessoal, com foco em uso local e experiência offline.</p><a href="https://github.com/Borussia80/Klipper" rel="noopener noreferrer">Ver repositório →</a></article>
+      <article class="card"><div class="tag">Código aberto</div><h3>Fedora Optimizer</h3><p>Automação de ajustes e configurações para estações de trabalho Fedora.</p><a href="https://github.com/Borussia80/fedora-optimizer" rel="noopener noreferrer">Ver repositório →</a></article>
+      <article class="card"><div class="tag">Em desenvolvimento</div><h3>FlowCalc</h3><p>Estudos e ferramentas para medição de vazão e incerteza em instrumentação industrial.</p><span class="muted">Publicação em preparação</span></article>
+    </div></section>
+    <section id="conversor" class="wrap"><h2>Conversor 4–20 mA</h2><p class="intro">Converta um sinal linear de corrente em valor de processo.</p><div class="tool">
+      <div class="fields"><label>Limite inferior (LRV)<input id="lrv" type="number" step="any" value="0" inputmode="decimal"></label><label>Limite superior (URV)<input id="urv" type="number" step="any" value="100" inputmode="decimal"></label><label>Corrente (mA)<input id="ma" type="number" step="any" value="12" inputmode="decimal"></label></div>
+      <output id="result" aria-live="polite"></output><p id="error" role="alert"></p><small class="muted">PV = LRV + (I − 4) × (URV − LRV) / 16. Valores fora de 4–20 mA são extrapolados e sinalizados.</small>
+    </div></section>
+  </main>
+  <footer><div class="wrap">© <span id="year"></span> Roberto Milet · QUEBEC · Engenharia e software</div></footer>
+  <script>
+    const fields = ["lrv","urv","ma"].map(id => document.getElementById(id));
+    const result = document.getElementById("result");
+    const error = document.getElementById("error");
+    function calculate() {
+      const [lrv, urv, ma] = fields.map(el => el.value.trim() === "" ? NaN : Number(el.value));
+      if (![lrv, urv, ma].every(Number.isFinite) || urv <= lrv) {
+        result.textContent = "Informe números válidos, com URV maior que LRV.";
+        error.textContent = ""; return;
+      }
+      const pv = lrv + (ma - 4) * (urv - lrv) / 16;
+      result.textContent = "Valor de processo: " + new Intl.NumberFormat("pt-BR",{maximumFractionDigits:4}).format(pv);
+      error.textContent = ma < 4 || ma > 20 ? "A corrente está fora da faixa nominal de 4–20 mA." : "";
+    }
+    fields.forEach(el => el.addEventListener("input", calculate));
+    document.getElementById("year").textContent = new Date().getFullYear();
+    calculate();
+  </script>
+</body>
+</html>
