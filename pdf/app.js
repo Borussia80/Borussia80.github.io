@@ -1,6 +1,17 @@
 const $ = id => document.getElementById(id);
-const elements = Object.fromEntries(['files','drop','work','pages','count','fileInfo','status','clear','exportAll','exportSelected','exportPng','addMore','activePage','annotation','x','y','fontSize','color','askForm','question','conversation'].map(id => [id, $(id)]));
-const state = { sources: [], pages: [], active: null, busy: false, pdfjs: null };
+const elements = Object.fromEntries(['files','drop','work','pages','count','fileInfo','status','clear','exportAll','exportSelected','exportPng','addMore','activePage','annotation','x','y','fontSize','color','askForm','question','conversation','workspace','catalog','backToTools','workflowTitle','workflowDescription','dropTitle','dropHint','splitBox','splitRanges','exportSplit','tools'].map(id => [id, $(id)]));
+const state = { sources: [], pages: [], active: null, busy: false, pdfjs: null, mode: 'merge' };
+const workflows = {
+  merge: ['Unir PDF', 'Adicione vários PDFs e organize as páginas antes de baixar.'],
+  split: ['Dividir PDF', 'Indique os intervalos e baixe cada parte em um arquivo ZIP.'],
+  organize: ['Organizar PDF', 'Mova páginas com as setas ou remova as que não quiser.'],
+  extract: ['Extrair páginas', 'Marque as páginas desejadas e baixe um novo PDF.'],
+  rotate: ['Girar PDF', 'Gire cada página pelo botão circular e baixe o resultado.'],
+  imageToPdf: ['Imagem para PDF', 'Adicione JPG ou PNG e monte um PDF na ordem desejada.'],
+  pdfToPng: ['PDF para PNG', 'Escolha uma página e baixe uma imagem em alta resolução.'],
+  edit: ['Adicionar texto', 'Clique na página e preencha o texto para incluir na cópia exportada.'],
+  read: ['Perguntar ao PDF', 'Carregue um PDF com texto selecionável e procure trechos por tema.']
+};
 const MAX_BYTES = 30 * 1024 * 1024;
 const MAX_PAGES = 300;
 const STOP = new Set('a o as os de da do das dos e em no na nos nas um uma para por com sobre que qual quais como onde quando quanto é são foi ser ao aos à às eu me meu minha este esta esse essa documento pdf página pag parte diz fala informe explique resumo faça favor'.split(' '));
@@ -28,7 +39,39 @@ function updateControls() {
   elements.exportAll.disabled = !hasPages || state.busy;
   elements.exportSelected.disabled = state.busy || !state.pages.some(page => page.selected);
   elements.exportPng.disabled = state.active === null || state.busy;
+  elements.exportSplit.disabled = !hasPages || state.busy;
   elements.addMore.disabled = state.busy;
+}
+
+async function clearDocuments() {
+  for (const source of state.sources) await source.reader.destroy();
+  state.sources = []; state.pages = []; state.active = null;
+  elements.files.value = ''; elements.splitRanges.value = '';
+  renderPages();
+}
+
+async function openTool(mode) {
+  if (state.busy || !workflows[mode]) return;
+  if (state.mode !== mode && state.pages.length) await clearDocuments();
+  state.mode = mode;
+  const [title, description] = workflows[mode];
+  elements.workflowTitle.textContent = title;
+  elements.workflowDescription.textContent = description;
+  const images = mode === 'imageToPdf';
+  elements.files.accept = images ? 'image/png,image/jpeg,.png,.jpg,.jpeg' : 'application/pdf,.pdf';
+  elements.files.multiple = !['split','pdfToPng','rotate','edit','read','extract'].includes(mode);
+  elements.dropTitle.textContent = images ? 'Selecione imagens JPG ou PNG' : 'Selecione arquivos PDF';
+  elements.dropHint.textContent = `${images ? 'JPG ou PNG' : 'PDF'} até 30 MB por arquivo`;
+  elements.exportAll.textContent = images ? 'Converter para PDF' : mode === 'edit' ? 'Baixar PDF editado' : 'Baixar PDF';
+  elements.exportAll.hidden = ['split','extract','pdfToPng','read'].includes(mode);
+  elements.exportSelected.hidden = mode !== 'extract';
+  elements.splitBox.hidden = mode !== 'split';
+  for (const panel of document.querySelectorAll('[data-panel]')) panel.hidden = panel.dataset.panel !== mode;
+  elements.tools.hidden = !['edit','read','pdfToPng'].includes(mode);
+  elements.workspace.hidden = false;
+  updateControls();
+  status('Pronto para receber seus arquivos.');
+  elements.workspace.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function setBusy(busy) {
@@ -59,6 +102,8 @@ async function addFiles(files) {
       const pdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
       const image = /\.(png|jpe?g)$/i.test(file.name) || ['image/png','image/jpeg'].includes(file.type);
       if (!pdf && !image) throw Error('formato não aceito');
+      if (state.mode === 'imageToPdf' && !image || state.mode !== 'imageToPdf' && !pdf) throw Error('formato diferente da ferramenta escolhida');
+      if (!elements.files.multiple && state.sources.length) throw Error('esta ferramenta aceita um arquivo por vez');
       const bytes = pdf ? new Uint8Array(await file.arrayBuffer()) : await convertImage(file);
       const document = await PDFLib.PDFDocument.load(bytes);
       const total = document.getPageCount();
@@ -206,6 +251,65 @@ async function compose(pages) {
   return new Uint8Array(await result.save());
 }
 
+function parseRanges(value, count) {
+  const groups = value.split(',').map(part => part.trim());
+  if (!value.trim() || groups.length > 50) throw Error('Informe de 1 a 50 intervalos, separados por vírgulas.');
+  return groups.map(part => {
+    if (!/^\d+(?:-\d+)?$/.test(part)) throw Error(`Intervalo inválido: ${part || '(vazio)'}.`);
+    const [start, end = start] = part.split('-').map(Number);
+    if (start < 1 || end > count || end < start) throw Error(`Intervalo fora das páginas disponíveis: ${part}.`);
+    return Array.from({ length: end - start + 1 }, (_, offset) => start + offset - 1);
+  });
+}
+
+function crc32(bytes) {
+  let crc = 0xffffffff;
+  for (const byte of bytes) {
+    crc ^= byte;
+    for (let i = 0; i < 8; i++) crc = crc & 1 ? (crc >>> 1) ^ 0xedb88320 : crc >>> 1;
+  }
+  return (crc ^ 0xffffffff) >>> 0;
+}
+
+function zip(files) {
+  const encoder = new TextEncoder(), parts = [], central = [];
+  let offset = 0;
+  for (const [name, bytes] of files) {
+    const label = encoder.encode(name), crc = crc32(bytes);
+    const local = new Uint8Array(30 + label.length), view = new DataView(local.buffer);
+    view.setUint32(0, 0x04034b50, true); view.setUint16(4, 20, true); view.setUint16(6, 0x0800, true);
+    view.setUint32(14, crc, true); view.setUint32(18, bytes.length, true); view.setUint32(22, bytes.length, true); view.setUint16(26, label.length, true);
+    local.set(label, 30); parts.push(local, bytes);
+    const record = new Uint8Array(46 + label.length), index = new DataView(record.buffer);
+    index.setUint32(0, 0x02014b50, true); index.setUint16(4, 20, true); index.setUint16(6, 20, true); index.setUint16(8, 0x0800, true);
+    index.setUint32(16, crc, true); index.setUint32(20, bytes.length, true); index.setUint32(24, bytes.length, true);
+    index.setUint16(28, label.length, true); index.setUint32(42, offset, true); record.set(label, 46);
+    central.push(record); offset += local.length + bytes.length;
+  }
+  const centralSize = central.reduce((sum, record) => sum + record.length, 0);
+  const end = new Uint8Array(22), view = new DataView(end.buffer);
+  view.setUint32(0, 0x06054b50, true); view.setUint16(8, files.length, true); view.setUint16(10, files.length, true);
+  view.setUint32(12, centralSize, true); view.setUint32(16, offset, true);
+  return new Blob([...parts, ...central, end], { type: 'application/zip' });
+}
+
+async function exportSplit() {
+  if (!state.pages.length || state.busy) return;
+  let groups;
+  try { groups = parseRanges(elements.splitRanges.value, state.pages.length); }
+  catch (err) { status(err.message, true); return; }
+  setBusy(true); status('Criando as partes do PDF…');
+  try {
+    const files = [];
+    for (let i = 0; i < groups.length; i++) {
+      files.push([`parte-${String(i + 1).padStart(2, '0')}.pdf`, await compose(groups[i].map(index => state.pages[index]))]);
+    }
+    download(zip(files), 'quebec-pdf-dividido.zip', 'application/zip');
+    status(`${files.length} parte${files.length === 1 ? '' : 's'} pronta${files.length === 1 ? '' : 's'} para baixar.`);
+  } catch (err) { status(`Não foi possível dividir o PDF: ${err.message}`, true); }
+  finally { setBusy(false); }
+}
+
 async function runExport(pages, suffix) {
   if (!pages.length || state.busy) return;
   setBusy(true); status('Preparando o PDF…');
@@ -284,10 +388,20 @@ elements.addMore.addEventListener('click', () => elements.files.click());
 for (const event of ['dragenter','dragover']) elements.drop.addEventListener(event, e => { e.preventDefault(); elements.drop.classList.add('dragging'); });
 for (const event of ['dragleave','drop']) elements.drop.addEventListener(event, e => { e.preventDefault(); elements.drop.classList.remove('dragging'); });
 elements.drop.addEventListener('drop', e => addFiles([...e.dataTransfer.files]));
-elements.clear.addEventListener('click', async () => { for (const source of state.sources) await source.reader.destroy(); state.sources = []; state.pages = []; state.active = null; renderPages(); status('Área de trabalho limpa.'); });
+elements.clear.addEventListener('click', async () => { await clearDocuments(); status('Área de trabalho limpa.'); });
 elements.exportAll.addEventListener('click', () => runExport(state.pages, 'completo'));
 elements.exportSelected.addEventListener('click', () => runExport(state.pages.filter(page => page.selected), 'selecionadas'));
+elements.exportSplit.addEventListener('click', exportSplit);
 elements.exportPng.addEventListener('click', exportPng);
+for (const button of document.querySelectorAll('[data-tool]')) button.addEventListener('click', () => openTool(button.dataset.tool));
+for (const filter of document.querySelectorAll('[data-filter]')) filter.addEventListener('click', () => {
+  for (const button of document.querySelectorAll('[data-filter]')) {
+    button.classList.toggle('active', button === filter);
+    button.setAttribute('aria-pressed', String(button === filter));
+  }
+  for (const card of document.querySelectorAll('[data-tool]')) card.hidden = filter.dataset.filter !== 'all' && card.dataset.category !== filter.dataset.filter;
+});
+elements.backToTools.addEventListener('click', () => { elements.workspace.hidden = true; elements.tools.hidden = true; elements.catalog.scrollIntoView({ behavior: 'smooth' }); });
 for (const id of ['annotation','x','y','fontSize','color']) elements[id].addEventListener('input', saveAnnotation);
 elements.askForm.addEventListener('submit', async e => { e.preventDefault(); const question = elements.question.value.trim(); if (question) { elements.question.value = ''; await ask(question); } });
 $('year').textContent = new Date().getFullYear();
