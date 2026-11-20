@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1424">
+  <meta name="description" content="Organize, edite, converta e consulte PDFs no navegador. Seus arquivos permanecem no dispositivo.">
+  <title>Estúdio PDF | QUEBEC Ferramentas</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="site-header"><div class="shell header-inner"><a class="brand" href="/">QUE<span>BEC</span><small> / FERRAMENTAS</small></a><a class="back" href="/">Todas as ferramentas</a></div></header>
+  <main class="shell">
+    <section class="hero"><div><p class="eyebrow">Estúdio PDF · no seu navegador</p><h1>Seus documentos.<br><em>Seu controle.</em></h1><p>Una e reorganize PDFs, adicione texto, converta imagens e encontre respostas no conteúdo dos seus arquivos.</p><div class="privacy"><span aria-hidden="true">◈</span> O processamento acontece no seu dispositivo. Seus arquivos não são enviados para este site.</div></div><div class="hero-symbol" aria-hidden="true"><span>PDF</span><i></i><i></i><i></i></div></section>
+    <section class="workspace" aria-label="Ferramentas PDF">
+      <div class="toolbar"><div><p class="eyebrow">Área de trabalho</p><h2>Monte seu documento</h2></div><div class="toolbar-actions"><button class="secondary" id="clear" type="button" disabled>Limpar</button><button class="primary" id="exportAll" type="button" disabled>Baixar PDF</button></div></div>
+      <div class="drop" id="drop"><input type="file" id="files" accept="application/pdf,image/png,image/jpeg,.pdf,.png,.jpg,.jpeg" multiple aria-label="Selecionar PDFs ou imagens"><div class="drop-icon" aria-hidden="true">＋</div><strong>Arraste PDFs ou imagens para começar</strong><span>ou <label for="files">escolha arquivos</label> · PDF, PNG ou JPG · até 30 MB por arquivo</span></div>
+      <div id="work" class="work" hidden>
+        <div class="work-heading"><div><h3>Páginas <span id="count">0</span></h3><p id="fileInfo">Selecione e organize antes de exportar.</p></div><div class="inline-actions"><button id="addMore" class="secondary" type="button">Adicionar arquivos</button><button id="exportSelected" class="secondary" type="button">Baixar selecionadas</button></div></div>
+        <div class="page-grid" id="pages" aria-live="polite"></div>
+      </div>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </section>
+    <section class="panels" id="tools">
+      <article class="panel"><div class="panel-kicker">01 / EDIÇÃO</div><h2>Adicionar texto</h2><p>Clique em uma página e marque a posição no preview. O texto será inserido na cópia exportada.</p><label for="annotation">Texto</label><textarea id="annotation" rows="3" placeholder="Ex.: Revisado em 20/11/2026" maxlength="500"></textarea><div class="pair"><label>Posição X (%)<input id="x" type="number" min="0" max="95" value="10"></label><label>Posição Y (%)<input id="y" type="number" min="5" max="100" value="15"></label></div><div class="pair"><label>Tamanho<input id="fontSize" type="number" min="8" max="48" value="16"></label><label>Cor<input id="color" type="color" value="#162b47"></label></div><p class="hint">Página ativa: <strong id="activePage">nenhuma</strong>. Coordenadas medidas a partir do canto superior esquerdo. O texto adicionado é incorporado visualmente ao PDF.</p></article>
+      <article class="panel"><div class="panel-kicker">02 / CONVERSA COM O DOCUMENTO</div><h2>Pergunte ao PDF</h2><p>Encontre trechos relevantes e a página de origem. A consulta usa o texto extraído no seu dispositivo.</p><div class="conversation" id="conversation" aria-live="polite"><div class="message assistant">Carregue um PDF com texto selecionável e pergunte sobre seu conteúdo.</div></div><form id="askForm" class="ask"><label class="sr-only" for="question">Pergunta sobre o PDF</label><input id="question" type="search" placeholder="O que o documento diz sobre…?" maxlength="240" autocomplete="off"><button class="primary" type="submit">Buscar</button></form><p class="hint">Busca contextual, sem IA generativa ou OCR. PDFs digitalizados precisam passar por OCR para que o texto seja consultável.</p></article>
+      <article class="panel"><div class="panel-kicker">03 / CONVERSÃO</div><h2>PDF para imagem</h2><p>Exporte a página ativa em PNG de alta resolução. Imagens PNG e JPG adicionadas acima são convertidas em páginas PDF.</p><button class="secondary wide" id="exportPng" type="button" disabled>Baixar página como PNG</button><p class="hint">Os PDFs originais não são alterados. Download gera um novo arquivo.</p></article>
+    </section>
+    <div class="credit">Inspirado nos fluxos de trabalho do <a href="https://github.com/Stirling-Tools/Stirling-PDF" target="_blank" rel="noopener noreferrer">Stirling-PDF</a>. Esta implementação é independente e executa um conjunto de operações no navegador.</div>
+  </main>
+  <footer><div class="shell">© <span id="year"></span> QUEBEC · Engenharia e software</div></footer>
+</body>
+</html>
