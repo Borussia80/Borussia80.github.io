@@ -1,4 +1,6 @@
-/* Ferramentas PDF — camada visual quebec 1.1.1. A lógica permanece em app.js. */
+/* Ferramentas PDF — marca quebec 1.1.1, destaque vermelho da ferramenta. A lógica permanece em app.js. */
+.pdf-main{--primary:#c7353e;--primary-hover:#a62a33;--on-primary:#fff;--link:#b52e37;--surface-tint:#fff0f1;--focus:#b52e37}
+[data-theme="dark"] .pdf-main{--primary:#ff858a;--primary-hover:#ffa0a4;--on-primary:#241014;--link:#ff858a;--surface-tint:#38242b;--focus:#ff858a}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 body.qb{margin:0;min-height:100vh;background:var(--bg);color:var(--text);line-height:1.5}
