@@ -1,0 +1,103 @@
+/* quebec — gerado de tokens.json do design system (pacote 1.1.1). Não editar à mão: altere o design system e gere de novo. */
+@font-face { font-family: 'TeX Gyre Adventor'; src: url('fonts/TeXGyreAdventor-700.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url('fonts/Inter-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url('fonts/Inter-500.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url('fonts/Inter-600.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('fonts/JetBrainsMono-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('fonts/JetBrainsMono-600.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+:root, [data-theme="light"] {
+  --navy-950: #08131F;
+  --navy-900: #0F1E31;
+  --navy-800: #102D50;
+  --navy-700: #1D4673;
+  --navy-500: #3D6E9F;
+  --navy-300: #9CC0E6;
+  --navy-100: #E7EEF6;
+  --navy-050: #F3F6FA;
+  --slate-700: #4B5B70;
+  --slate-400: #7D8DA1;
+  --slate-200: #D8E0E9;
+  --slate-050: #F7F9FA;
+  --cyan-400: #4CC3F0;
+  --bg: var(--slate-050);
+  --surface: #FFFFFF;
+  --surface-sunken: #EEF3F8;
+  --surface-tint: var(--navy-100);
+  --text: #0E1B2C;
+  --text-muted: var(--slate-700);
+  --border: var(--slate-200);
+  --border-strong: var(--slate-400);
+  --primary: var(--navy-800);
+  --primary-hover: #0A1F38;
+  --on-primary: #FFFFFF;
+  --link: var(--navy-700);
+  --focus: #1F78B8;
+  --band: var(--navy-800);
+  --on-band: #FFFFFF;
+  --on-band-muted: #B9CBE0;
+  --success: #1E7B4F;
+  --warning: #8F5410;
+  --danger: #B42318;
+  --shadow-sm: 0 1px 2px rgba(16,45,80,0.08);
+  --shadow-md: 0 6px 20px rgba(16,45,80,0.10);
+  color-scheme: light;
+}
+[data-theme="dark"] {
+  --bg: var(--navy-950);
+  --surface: var(--navy-900);
+  --surface-sunken: #0B1828;
+  --surface-tint: #14304F;
+  --text: #EEF3F8;
+  --text-muted: #A3B2C4;
+  --border: #25394F;
+  --border-strong: #5E7591;
+  --primary: var(--navy-300);
+  --primary-hover: #B9D3EE;
+  --on-primary: var(--navy-950);
+  --link: var(--navy-300);
+  --focus: var(--cyan-400);
+  --band: var(--navy-900);
+  --on-band: #EEF3F8;
+  --on-band-muted: #A3B2C4;
+  --success: #5CCB93;
+  --warning: #F0B45A;
+  --danger: #F28B82;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-md: 0 8px 24px rgba(0,0,0,0.45);
+  color-scheme: dark;
+}
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 999px;
+  --container: 1200px;
+  --container-narrow: 760px;
+  --header-height: 64px;
+  --font-display: "TeX Gyre Adventor", "Century Gothic", "Avenir Next", system-ui, sans-serif;
+  --font-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+.display-xl { font-family: var(--font-display); font-size: 64px; line-height: 68px; font-weight: 700; letter-spacing: -0.02em; }
+.display-lg { font-family: var(--font-display); font-size: 48px; line-height: 54px; font-weight: 700; letter-spacing: -0.015em; }
+.h1 { font-family: var(--font-display); font-size: 36px; line-height: 42px; font-weight: 700; letter-spacing: -0.01em; }
+.h2 { font-family: var(--font-display); font-size: 28px; line-height: 34px; font-weight: 700; }
+.h3 { font-family: var(--font-display); font-size: 20px; line-height: 26px; font-weight: 700; }
+.body-lg { font-family: var(--font-sans); font-size: 18px; line-height: 28px; font-weight: 400; }
+.body { font-family: var(--font-sans); font-size: 16px; line-height: 24px; font-weight: 400; }
+.body-sm { font-family: var(--font-sans); font-size: 14px; line-height: 20px; font-weight: 400; }
+.label { font-family: var(--font-sans); font-size: 14px; line-height: 20px; font-weight: 600; }
+.caption { font-family: var(--font-sans); font-size: 12px; line-height: 16px; font-weight: 500; }
+.eyebrow { font-family: var(--font-mono); font-size: 13px; line-height: 18px; font-weight: 600; }
+.code { font-family: var(--font-mono); font-size: 14px; line-height: 22px; font-weight: 400; }
+.result { font-family: var(--font-mono); font-size: 32px; line-height: 40px; font-weight: 600; }
