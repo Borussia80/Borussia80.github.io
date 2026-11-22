@@ -1,4 +1,4 @@
-const CACHE_NAME = 'diceware-pwa-v8-quebec-1.1.1';
+const CACHE_NAME = 'diceware-pwa-v9-quebec-1.1.1';
 const APP_SHELL = [
   './', './index.html', './manifest.webmanifest', './wordlists.js', './AUDITORIA-LISTAS.md',
   './style.css?v=1',
