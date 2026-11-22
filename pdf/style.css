@@ -58,3 +58,45 @@ button.secondary:hover:not(:disabled){background:#eaf5f7}
 footer{border-color:#dce5ec;color:#667e8d;background:#fff}
 @media(max-width:850px){.tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.catalog-head{align-items:start}.hero{padding:45px 0 35px}}
 @media(max-width:560px){.header-inner nav{gap:10px}.header-inner nav a:first-child{display:none}.brand small{display:none}.tool-grid{grid-template-columns:1fr;gap:10px}.tool-card{min-height:122px;padding:18px 20px;display:grid;grid-template-columns:44px 1fr;column-gap:14px;align-items:center}.tool-icon{grid-row:1/3}.tool-card strong{margin:0}.tool-card>span:last-child{grid-column:2}.catalog-head>span{display:none}.hero h1{font-size:2.35rem}.privacy{font-size:.78rem}.toolbar{padding:19px}.drop{margin:17px}.split-box{margin:0 17px 20px}.back-to-tools{padding:19px 19px 0}}
+
+/* Fluxo de tarefas PDF */
+:root{background:#f7f8fa;color:#26323f}
+body{background:#f7f8fa}
+.site-header{box-shadow:none}
+.brand span{color:#e3484b}
+.site-header nav a:hover{color:#c7353e}
+.hero{padding:64px 0 56px}
+.hero h1{letter-spacing:-.055em}
+.hero h1 em{color:#df4248}
+.hero p:not(.eyebrow){max-width:590px}
+.eyebrow,.panel-kicker{color:#cf3d44}
+.hero-cta{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:10px 23px;border-radius:9px;background:#df4248;color:#fff;text-decoration:none;font-weight:750;box-shadow:0 8px 20px #df42482d}
+.hero-cta:hover{background:#bd3039}
+.privacy{display:flex;width:max-content;max-width:100%;margin:23px auto 0;background:#fff;border-color:#e3e8ed;color:#4b6574;box-shadow:0 2px 8px #153b5610}
+.catalog{padding-bottom:65px}
+.catalog-head h2{font-size:1.9rem}
+.tool-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.tool-card{min-height:182px;padding:22px;border-radius:12px;box-shadow:0 2px 6px #172d4210}
+.tool-card:hover{border-color:#e59a9d;box-shadow:0 9px 22px #172d4220}
+.tool-card strong{font-size:1.13rem}
+.filter.active,.filter:hover{background:#303f50;border-color:#303f50}
+button.primary{background:#df4248}
+button.primary:hover:not(:disabled){background:#bd3039}
+.drop{background:#fffafa;border-color:#e6adb0}
+.drop.dragging{background:#fff0f0;border-color:#df4248}
+.drop label,.back-to-tools{color:#c63740}
+.drop input:focus-visible+div{outline-color:#df4248}
+.page[draggable=true]{cursor:grab}
+.page[draggable=true]:active{cursor:grabbing}
+.page.drag-over{border-color:#df4248;box-shadow:0 0 0 3px #df424830}
+.preview{width:100%;padding:0;border:0;font:inherit}
+.preview:focus-visible{outline:3px solid #df4248;outline-offset:2px}
+.page input[type=checkbox]{accent-color:#df4248}
+.status{color:#3e596b}
+.panel select{width:100%;height:46px;padding:10px 36px 10px 11px;border:1px solid #b9cbd6;border-radius:8px;background:#fff;color:#243e51;font:inherit;appearance:none;background-image:linear-gradient(45deg,transparent 50%,#526a7b 50%),linear-gradient(135deg,#526a7b 50%,transparent 50%);background-position:calc(100% - 19px) 20px,calc(100% - 14px) 20px;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+.panel select:focus-visible{outline:2px solid #df4248;outline-offset:2px}
+.panel-action{margin-top:20px}
+.inline-actions button{font-size:.9rem}
+@media(max-width:1100px){.tool-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:850px){.tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.hero{padding:42px 0 36px}.hero h1{font-size:2.45rem}.privacy{width:auto;text-align:left}.tool-grid{grid-template-columns:1fr}.tool-card{min-height:120px}.pair{grid-template-columns:1fr}.inline-actions{width:100%}.inline-actions button{flex:1 1 auto}}

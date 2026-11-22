@@ -1,5 +1,5 @@
 const $ = id => document.getElementById(id);
-const elements = Object.fromEntries(['files','drop','work','pages','count','fileInfo','status','clear','exportAll','exportSelected','exportPng','addMore','activePage','annotation','x','y','fontSize','color','askForm','question','conversation','workspace','catalog','backToTools','workflowTitle','workflowDescription','dropTitle','dropHint','splitBox','splitRanges','exportSplit','tools'].map(id => [id, $(id)]));
+const elements = Object.fromEntries(['files','drop','work','pages','count','fileInfo','status','clear','exportAll','exportSelected','exportImages','imageFormat','imageScope','selectAll','selectNone','numberStart','numberPosition','addMore','activePage','annotation','x','y','fontSize','color','askForm','question','conversation','workspace','catalog','backToTools','workflowTitle','workflowDescription','dropTitle','dropHint','splitBox','splitRanges','exportSplit','tools'].map(id => [id, $(id)]));
 const state = { sources: [], pages: [], active: null, busy: false, pdfjs: null, mode: 'merge' };
 const workflows = {
   merge: ['Unir PDF', 'Adicione vários PDFs e organize as páginas antes de baixar.'],
@@ -8,12 +8,14 @@ const workflows = {
   extract: ['Extrair páginas', 'Marque as páginas desejadas e baixe um novo PDF.'],
   rotate: ['Girar PDF', 'Gire cada página pelo botão circular e baixe o resultado.'],
   imageToPdf: ['Imagem para PDF', 'Adicione JPG ou PNG e monte um PDF na ordem desejada.'],
-  pdfToPng: ['PDF para PNG', 'Escolha uma página e baixe uma imagem em alta resolução.'],
+  pdfToPng: ['PDF para imagem', 'Converta uma página ou várias em PNG ou JPG.'],
   edit: ['Adicionar texto', 'Clique na página e preencha o texto para incluir na cópia exportada.'],
+  number: ['Numerar páginas', 'Escolha o número inicial e a posição antes de baixar.'],
   read: ['Perguntar ao PDF', 'Carregue um PDF com texto selecionável e procure trechos por tema.']
 };
 const MAX_BYTES = 30 * 1024 * 1024;
 const MAX_PAGES = 300;
+const MAX_IMAGES = 100;
 const STOP = new Set('a o as os de da do das dos e em no na nos nas um uma para por com sobre que qual quais como onde quando quanto é são foi ser ao aos à às eu me meu minha este esta esse essa documento pdf página pag parte diz fala informe explique resumo faça favor'.split(' '));
 
 function status(message, error = false) {
@@ -34,12 +36,18 @@ function updateControls() {
   const hasPages = state.pages.length > 0;
   elements.work.hidden = !hasPages;
   elements.count.textContent = state.pages.length;
-  elements.fileInfo.textContent = `${state.sources.length} arquivo${state.sources.length === 1 ? '' : 's'} · marque as páginas para extrair`;
+  const canSelect = ['extract','pdfToPng'].includes(state.mode);
+  const canReorder = ['merge','organize','imageToPdf','number'].includes(state.mode);
+  elements.fileInfo.textContent = `${state.sources.length} arquivo${state.sources.length === 1 ? '' : 's'} · ${canSelect ? 'marque as páginas que desejar' : canReorder ? 'arraste miniaturas ou use as setas' : 'clique na miniatura para escolher uma página'}`;
   elements.clear.disabled = !hasPages || state.busy;
   elements.exportAll.disabled = !hasPages || state.busy;
   elements.exportSelected.disabled = state.busy || !state.pages.some(page => page.selected);
-  elements.exportPng.disabled = state.active === null || state.busy;
+  elements.exportImages.disabled = !hasPages || state.busy || (elements.imageScope.value === 'selected' && !state.pages.some(page => page.selected));
+  elements.selectAll.hidden = elements.selectNone.hidden = !canSelect;
+  elements.selectAll.disabled = state.busy || state.pages.every(page => page.selected);
+  elements.selectNone.disabled = state.busy || !state.pages.some(page => page.selected);
   elements.exportSplit.disabled = !hasPages || state.busy;
+  elements.addMore.hidden = !elements.files.multiple;
   elements.addMore.disabled = state.busy;
 }
 
@@ -59,15 +67,15 @@ async function openTool(mode) {
   elements.workflowDescription.textContent = description;
   const images = mode === 'imageToPdf';
   elements.files.accept = images ? 'image/png,image/jpeg,.png,.jpg,.jpeg' : 'application/pdf,.pdf';
-  elements.files.multiple = !['split','pdfToPng','rotate','edit','read','extract'].includes(mode);
+  elements.files.multiple = !['split','pdfToPng','rotate','edit','read','extract','number'].includes(mode);
   elements.dropTitle.textContent = images ? 'Selecione imagens JPG ou PNG' : 'Selecione arquivos PDF';
   elements.dropHint.textContent = `${images ? 'JPG ou PNG' : 'PDF'} até 30 MB por arquivo`;
-  elements.exportAll.textContent = images ? 'Converter para PDF' : mode === 'edit' ? 'Baixar PDF editado' : 'Baixar PDF';
+  elements.exportAll.textContent = images ? 'Converter para PDF' : mode === 'edit' ? 'Baixar PDF editado' : mode === 'number' ? 'Baixar PDF numerado' : 'Baixar PDF';
   elements.exportAll.hidden = ['split','extract','pdfToPng','read'].includes(mode);
   elements.exportSelected.hidden = mode !== 'extract';
   elements.splitBox.hidden = mode !== 'split';
   for (const panel of document.querySelectorAll('[data-panel]')) panel.hidden = panel.dataset.panel !== mode;
-  elements.tools.hidden = !['edit','read','pdfToPng'].includes(mode);
+  elements.tools.hidden = !['edit','read','pdfToPng','number'].includes(mode);
   elements.workspace.hidden = false;
   updateControls();
   status('Pronto para receber seus arquivos.');
@@ -97,6 +105,7 @@ async function addFiles(files) {
   setBusy(true);
   const errors = [];
   for (const file of files) {
+    let reader;
     try {
       if (file.size > MAX_BYTES) throw Error('excede 30 MB');
       const pdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
@@ -107,12 +116,15 @@ async function addFiles(files) {
       const bytes = pdf ? new Uint8Array(await file.arrayBuffer()) : await convertImage(file);
       const document = await PDFLib.PDFDocument.load(bytes);
       const total = document.getPageCount();
+      if (!total) throw Error('PDF sem páginas');
       if (state.pages.length + total > MAX_PAGES) throw Error(`limite de ${MAX_PAGES} páginas atingido`);
-      const reader = await state.pdfjs.getDocument({ data: bytes.slice() }).promise;
+      reader = await state.pdfjs.getDocument({ data: bytes.slice() }).promise;
       const source = { name: file.name, document, reader, text: new Map() };
       state.sources.push(source);
+      reader = null;
       for (let i = 0; i < total; i++) state.pages.push({ source, index: i, rotation: 0, selected: false, annotation: null });
     } catch (err) {
+      if (reader) await reader.destroy();
       errors.push(`${file.name}: ${/password|encrypted/i.test(String(err)) ? 'PDF protegido por senha' : err.message || 'não foi possível abrir'}`);
     }
   }
@@ -159,24 +171,21 @@ function renderPages() {
   }, { rootMargin: '250px' });
   state.pages.forEach((page, position) => {
     const item = document.createElement('div'); item.className = `page${page === state.active ? ' active' : ''}`; item.pageRecord = page;
-    const preview = document.createElement('div'); preview.className = 'preview'; preview.title = 'Ativar página e posicionar texto';
+    const preview = document.createElement('button'); preview.type = 'button'; preview.className = 'preview'; preview.setAttribute('aria-label', `Ativar página ${position + 1}`);
     const canvas = document.createElement('canvas'); preview.append(canvas);
     preview.addEventListener('click', event => {
-      state.active = page;
       const bounds = canvas.getBoundingClientRect();
-      if (bounds.width && bounds.height && event.clientX >= bounds.left && event.clientX <= bounds.right && event.clientY >= bounds.top && event.clientY <= bounds.bottom) {
-        const x = Math.min(95, Math.max(0, Math.round((event.clientX - bounds.left) / bounds.width * 100)));
-        const y = Math.min(100, Math.max(5, Math.round((event.clientY - bounds.top) / bounds.height * 100)));
-        if (page.annotation) { page.annotation.x = x; page.annotation.y = y; }
-        else { elements.x.value = x; elements.y.value = y; }
-      }
+      const clickedCanvas = event.detail > 0 && bounds.width && bounds.height && event.clientX >= bounds.left && event.clientX <= bounds.right && event.clientY >= bounds.top && event.clientY <= bounds.bottom;
+      const x = clickedCanvas ? Math.min(95, Math.max(0, Math.round((event.clientX - bounds.left) / bounds.width * 100))) : null;
+      const y = clickedCanvas ? Math.min(100, Math.max(5, Math.round((event.clientY - bounds.top) / bounds.height * 100))) : null;
+      state.active = page;
       renderPages();
-      if (!page.annotation) { elements.x.value = Math.min(95, Math.max(0, Math.round((event.clientX - bounds.left) / bounds.width * 100))); elements.y.value = Math.min(100, Math.max(5, Math.round((event.clientY - bounds.top) / bounds.height * 100))); }
-      status(`Página ${state.pages.indexOf(page) + 1} ativa. Digite o texto para anotá-la.`);
+      if (state.mode === 'edit' && x !== null) { elements.x.value = x; elements.y.value = y; if (page.annotation) saveAnnotation(); }
+      status(`Página ${state.pages.indexOf(page) + 1} ativa.${state.mode === 'edit' ? ' Digite o texto para anotá-la.' : ''}`);
     });
     const top = document.createElement('div'); top.className = 'page-top';
     const label = document.createElement('span'); label.title = page.source.name; label.textContent = `${position + 1} · ${page.source.name}`;
-    const check = document.createElement('input'); check.type = 'checkbox'; check.checked = page.selected; check.setAttribute('aria-label', `Selecionar página ${position + 1}`);
+    const check = document.createElement('input'); check.type = 'checkbox'; check.checked = page.selected; check.hidden = !['extract','pdfToPng'].includes(state.mode); check.setAttribute('aria-label', `Selecionar página ${position + 1}`);
     check.addEventListener('change', () => { page.selected = check.checked; updateControls(); });
     top.append(label, check);
     const actions = document.createElement('div'); actions.className = 'page-actions';
@@ -186,7 +195,17 @@ function renderPages() {
       ['Remover página','×', () => { state.pages.splice(state.pages.indexOf(page), 1); if (state.active === page) state.active = state.pages[0] || null; renderPages(); }]
     ]) {
       const button = document.createElement('button'); button.type = 'button'; button.title = title; button.textContent = icon; button.setAttribute('aria-label', `${title}: página ${position + 1}`);
+      if (title === 'Mover para a esquerda') button.disabled = position === 0;
+      if (title === 'Mover para a direita') button.disabled = position === state.pages.length - 1;
       button.addEventListener('click', action); actions.append(button);
+    }
+    if (['merge','organize','imageToPdf','number'].includes(state.mode)) {
+      item.draggable = true; item.title = 'Arraste para mudar a ordem das páginas';
+      item.addEventListener('dragstart', event => { state.dragged = page; event.dataTransfer.effectAllowed = 'move'; });
+      item.addEventListener('dragend', () => { state.dragged = null; item.classList.remove('drag-over'); });
+      item.addEventListener('dragover', event => { if (state.dragged && state.dragged !== page) { event.preventDefault(); item.classList.add('drag-over'); } });
+      item.addEventListener('dragleave', () => item.classList.remove('drag-over'));
+      item.addEventListener('drop', event => { event.preventDefault(); item.classList.remove('drag-over'); if (state.dragged && state.dragged !== page) { const from = state.pages.indexOf(state.dragged), to = state.pages.indexOf(page); state.pages.splice(from, 1); state.pages.splice(to, 0, state.dragged); renderPages(); status('Ordem das páginas atualizada.'); } state.dragged = null; });
     }
     item.append(preview, top, actions); elements.pages.append(item); observer.observe(item);
   });
@@ -240,13 +259,35 @@ async function annotate(doc, page, annotation) {
   }
 }
 
-async function compose(pages) {
+function numberSettings() {
+  const start = Number(elements.numberStart.value);
+  if (!Number.isInteger(start) || start < 1 || start > 999999 || start + state.pages.length - 1 > 999999) throw Error('Escolha um número inicial entre 1 e 999999, considerando todas as páginas.');
+  return { start, position: elements.numberPosition.value };
+}
+
+function drawPageNumber(page, font, number, position) {
+  const value = String(number), size = 12, margin = 24;
+  const { width, height } = page.getSize();
+  const angle = ((page.getRotation().angle % 360) + 360) % 360;
+  const displayWidth = angle % 180 ? height : width;
+  const displayHeight = angle % 180 ? width : height;
+  const textWidth = font.widthOfTextAtSize(value, size);
+  const [vertical, horizontal] = position.split('-');
+  const u = horizontal === 'left' ? margin : horizontal === 'center' ? (displayWidth - textWidth) / 2 : displayWidth - margin - textWidth;
+  const v = vertical === 'top' ? displayHeight - margin - size : margin;
+  const point = angle === 90 ? { x: width - v, y: u } : angle === 180 ? { x: width - u, y: height - v } : angle === 270 ? { x: v, y: height - u } : { x: u, y: v };
+  page.drawText(value, { ...point, size, font, rotate: PDFLib.degrees(angle), color: PDFLib.rgb(0.16, 0.22, 0.29) });
+}
+
+async function compose(pages, numbering = null) {
   const result = await PDFLib.PDFDocument.create();
-  for (const item of pages) {
+  const font = numbering ? await result.embedFont(PDFLib.StandardFonts.Helvetica) : null;
+  for (const [position, item] of pages.entries()) {
     const [copied] = await result.copyPages(item.source.document, [item.index]);
     copied.setRotation(PDFLib.degrees((copied.getRotation().angle + item.rotation) % 360));
     result.addPage(copied);
     await annotate(result, copied, item.annotation);
+    if (numbering) drawPageNumber(copied, font, numbering.start + position, numbering.position);
   }
   return new Uint8Array(await result.save());
 }
@@ -312,29 +353,43 @@ async function exportSplit() {
 
 async function runExport(pages, suffix) {
   if (!pages.length || state.busy) return;
+  let numbering = null;
+  try { if (state.mode === 'number') numbering = numberSettings(); }
+  catch (err) { status(err.message, true); return; }
   setBusy(true); status('Preparando o PDF…');
   try {
-    const bytes = await compose(pages);
+    const bytes = await compose(pages, numbering);
     download(bytes, `quebec-pdf-${suffix}.pdf`, 'application/pdf');
     status(`PDF com ${pages.length} página${pages.length === 1 ? '' : 's'} pronto para baixar.`);
   } catch (err) { status(`Não foi possível criar o PDF: ${err.message}`, true); }
   finally { setBusy(false); }
 }
 
-async function exportPng() {
-  if (!state.active || state.busy) return;
-  setBusy(true); status('Renderizando a imagem…');
+async function exportImages() {
+  if (!state.pages.length || state.busy) return;
+  const scope = elements.imageScope.value;
+  const pages = scope === 'active' ? [state.active] : scope === 'selected' ? state.pages.filter(page => page.selected) : state.pages;
+  if (!pages.length) { status('Selecione ao menos uma página.', true); return; }
+  if (pages.length > MAX_IMAGES) { status(`Selecione até ${MAX_IMAGES} páginas por conversão.`, true); return; }
+  const jpeg = elements.imageFormat.value === 'jpeg', extension = jpeg ? 'jpg' : 'png', mime = jpeg ? 'image/jpeg' : 'image/png';
+  setBusy(true); status(`Convertendo ${pages.length} página${pages.length === 1 ? '' : 's'}…`);
   try {
-    const bytes = await compose([state.active]);
-    const reader = await state.pdfjs.getDocument({ data: bytes }).promise;
-    const page = await reader.getPage(1);
-    const viewport = page.getViewport({ scale: 2 });
-    const canvas = document.createElement('canvas'); canvas.width = Math.ceil(viewport.width); canvas.height = Math.ceil(viewport.height);
-    await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
-    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-    if (!blob) throw Error('Falha ao gerar PNG');
-    download(blob, `quebec-pagina-${state.pages.indexOf(state.active) + 1}.png`, 'image/png');
-    await reader.destroy(); status('PNG pronto para baixar.');
+    const files = [];
+    for (const item of pages) {
+      const page = await item.source.reader.getPage(item.index + 1);
+      const base = page.getViewport({ scale: 1, rotation: (page.rotate + item.rotation) % 360 });
+      const viewport = page.getViewport({ scale: Math.min(2, 2400 / Math.max(base.width, base.height)), rotation: (page.rotate + item.rotation) % 360 });
+      const canvas = document.createElement('canvas'); canvas.width = Math.ceil(viewport.width); canvas.height = Math.ceil(viewport.height);
+      await page.render({ canvasContext: canvas.getContext('2d'), viewport, background: '#ffffff' }).promise;
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, mime, jpeg ? 0.9 : undefined));
+      canvas.width = canvas.height = 0;
+      if (!blob) throw Error('Falha ao gerar imagem');
+      const index = state.pages.indexOf(item) + 1;
+      files.push([`quebec-pagina-${String(index).padStart(3, '0')}.${extension}`, new Uint8Array(await blob.arrayBuffer())]);
+    }
+    if (files.length === 1) download(files[0][1], files[0][0], mime);
+    else download(zip(files), 'quebec-paginas-imagens.zip', 'application/zip');
+    status(`${files.length} ${files.length === 1 ? 'imagem pronta' : 'imagens prontas'} para baixar.`);
   } catch (err) { status(`Não foi possível gerar a imagem: ${err.message}`, true); }
   finally { setBusy(false); }
 }
@@ -392,7 +447,10 @@ elements.clear.addEventListener('click', async () => { await clearDocuments(); s
 elements.exportAll.addEventListener('click', () => runExport(state.pages, 'completo'));
 elements.exportSelected.addEventListener('click', () => runExport(state.pages.filter(page => page.selected), 'selecionadas'));
 elements.exportSplit.addEventListener('click', exportSplit);
-elements.exportPng.addEventListener('click', exportPng);
+elements.exportImages.addEventListener('click', exportImages);
+elements.imageScope.addEventListener('change', updateControls);
+elements.selectAll.addEventListener('click', () => { state.pages.forEach(page => page.selected = true); renderPages(); });
+elements.selectNone.addEventListener('click', () => { state.pages.forEach(page => page.selected = false); renderPages(); });
 for (const button of document.querySelectorAll('[data-tool]')) button.addEventListener('click', () => openTool(button.dataset.tool));
 for (const filter of document.querySelectorAll('[data-filter]')) filter.addEventListener('click', () => {
   for (const button of document.querySelectorAll('[data-filter]')) {
