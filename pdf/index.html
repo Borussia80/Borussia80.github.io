@@ -1,19 +1,37 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#F7F9FA" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#08131F" media="(prefers-color-scheme: dark)">
   <meta name="description" content="Ferramentas para unir, dividir, organizar, editar e converter PDFs no navegador.">
-  <title>Ferramentas PDF | QUEBEC</title>
-  <link rel="stylesheet" href="./style.css?v=3">
+  <title>Ferramentas PDF | quebec</title>
+  <link rel="canonical" href="https://ferramentas.quebec.com.br/pdf/">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/quebec/logos/favicon_16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/quebec/logos/favicon_32.png">
+  <link rel="apple-touch-icon" href="/assets/quebec/logos/apple-touch-icon.png">
+  <script>(function(){var s;try{s=localStorage.getItem('qb-theme')}catch(e){}document.documentElement.setAttribute('data-theme',s==='light'||s==='dark'?s:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))})()</script>
+  <link rel="stylesheet" href="/assets/quebec/tokens.css?v=1.1.1">
+  <link rel="stylesheet" href="/assets/quebec/bundle.css?v=1.1.1">
+  <link rel="stylesheet" href="./style.css?v=4">
+  <script src="/assets/quebec/quebec.js?v=1.1.1" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
   <script type="module" src="./app.js?v=3"></script>
 </head>
-<body>
-  <header class="site-header"><div class="shell header-inner"><a class="brand" href="/">QUE<span>BEC</span><small> / FERRAMENTAS PDF</small></a><nav aria-label="Navegação"><a class="back" href="#catalog">Todas as ferramentas</a><a class="back" href="/">Voltar à QUEBEC</a></nav></div></header>
-  <main class="shell">
-    <section class="hero"><div><p class="eyebrow">FERRAMENTAS PDF · GRATUITAS · SEM CONTA</p><h1>Seu PDF pronto em<br><em>poucos passos.</em></h1><p>Escolha uma tarefa, adicione seus arquivos e baixe o resultado. Simples no computador ou no celular.</p><a class="hero-cta" href="#catalog">Escolher ferramenta</a><div class="privacy"><span aria-hidden="true">◈</span> Seus arquivos são processados no navegador, sem envio ao servidor da QUEBEC.</div></div></section>
+<body class="qb">
+<a class="qb-btn qb-btn--primary qb-skip" href="#conteudo">Pular para o conteúdo</a>
+<div class="qb-header-wrap">
+  <header class="qb-header"><div class="qb-container">
+    <a class="qb-brand" href="/" aria-label="quebec ferramentas, início"><img class="qb-only-light" src="/assets/quebec/logos/nome_quebec.svg" alt="quebec" width="76" height="28"><img class="qb-only-dark" src="/assets/quebec/logos/nome_quebec_branco.svg" alt="quebec" width="76" height="28"><span class="qb-sub">ferramentas</span></a>
+    <nav class="qb-nav" aria-label="Principal"><a href="/">Catálogo</a><a href="/pdf/" aria-current="page">Ferramentas PDF</a><a href="/diceware/">Diceware</a><a href="/#conversor">Conversor</a></nav>
+    <a class="qb-btn qb-btn--ghost qb-btn--sm qb-header-cta" href="https://klipper.quebec.com.br/" rel="noopener noreferrer">Klipper</a>
+    <button class="qb-menu-btn" type="button" aria-expanded="false" aria-controls="menu-celular-pdf" aria-label="Menu"><span class="i-open" aria-hidden="true">☰</span><span class="i-close" aria-hidden="true">×</span></button>
+  </div></header>
+  <nav class="qb-mobile-nav" id="menu-celular-pdf" aria-label="Principal (celular)" hidden><a href="/">Catálogo</a><a href="/pdf/" aria-current="page">Ferramentas PDF</a><a href="/diceware/">Diceware</a><a href="/#conversor">Conversor</a><a class="qb-btn qb-btn--secondary" href="https://klipper.quebec.com.br/" rel="noopener noreferrer">Abrir Klipper</a></nav>
+</div>
+  <main class="shell" id="conteudo">
+    <section class="hero"><div><p class="eyebrow">// FERRAMENTAS PDF · SEM CONTA</p><h1>Seu PDF pronto em<br><em>poucos passos.</em></h1><p>Escolha uma tarefa, adicione seus arquivos e baixe o resultado. Simples no computador ou no celular.</p><a class="hero-cta" href="#catalog">Escolher ferramenta</a><div class="privacy"><span aria-hidden="true">◈</span> Seus arquivos são processados no navegador, sem envio ao servidor da QUEBEC.</div></div></section>
     <section class="catalog" id="catalog" aria-label="Catálogo de ferramentas PDF"><div class="catalog-head"><div><p class="eyebrow">ESCOLHA SUA FERRAMENTA</p><h2>O que você quer fazer?</h2></div><span>10 ferramentas disponíveis</span></div><div class="filters" role="group" aria-label="Filtrar ferramentas"><button class="filter active" type="button" data-filter="all" aria-pressed="true">Todas</button><button class="filter" type="button" data-filter="organize" aria-pressed="false">Organizar</button><button class="filter" type="button" data-filter="convert" aria-pressed="false">Converter</button><button class="filter" type="button" data-filter="edit" aria-pressed="false">Editar</button><button class="filter" type="button" data-filter="read" aria-pressed="false">Consultar</button></div><div class="tool-grid">
       <button class="tool-card" data-tool="merge" data-category="organize" type="button"><span class="tool-icon violet" aria-hidden="true">▤</span><strong>Unir PDF</strong><span>Combine arquivos na ordem que você escolher.</span></button>
       <button class="tool-card" data-tool="split" data-category="organize" type="button"><span class="tool-icon orange" aria-hidden="true">◫</span><strong>Dividir PDF</strong><span>Separe páginas por intervalos em um ZIP.</span></button>
@@ -45,6 +63,6 @@
     </section>
     <div class="credit">Inspirado nos fluxos de trabalho do <a href="https://github.com/Stirling-Tools/Stirling-PDF" target="_blank" rel="noopener noreferrer">Stirling-PDF</a>. Esta implementação é independente e executa um conjunto de operações no navegador.</div>
   </main>
-  <footer><div class="shell">© <span id="year"></span> QUEBEC · Engenharia e software</div></footer>
+  <footer class="qb-footer"><div class="qb-container qb-foot-inner"><div><img src="/assets/quebec/logos/nome_quebec_branco.svg" alt="quebec" width="65" height="24"><span>Ferramentas PDF · arquivos processados no navegador</span></div><div class="qb-foot-actions"><a href="/">Catálogo</a><a href="/diceware/">Diceware</a><div class="qb-theme" role="group" aria-label="Tema"><button type="button" data-qb-theme-set="system" aria-pressed="true">Sistema</button><button type="button" data-qb-theme-set="light" aria-pressed="false">Claro</button><button type="button" data-qb-theme-set="dark" aria-pressed="false">Escuro</button></div></div></div><div class="qb-container qb-foot-legal">© <span id="year"></span> quebec · Roberto Milet</div></footer>
 </body>
 </html>
