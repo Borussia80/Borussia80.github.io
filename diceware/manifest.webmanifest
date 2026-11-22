@@ -1,19 +1,19 @@
 {
   "id": "./",
-  "name": "Gerador de Frase-Senha Diceware",
+  "name": "Diceware | quebec",
   "short_name": "Diceware",
   "description": "Gere frases-senha localmente com aleatoriedade criptograficamente segura.",
   "lang": "pt-BR",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#667eea",
-  "theme_color": "#667eea",
+  "background_color": "#F7F9FA",
+  "theme_color": "#102D50",
   "icons": [
     {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "../assets/quebec/logos/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any"
     }
   ]
