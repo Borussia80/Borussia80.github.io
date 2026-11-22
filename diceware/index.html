@@ -1,13 +1,20 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#667eea">
+<meta name="theme-color" content="#F7F9FA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#08131F" media="(prefers-color-scheme: dark)">
 <meta name="description" content="Gere frases-senha Diceware localmente, com aleatoriedade criptograficamente segura.">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icon.svg" type="image/svg+xml">
-<title>Gerador Diceware PT-BR</title>
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/quebec/logos/favicon_16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/quebec/logos/favicon_32.png">
+<link rel="apple-touch-icon" href="/assets/quebec/logos/apple-touch-icon.png">
+<link rel="canonical" href="https://ferramentas.quebec.com.br/diceware/">
+<title>Diceware | quebec</title>
+<script>(function(){var s;try{s=localStorage.getItem('qb-theme')}catch(e){}document.documentElement.setAttribute('data-theme',s==='light'||s==='dark'?s:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))})()</script>
+<link rel="stylesheet" href="/assets/quebec/tokens.css?v=1.1.1">
+<link rel="stylesheet" href="/assets/quebec/bundle.css?v=1.1.1">
 <style>
 :root{--primary:#667eea;--secondary:#764ba2;--success:#10b981}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -81,11 +88,18 @@ button:disabled{opacity:.6;cursor:not-allowed;transform:none!important}
 .exit-link:hover{color:var(--primary);background:#eef2ff}
 @media (max-width:750px){.container{padding:24px}h1{font-size:1.6em}.actions{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.dice{width:55px;height:55px}.control-group{flex-direction:column;align-items:flex-start;gap:10px}.control-label{min-width:auto}}
 </style>
+<link rel="stylesheet" href="./style.css?v=1">
+<script src="/assets/quebec/quebec.js?v=1.1.1" defer></script>
 </head>
-<body>
-<div class="container">
-<a class="exit-link" href="../" aria-label="Sair do Diceware e voltar ao portal de ferramentas">← Sair</a>
-<h1>🎲 Gerador de Frase-Senha</h1>
+<body class="qb">
+<a class="qb-btn qb-btn--primary qb-skip" href="#conteudo">Pular para o conteúdo</a>
+<div class="qb-header-wrap">
+<header class="qb-header"><div class="qb-container"><a class="qb-brand" href="/" aria-label="quebec ferramentas, início"><img class="qb-only-light" src="/assets/quebec/logos/nome_quebec.svg" alt="quebec" width="76" height="28"><img class="qb-only-dark" src="/assets/quebec/logos/nome_quebec_branco.svg" alt="quebec" width="76" height="28"><span class="qb-sub">ferramentas</span></a><nav class="qb-nav" aria-label="Principal"><a href="/">Catálogo</a><a href="/pdf/">Ferramentas PDF</a><a href="/diceware/" aria-current="page">Diceware</a><a href="/#conversor">Conversor</a></nav><a class="qb-btn qb-btn--ghost qb-btn--sm qb-header-cta" href="https://klipper.quebec.com.br/" rel="noopener noreferrer">Klipper</a><button class="qb-menu-btn" type="button" aria-expanded="false" aria-controls="menu-celular-dice" aria-label="Menu"><span class="i-open" aria-hidden="true">☰</span><span class="i-close" aria-hidden="true">×</span></button></div></header>
+<nav class="qb-mobile-nav" id="menu-celular-dice" aria-label="Principal (celular)" hidden><a href="/">Catálogo</a><a href="/pdf/">Ferramentas PDF</a><a href="/diceware/" aria-current="page">Diceware</a><a href="/#conversor">Conversor</a><a class="qb-btn qb-btn--secondary" href="https://klipper.quebec.com.br/" rel="noopener noreferrer">Abrir Klipper</a></nav>
+</div>
+<main class="container" id="conteudo">
+<p class="qb-eyebrow">// segurança · ferramenta local</p>
+<h1>Gerador de frase-senha</h1>
 <p class="subtitle">Cria uma senha forte e fácil de lembrar, feita de palavras sorteadas.<br><small>Tudo acontece no seu aparelho: nada é enviado à internet.</small></p>
 
 <div class="password-display" id="passBox">
@@ -176,7 +190,8 @@ button:disabled{opacity:.6;cursor:not-allowed;transform:none!important}
 <p>Lista com <strong id="listSizeInfo">N</strong> palavras, ou <strong id="bitsPerWordInfo">N</strong> bits por palavra. Para chegar a ~77 bits, use pelo menos <strong id="recommendedWords">N</strong> palavras. A última senha gerada tem <strong id="entropy">0</strong> bits. Maiúscula, número e símbolo exigidos por sites não contam como ganho de força.</p>
 </div>
 </details>
-</div>
+</main>
+<footer class="qb-footer"><div class="qb-container qb-foot-inner"><div><img src="/assets/quebec/logos/nome_quebec_branco.svg" alt="quebec" width="65" height="24"><span>Diceware · frases-senha geradas no seu dispositivo</span></div><div class="qb-foot-actions"><a href="/">Catálogo</a><a href="/pdf/">Ferramentas PDF</a><div class="qb-theme" role="group" aria-label="Tema"><button type="button" data-qb-theme-set="system" aria-pressed="true">Sistema</button><button type="button" data-qb-theme-set="light" aria-pressed="false">Claro</button><button type="button" data-qb-theme-set="dark" aria-pressed="false">Escuro</button></div></div></div><div class="qb-container qb-foot-legal">© quebec · Roberto Milet</div></footer>
 
 <script src="wordlists.js"></script>
 <script>
@@ -209,7 +224,7 @@ function loadWordlist(raw){
   let diceSpace = 1;
   while (diceSpace < N) { diceSpace *= 6; DICE_COUNT++; }
 
-  document.title = 'Gerador Diceware PT-BR';
+  document.title = 'Diceware | quebec';
   document.getElementById('listSizeInfo').textContent = N.toLocaleString('pt-BR');
   document.getElementById('bitsPerWordInfo').textContent = bitsPerWord.toFixed(2);
   document.getElementById('recommendedWords').textContent = Math.ceil(77 / bitsPerWord);

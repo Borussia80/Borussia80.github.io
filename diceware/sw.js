@@ -1,5 +1,16 @@
-const CACHE_NAME = 'diceware-pwa-v7-portal';
-const APP_SHELL = ['./', './index.html', './manifest.webmanifest', './icon.svg', './wordlists.js', './AUDITORIA-LISTAS.md'];
+const CACHE_NAME = 'diceware-pwa-v8-quebec-1.1.1';
+const APP_SHELL = [
+  './', './index.html', './manifest.webmanifest', './wordlists.js', './AUDITORIA-LISTAS.md',
+  './style.css?v=1',
+  '../assets/quebec/tokens.css?v=1.1.1', '../assets/quebec/bundle.css?v=1.1.1',
+  '../assets/quebec/quebec.js?v=1.1.1',
+  '../assets/quebec/fonts/Inter-400.woff2', '../assets/quebec/fonts/Inter-500.woff2',
+  '../assets/quebec/fonts/Inter-600.woff2', '../assets/quebec/fonts/JetBrainsMono-400.woff2',
+  '../assets/quebec/fonts/JetBrainsMono-600.woff2', '../assets/quebec/fonts/TeXGyreAdventor-700.woff2',
+  '../assets/quebec/logos/nome_quebec.svg', '../assets/quebec/logos/nome_quebec_branco.svg',
+  '../assets/quebec/logos/favicon_16.png', '../assets/quebec/logos/favicon_32.png',
+  '../assets/quebec/logos/apple-touch-icon.png', '../assets/quebec/logos/icon-512.png'
+];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)));
