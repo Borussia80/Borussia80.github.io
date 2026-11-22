@@ -1,4 +1,4 @@
-const CACHE_NAME = 'diceware-pwa-v9-quebec-1.1.1';
+const CACHE_NAME = 'diceware-pwa-v10-quebec-1.1.1';
 const APP_SHELL = [
   './', './index.html', './manifest.webmanifest', './wordlists.js', './AUDITORIA-LISTAS.md',
   './style.css?v=1',
@@ -28,6 +28,18 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).then(async (response) => {
+        if (response.ok) {
+          const cache = await caches.open(CACHE_NAME);
+          await cache.put(event.request, response.clone());
+        }
+        return response;
+      }).catch(async () => (await caches.match(event.request)) || caches.match('./index.html'))
+    );
+    return;
+  }
   event.respondWith(
     caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
       if (new URL(event.request.url).origin === self.location.origin && response.ok) {
