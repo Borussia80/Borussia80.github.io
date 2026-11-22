@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ferramentas | quebec</title>
-  <meta name="description" content="Ferramentas e aplicativos de engenharia e software da quebec: PDF, Diceware e mais. Use direto no navegador.">
+  <meta name="description" content="Ferramentas gratuitas no navegador para documentos, senhas e conversão de unidades.">
   <meta name="theme-color" content="#F7F9FA" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#08131F" media="(prefers-color-scheme: dark)">
   <link rel="canonical" href="https://ferramentas.quebec.com.br/">
@@ -13,7 +13,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/quebec/logos/favicon_32.png">
   <link rel="apple-touch-icon" href="/assets/quebec/logos/apple-touch-icon.png">
   <meta property="og:title" content="Ferramentas | quebec">
-  <meta property="og:description" content="Ferramentas e aplicativos de engenharia e software. Use direto no navegador.">
+  <meta property="og:description" content="PDF, senhas e conversão de unidades no navegador.">
   <meta property="og:image" content="https://ferramentas.quebec.com.br/assets/quebec/logos/icon-512.png">
   <script>(function(){var s;try{s=localStorage.getItem('qb-theme')}catch(e){}document.documentElement.setAttribute('data-theme',s==='light'||s==='dark'?s:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))})()</script>
   <link rel="preload" href="/assets/quebec/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
@@ -31,6 +31,14 @@
     .page-head .lead { margin: 0 0 var(--space-8); max-width: 620px; color: var(--text-muted); }
     .search { max-width: 620px; margin-bottom: var(--space-4); }
     .catalog { padding: var(--space-4) 0 var(--space-16); }
+    .tool-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--space-5); }
+    .tool-grid .qb-card { min-height:210px; }
+    .product-strip { padding:var(--space-10,40px) 0 var(--space-16); border-top:1px solid var(--border); }
+    .product-strip h2 { margin:0 0 var(--space-3); }
+    .product-strip p { color:var(--text-muted); margin:0 0 var(--space-5); }
+    .product-links { display:flex; flex-wrap:wrap; gap:var(--space-3); align-items:center; }
+    .product-links span { color:var(--text-muted); font-size:14px; }
+    @media(max-width:680px){.tool-grid{grid-template-columns:1fr}.tool-grid .qb-card{min-height:0}}
     .qb-footer .qb-legal { align-items: center; gap: var(--space-4); flex-wrap: wrap; }
     .qb-foot-title { margin: 0 0 var(--space-3); font: 600 13px/18px var(--font-mono); color: var(--on-band); }
     .qb-footer .soon { font-size: 14px; color: var(--on-band-muted); }
@@ -42,45 +50,37 @@
 <div class="qb-header-wrap">
   <header class="qb-header"><div class="qb-container">
     <a class="qb-brand" href="/" aria-label="quebec ferramentas, início"><img class="qb-only-light" src="/assets/quebec/logos/nome_quebec.svg" alt="quebec" width="76" height="28"><img class="qb-only-dark" src="/assets/quebec/logos/nome_quebec_branco.svg" alt="quebec" width="76" height="28"><span class="qb-sub">ferramentas</span></a>
-    <nav class="qb-nav" aria-label="Principal"><a href="/" aria-current="page">Catálogo</a><a href="/pdf/?v=3">Ferramentas PDF</a><a href="/diceware/">Diceware</a></nav>
-    <a class="qb-btn qb-btn--ghost qb-btn--sm qb-header-cta" href="https://klipper.quebec.com.br/" rel="noopener noreferrer">Klipper <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 5h5v5M19 5l-8 8M18 14v4a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h4"/></svg></a>
+    <nav class="qb-nav" aria-label="Principal"><a href="/" aria-current="page">Catálogo</a><a href="/pdf/">PDF</a><a href="/diceware/">Diceware</a><a href="/senhas/">Senhas</a><a href="/unidades/">Unidades</a></nav>
+    
     <button class="qb-menu-btn" type="button" aria-expanded="false" aria-controls="menu-celular" aria-label="Menu"><span class="i-open"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></span><span class="i-close"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span></button>
   </div></header>
-  <nav class="qb-mobile-nav" id="menu-celular" aria-label="Principal (celular)" hidden><a href="/" aria-current="page">Catálogo</a><a href="/pdf/?v=3">Ferramentas PDF</a><a href="/diceware/">Diceware</a><a class="qb-btn qb-btn--secondary" href="https://klipper.quebec.com.br/" rel="noopener noreferrer">Abrir Klipper</a></nav>
+  <nav class="qb-mobile-nav" id="menu-celular" aria-label="Principal (celular)" hidden><a href="/" aria-current="page">Catálogo</a><a href="/pdf/">PDF</a><a href="/diceware/">Diceware</a><a href="/senhas/">Senhas</a><a href="/unidades/">Unidades</a></nav>
 </div>
 
 <main id="conteudo">
-  <div data-qb-catalog>
-    <section class="page-head"><div class="qb-container">
-      <p class="qb-eyebrow">// ferramentas.quebec.com.br</p>
-      <h1 class="display-lg">Ferramentas</h1>
-      <p class="lead body-lg">Ferramentas PDF e Diceware no navegador, sem criar conta. Conheça também os aplicativos da quebec.</p>
-      <div class="qb-input qb-input--search search"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg><input type="search" placeholder="Buscar ferramenta" aria-label="Buscar ferramenta" data-qb-search autocomplete="off"><span class="qb-kbd" aria-hidden="true">/</span></div>
-      <div class="qb-chips" role="group" aria-label="Filtrar por categoria"><button class="qb-chip" type="button" data-qb-filter="todas" aria-pressed="true">Todas <span class="qb-count" aria-hidden="true">4</span><span class="qb-visually-hidden">, 4 itens</span></button><button class="qb-chip" type="button" data-qb-filter="documentos" aria-pressed="false">Documentos <span class="qb-count" aria-hidden="true">1</span><span class="qb-visually-hidden">, 1 item</span></button><button class="qb-chip" type="button" data-qb-filter="engenharia" aria-pressed="false">Engenharia <span class="qb-count" aria-hidden="true">1</span><span class="qb-visually-hidden">, 1 item</span></button><button class="qb-chip" type="button" data-qb-filter="financas" aria-pressed="false">Finanças <span class="qb-count" aria-hidden="true">1</span><span class="qb-visually-hidden">, 1 item</span></button><button class="qb-chip" type="button" data-qb-filter="seguranca" aria-pressed="false">Segurança <span class="qb-count" aria-hidden="true">1</span><span class="qb-visually-hidden">, 1 item</span></button></div>
-      <p class="qb-visually-hidden" aria-live="polite" data-qb-status></p>
-    </div></section>
-
-    <section class="catalog" aria-label="Catálogo"><div class="qb-container">
-      <div class="qb-grid">
-<a class="qb-card" href="/pdf/?v=3" aria-label="Usar Ferramentas PDF" data-qb-item data-category="documentos" data-search="Ferramentas PDF Una, divida, numere e converta PDFs em imagens no navegador, sem enviar seus arquivos. pdf juntar unir dividir organizar girar extrair imagem numerar texto"><div class="qb-card-top"><span class="qb-icon-tile"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7z"/><path d="M14 3v4h4M9 13h6M9 17h4"/></svg></span><span class="qb-badges"><span class="qb-badge qb-badge--success"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg> no navegador</span></span></div><h3 class="h3">Ferramentas PDF</h3><p class="body-sm">Una, divida, numere e converta PDFs em imagens no navegador, sem enviar seus arquivos.</p><div class="qb-card-foot"><span>// documentos</span><span class="qb-go">Usar <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a>
-<a class="qb-card" href="/diceware/" aria-label="Usar Diceware" data-qb-item data-category="seguranca" data-search="Diceware Gere frases-senha em português no seu dispositivo. Funciona offline depois do primeiro acesso. senha frase-senha password gerador"><div class="qb-card-top"><span class="qb-icon-tile"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l8-8M16 7l2 2M14 9l2 2"/></svg></span><span class="qb-badges"><span class="qb-badge qb-badge--success"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg> no navegador</span><span class="qb-badge"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 18h.01M8.5 14.5a5 5 0 0 1 7 0M5 11a10 10 0 0 1 14 0"/></svg> offline</span></span></div><h3 class="h3">Diceware</h3><p class="body-sm">Gere frases-senha em português no seu dispositivo. Funciona offline depois do primeiro acesso.</p><div class="qb-card-foot"><span>// segurança</span><span class="qb-go">Usar <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a>
-
-<a class="qb-card" href="https://klipper.quebec.com.br/" rel="noopener noreferrer" aria-label="Abrir Klipper (abre em outro site)" data-qb-item data-category="financas" data-search="Klipper Organize suas finanças pessoais no aplicativo dedicado. financas dinheiro contas orcamento app"><div class="qb-card-top"><span class="qb-icon-tile"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h18M16 14.5h2"/></svg></span><span class="qb-badges"></span></div><h3 class="h3">Klipper</h3><p class="body-sm">Organize suas finanças pessoais no aplicativo dedicado.</p><div class="qb-card-foot"><span>// finanças</span><span class="qb-go">Abrir <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 5h5v5M19 5l-8 8M18 14v4a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h4"/></svg></span></div></a>
-<article class="qb-card" data-qb-item data-category="engenharia" data-search="FlowCalc Cálculo e verificação de elementos de medição de vazão. A aplicação requer servidor e ainda não está publicada. vazao placa de orificio medicao"><div class="qb-card-top"><span class="qb-icon-tile"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9h7M14 9h7M3 15h7M14 15h7M10 5v14M14 5v14"/></svg></span><span class="qb-badges"><span class="qb-badge qb-badge--brand">em preparação</span></span></div><h3 class="h3">FlowCalc</h3><p class="body-sm">Cálculo e verificação de elementos de medição de vazão. A aplicação requer servidor e ainda não está publicada.</p><div class="qb-card-foot"><span>// engenharia</span><span class="qb-muted">em breve</span></div></article>
-      </div>
-      <div class="qb-empty" data-qb-empty hidden><span class="qb-icon-tile"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg></span>
-        <h3 class="h3">Nenhuma ferramenta para “<span data-qb-query></span>”</h3>
-        <p class="body-sm">Tente outro termo ou veja todas as ferramentas.</p>
-        <button class="qb-btn qb-btn--secondary qb-btn--sm" type="button" data-qb-clear>Limpar busca</button></div>
-    </div></section>
-  </div>
-
+<div data-qb-catalog>
+<section class="page-head"><div class="qb-container">
+  <p class="qb-eyebrow">// ferramentas.quebec.com.br</p>
+  <h1 class="display-lg">Ferramentas para usar agora</h1>
+  <p class="lead body-lg">Documentos, senhas e conversões em um só lugar. Escolha uma ferramenta e comece no navegador, sem criar conta.</p>
+  <div class="qb-input qb-input--search search"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg><input type="search" placeholder="Buscar ferramenta" aria-label="Buscar ferramenta" data-qb-search autocomplete="off"><span class="qb-kbd" aria-hidden="true">/</span></div>
+  <div class="qb-chips" role="group" aria-label="Filtrar por categoria"><button class="qb-chip" type="button" data-qb-filter="todas" aria-pressed="true">Todas <span class="qb-count" aria-hidden="true">4</span></button><button class="qb-chip" type="button" data-qb-filter="documentos" aria-pressed="false">Documentos <span class="qb-count" aria-hidden="true">1</span></button><button class="qb-chip" type="button" data-qb-filter="seguranca" aria-pressed="false">Segurança <span class="qb-count" aria-hidden="true">2</span></button><button class="qb-chip" type="button" data-qb-filter="conversao" aria-pressed="false">Conversão <span class="qb-count" aria-hidden="true">1</span></button></div>
+  <p class="qb-visually-hidden" aria-live="polite" data-qb-status></p>
+</div></section>
+<section class="catalog" aria-label="Catálogo"><div class="qb-container"><div class="tool-grid">
+<a class="qb-card" href="/pdf/" data-qb-item data-category="documentos" data-search="PDF unir dividir organizar editar converter imagem documento"><div class="qb-card-top"><span class="qb-icon-tile" aria-hidden="true">▤</span><span class="qb-badge qb-badge--success">no navegador</span></div><h3 class="h3">Ferramentas PDF</h3><p class="body-sm">Una, divida, edite e converta arquivos PDF.</p><div class="qb-card-foot"><span>// documentos</span><span class="qb-go">Abrir <span aria-hidden="true">→</span></span></div></a>
+<a class="qb-card" href="/diceware/" data-qb-item data-category="seguranca" data-search="Diceware frase senha palavras portugues memoravel offline seguranca"><div class="qb-card-top"><span class="qb-icon-tile" aria-hidden="true">⚄</span><span class="qb-badge qb-badge--success">no navegador</span></div><h3 class="h3">Diceware</h3><p class="body-sm">Crie uma frase-senha com palavras sorteadas.</p><div class="qb-card-foot"><span>// segurança</span><span class="qb-go">Abrir <span aria-hidden="true">→</span></span></div></a>
+<a class="qb-card" href="/senhas/" data-qb-item data-category="seguranca" data-search="gerador senha aleatoria letras numeros simbolos criptografica seguranca"><div class="qb-card-top"><span class="qb-icon-tile" aria-hidden="true">✳</span><span class="qb-badge qb-badge--success">no navegador</span></div><h3 class="h3">Senhas aleatórias</h3><p class="body-sm">Gere uma senha com comprimento e caracteres à sua escolha.</p><div class="qb-card-foot"><span>// segurança</span><span class="qb-go">Abrir <span aria-hidden="true">→</span></span></div></a>
+<a class="qb-card" href="/unidades/" data-qb-item data-category="conversao" data-search="conversor unidades comprimento massa temperatura volume area pressao medida"><div class="qb-card-top"><span class="qb-icon-tile" aria-hidden="true">⇄</span><span class="qb-badge qb-badge--success">no navegador</span></div><h3 class="h3">Conversor de unidades</h3><p class="body-sm">Converta medidas comuns com fatores e fórmulas visíveis.</p><div class="qb-card-foot"><span>// conversão</span><span class="qb-go">Abrir <span aria-hidden="true">→</span></span></div></a>
+</div><div class="qb-empty" data-qb-empty hidden><span class="qb-icon-tile" aria-hidden="true">⌕</span><h2 class="h3">Nenhuma ferramenta para “<span data-qb-query></span>”</h2><p class="body-sm">Tente outro termo ou veja todas as ferramentas.</p><button class="qb-btn qb-btn--secondary qb-btn--sm" type="button" data-qb-clear>Limpar busca</button></div></div></section>
+</div>
+<section class="product-strip"><div class="qb-container"><p class="qb-eyebrow">// outros projetos</p><h2 class="h2">Aplicativos da quebec</h2><p>Projetos independentes das ferramentas rápidas deste catálogo.</p><div class="product-links"><a class="qb-btn qb-btn--secondary" href="https://klipper.quebec.com.br/">Conhecer o Klipper</a><span>FlowCalc · em preparação</span></div></div></section>
 </main>
 
 <footer class="qb-footer"><div class="qb-container">
   <div class="qb-foot-grid">
     <div><img src="/assets/quebec/logos/nome_quebec_branco.svg" alt="quebec" width="65" height="24"><p style="margin:0;max-width:300px;font-size:14px;line-height:20px">Ferramentas e aplicativos de engenharia e software.</p></div>
-    <div><h2 class="qb-foot-title">// ferramentas</h2><ul><li><a href="/pdf/?v=3">Ferramentas PDF</a></li><li><a href="/diceware/">Diceware</a></li></ul></div>
+    <div><h2 class="qb-foot-title">// ferramentas</h2><ul><li><a href="/pdf/">Ferramentas PDF</a></li><li><a href="/diceware/">Diceware</a></li><li><a href="/senhas/">Senhas aleatórias</a></li><li><a href="/unidades/">Conversor de unidades</a></li></ul></div>
     <div><h2 class="qb-foot-title">// apps</h2><ul><li><a href="https://klipper.quebec.com.br/" rel="noopener noreferrer">Klipper</a></li><li><span class="soon">FlowCalc · em breve</span></li></ul></div>
     <div></div>
   </div>
