@@ -11,7 +11,8 @@ const workflows = {
   pdfToPng: ['PDF para imagem', 'Converta uma página ou várias em PNG ou JPG.'],
   edit: ['Adicionar texto', 'Clique na página e preencha o texto para incluir na cópia exportada.'],
   number: ['Numerar páginas', 'Escolha o número inicial e a posição antes de baixar.'],
-  read: ['Perguntar ao PDF', 'Carregue um PDF com texto selecionável e procure trechos por tema.']
+  read: ['Perguntar ao PDF', 'Carregue um PDF com texto selecionável e procure trechos por tema.'],
+  compress: ['Comprimir PDF', 'Reduza o tamanho do PDF no navegador.']
 };
 const MAX_BYTES = 30 * 1024 * 1024;
 const MAX_PAGES = 300;
@@ -58,8 +59,33 @@ async function clearDocuments() {
   renderPages();
 }
 
+let compressor = null;
+async function openCompressor() {
+  const section = $('compressor');
+  elements.workspace.hidden = true; elements.tools.hidden = true; section.hidden = false;
+  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (compressor) return;
+  try {
+    const { mountCompressor } = await import('./compress.js?v=1');
+    compressor = mountCompressor({ getPdfjs: () => state.pdfjs });
+  } catch (err) {
+    $('cmpStatus').textContent = `Não foi possível carregar o compressor: ${err.message}. Confira sua conexão e atualize a página.`;
+  }
+}
+function closeCompressor() {
+  $('compressor').hidden = true;
+  compressor?.reset();
+}
+
 async function openTool(mode) {
   if (state.busy || !workflows[mode]) return;
+  if (mode === 'compress') {
+    if (state.pages.length) await clearDocuments();
+    state.mode = mode;
+    await openCompressor();
+    return;
+  }
+  closeCompressor();
   if (state.mode !== mode && state.pages.length) await clearDocuments();
   state.mode = mode;
   const [title, description] = workflows[mode];
@@ -460,6 +486,7 @@ for (const filter of document.querySelectorAll('[data-filter]')) filter.addEvent
   for (const card of document.querySelectorAll('[data-tool]')) card.hidden = filter.dataset.filter !== 'all' && card.dataset.category !== filter.dataset.filter;
 });
 elements.backToTools.addEventListener('click', () => { elements.workspace.hidden = true; elements.tools.hidden = true; elements.catalog.scrollIntoView({ behavior: 'smooth' }); });
+$('cmpBack').addEventListener('click', () => { closeCompressor(); elements.catalog.scrollIntoView({ behavior: 'smooth' }); });
 for (const id of ['annotation','x','y','fontSize','color']) elements[id].addEventListener('input', saveAnnotation);
 elements.askForm.addEventListener('submit', async e => { e.preventDefault(); const question = elements.question.value.trim(); if (question) { elements.question.value = ''; await ask(question); } });
 $('year').textContent = new Date().getFullYear();

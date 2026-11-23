@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#F7F9FA" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#08131F" media="(prefers-color-scheme: dark)">
-  <meta name="description" content="Ferramentas para unir, dividir, organizar, editar e converter PDFs no navegador.">
+  <meta name="description" content="Ferramentas para unir, dividir, organizar, comprimir, editar e converter PDFs no navegador.">
   <title>Ferramentas PDF | quebec</title>
   <link rel="canonical" href="https://ferramentas.quebec.com.br/pdf/">
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/quebec/logos/favicon_16.png">
@@ -17,7 +17,7 @@
   <link rel="stylesheet" href="./style.css?v=5">
   <script src="/assets/quebec/quebec.js?v=1.1.1" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-  <script type="module" src="./app.js?v=3"></script>
+  <script type="module" src="./app.js?v=4"></script>
 </head>
 <body class="qb">
 <a class="qb-btn qb-btn--primary qb-skip" href="#conteudo">Pular para o conteúdo</a>
@@ -32,7 +32,7 @@
 </div>
   <main class="shell pdf-main" id="conteudo">
     <section class="hero"><div><p class="eyebrow">// FERRAMENTAS PDF · SEM CONTA</p><h1>Seu PDF pronto em<br><em>poucos passos.</em></h1><p>Escolha uma tarefa, adicione seus arquivos e baixe o resultado. Simples no computador ou no celular.</p><a class="hero-cta" href="#catalog">Escolher ferramenta</a><div class="privacy"><span aria-hidden="true">◈</span> Seus arquivos são processados no navegador, sem envio ao servidor da QUEBEC.</div></div></section>
-    <section class="catalog" id="catalog" aria-label="Catálogo de ferramentas PDF"><div class="catalog-head"><div><p class="eyebrow">ESCOLHA SUA FERRAMENTA</p><h2>O que você quer fazer?</h2></div><span>10 ferramentas disponíveis</span></div><div class="filters" role="group" aria-label="Filtrar ferramentas"><button class="filter active" type="button" data-filter="all" aria-pressed="true">Todas</button><button class="filter" type="button" data-filter="organize" aria-pressed="false">Organizar</button><button class="filter" type="button" data-filter="convert" aria-pressed="false">Converter</button><button class="filter" type="button" data-filter="edit" aria-pressed="false">Editar</button><button class="filter" type="button" data-filter="read" aria-pressed="false">Consultar</button></div><div class="tool-grid">
+    <section class="catalog" id="catalog" aria-label="Catálogo de ferramentas PDF"><div class="catalog-head"><div><p class="eyebrow">ESCOLHA SUA FERRAMENTA</p><h2>O que você quer fazer?</h2></div><span>11 ferramentas disponíveis</span></div><div class="filters" role="group" aria-label="Filtrar ferramentas"><button class="filter active" type="button" data-filter="all" aria-pressed="true">Todas</button><button class="filter" type="button" data-filter="organize" aria-pressed="false">Organizar</button><button class="filter" type="button" data-filter="convert" aria-pressed="false">Converter</button><button class="filter" type="button" data-filter="edit" aria-pressed="false">Editar</button><button class="filter" type="button" data-filter="read" aria-pressed="false">Consultar</button></div><div class="tool-grid">
       <button class="tool-card" data-tool="merge" data-category="organize" type="button"><span class="tool-icon violet" aria-hidden="true">▤</span><strong>Unir PDF</strong><span>Combine arquivos na ordem que você escolher.</span></button>
       <button class="tool-card" data-tool="split" data-category="organize" type="button"><span class="tool-icon orange" aria-hidden="true">◫</span><strong>Dividir PDF</strong><span>Separe páginas por intervalos em um ZIP.</span></button>
       <button class="tool-card" data-tool="organize" data-category="organize" type="button"><span class="tool-icon blue" aria-hidden="true">▦</span><strong>Organizar PDF</strong><span>Reordene ou remova páginas.</span></button>
@@ -40,6 +40,7 @@
       <button class="tool-card" data-tool="rotate" data-category="organize" type="button"><span class="tool-icon coral" aria-hidden="true">⟳</span><strong>Girar PDF</strong><span>Corrija a orientação de cada página.</span></button>
       <button class="tool-card" data-tool="imageToPdf" data-category="convert" type="button"><span class="tool-icon amber" aria-hidden="true">▧</span><strong>Imagem para PDF</strong><span>Transforme JPG e PNG em PDF.</span></button>
       <button class="tool-card" data-tool="pdfToPng" data-category="convert" type="button"><span class="tool-icon cyan" aria-hidden="true">▥</span><strong>PDF para imagem</strong><span>Exporte páginas em PNG ou JPG, uma ou várias.</span></button>
+      <button class="tool-card" data-tool="compress" data-category="convert" type="button"><span class="tool-icon teal" aria-hidden="true">⇲</span><strong>Comprimir PDF</strong><span>Reduza o tamanho mantendo o texto ou recompactando as páginas.</span></button>
       <button class="tool-card" data-tool="edit" data-category="edit" type="button"><span class="tool-icon pink" aria-hidden="true">✎</span><strong>Adicionar texto</strong><span>Insira texto em uma cópia do PDF.</span></button>
       <button class="tool-card" data-tool="number" data-category="edit" type="button"><span class="tool-icon coral" aria-hidden="true">①</span><strong>Numerar páginas</strong><span>Escolha o número inicial e a posição.</span></button>
       <button class="tool-card" data-tool="read" data-category="read" type="button"><span class="tool-icon teal" aria-hidden="true">⌕</span><strong>Perguntar ao PDF</strong><span>Encontre trechos com indicação de página.</span></button>
@@ -54,6 +55,51 @@
       </div>
       <div id="splitBox" class="split-box" hidden><label for="splitRanges">Intervalos para dividir</label><input id="splitRanges" type="text" placeholder="Ex.: 1-3, 4-6, 7"><p>Cada intervalo vira um PDF separado dentro de um ZIP. Use a numeração das páginas acima.</p><button id="exportSplit" class="secondary" type="button" disabled>Baixar partes em ZIP</button></div>
       <p class="status" id="status" role="status" aria-live="polite"></p>
+    </section>
+    <section class="qb-tool workspace" id="compressor" aria-labelledby="cmpTitle" hidden>
+      <button class="back-to-tools" id="cmpBack" type="button">← Ver ferramentas</button>
+      <div class="qb-tool-head"><span class="qb-icon-tile" aria-hidden="true">⇲</span><div><h2 class="h3" id="cmpTitle">Comprimir PDF</h2><p class="body-sm">O arquivo é processado no seu navegador e não é enviado a nenhum servidor.</p></div></div>
+      <div class="qb-filetool">
+        <div class="qb-drop" id="cmpDrop">
+          <input type="file" id="cmpFile" accept="application/pdf,.pdf" aria-label="Selecionar PDF para comprimir" disabled>
+          <span class="qb-icon-tile" aria-hidden="true">＋</span>
+          <strong>Selecione um PDF</strong>
+          <span class="qb-help"><span class="qb-drop-link">Escolher arquivo</span> ou arraste para cá · PDF até 30 MB</span>
+        </div>
+        <ul class="qb-files" id="cmpFiles" hidden><li class="qb-file"><span class="qb-move" aria-hidden="true"></span><span class="qb-file-ico" aria-hidden="true">▤</span><div class="qb-file-name"><b id="cmpFileName"></b><span id="cmpFileSize"></span></div><span class="qb-file-state" id="cmpFileState">Pronto</span><button class="qb-icon-btn" id="cmpRemove" type="button" aria-label="Remover arquivo" title="Remover arquivo">×</button></li></ul>
+        <div class="qb-field" role="group" aria-labelledby="cmpModeLabel">
+          <label id="cmpModeLabel">Modo de compressão</label>
+          <div class="qb-chips">
+            <button class="qb-chip" type="button" data-cmp-mode="structural" aria-pressed="true">Estrutural · preserva texto e vetores</button>
+            <button class="qb-chip" type="button" data-cmp-mode="images" aria-pressed="false">Imagens / escaneados · maior redução</button>
+          </div>
+          <p class="qb-help" id="cmpModeHelp">Remove dados não utilizados e recompacta o conteúdo sem alterar o aspecto do documento. Ideal para PDFs com texto selecionável.</p>
+        </div>
+        <div class="qb-field" role="group" aria-labelledby="cmpPresetLabel" id="cmpPresetField" hidden>
+          <label id="cmpPresetLabel">Nível de compressão</label>
+          <div class="qb-chips">
+            <button class="qb-chip" type="button" data-cmp-preset="leve" aria-pressed="false">Leve <span class="qb-count">150 DPI · 85%</span></button>
+            <button class="qb-chip" type="button" data-cmp-preset="equilibrado" aria-pressed="true">Equilibrado <span class="qb-count">120 DPI · 70%</span></button>
+            <button class="qb-chip" type="button" data-cmp-preset="maximo" aria-pressed="false">Máximo <span class="qb-count">96 DPI · 55%</span></button>
+          </div>
+          <p class="qb-note"><span aria-hidden="true">ⓘ</span><span>Cada página vira uma imagem JPEG: o texto deixa de ser selecionável e pesquisável, e links ou formulários são removidos.</span></p>
+        </div>
+        <div class="qb-progress" id="cmpProgress" hidden>
+          <div class="qb-progress-top"><span id="cmpProgressLabel">Preparando…</span><span class="qb-mono" id="cmpProgressValue"></span></div>
+          <div class="qb-bar" id="cmpBar" role="progressbar" aria-labelledby="cmpProgressLabel" aria-valuemin="0" aria-valuemax="100"><span id="cmpBarFill"></span></div>
+        </div>
+        <div class="qb-field" id="cmpErrorField" hidden><p class="qb-error" id="cmpError" role="alert"></p></div>
+        <div class="qb-field" id="cmpResult" hidden>
+          <div class="qb-result"><span class="qb-icon-tile" aria-hidden="true">✓</span><div><b id="cmpResultTitle">PDF comprimido</b><span id="cmpResultName"></span></div><a class="qb-btn qb-btn--primary" id="cmpDownload" href="#" download>Baixar PDF</a></div>
+          <dl class="qb-kv" id="cmpSummary"><dt>Tamanho original</dt><dd id="cmpOriginal">—</dd><dt>Tamanho comprimido</dt><dd id="cmpCompressed">—</dd><dt>Redução</dt><dd id="cmpReduction">—</dd></dl>
+          <p class="qb-note" id="cmpOptimized" hidden><span aria-hidden="true">ⓘ</span><span>Este PDF já está otimizado: a compressão não reduziu o tamanho. O download entrega o arquivo original, sem alterações.</span></p>
+          <p class="qb-note" id="cmpDetails" hidden></p>
+        </div>
+        <div class="qb-actionbar">
+          <p class="body-sm qb-muted" id="cmpStatus" role="status" aria-live="polite">Selecione um PDF para começar.</p>
+          <div class="qb-actions"><button class="qb-btn qb-btn--secondary" id="cmpCancel" type="button" hidden>Cancelar</button><button class="qb-btn qb-btn--primary" id="cmpRun" type="button" disabled>Comprimir PDF</button></div>
+        </div>
+      </div>
     </section>
     <section class="panels" id="tools" hidden>
       <article class="panel" data-panel="edit" hidden><div class="panel-kicker">01 / EDIÇÃO</div><h2>Adicionar texto</h2><p>Clique em uma página e marque a posição no preview. O texto será inserido na cópia exportada.</p><label for="annotation">Texto</label><textarea id="annotation" rows="3" placeholder="Ex.: Revisado em 20/11/2026" maxlength="500"></textarea><div class="pair"><label>Posição X (%)<input id="x" type="number" min="0" max="95" value="10"></label><label>Posição Y (%)<input id="y" type="number" min="5" max="100" value="15"></label></div><div class="pair"><label>Tamanho<input id="fontSize" type="number" min="8" max="48" value="16"></label><label>Cor<input id="color" type="color" value="#162b47"></label></div><p class="hint">Página ativa: <strong id="activePage">nenhuma</strong>. Coordenadas medidas a partir do canto superior esquerdo. O texto adicionado é incorporado visualmente ao PDF.</p></article>
