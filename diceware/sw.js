@@ -1,9 +1,9 @@
-const CACHE_NAME = 'diceware-pwa-v13-quebec-1.2.0';
+const CACHE_NAME = 'diceware-pwa-v14-quebec-1.2.1';
 const APP_SHELL = [
   './', './index.html', './manifest.webmanifest', './wordlists.js', './AUDITORIA-LISTAS.md',
   './style.css?v=2',
-  '../assets/quebec/tokens.css?v=1.2.0', '../assets/quebec/bundle.css?v=1.2.0',
-  '../assets/quebec/quebec.js?v=1.2.0', '../assets/quebec/icons.svg?v=1.2.0',
+  '../assets/quebec/tokens.css?v=1.2.1', '../assets/quebec/bundle.css?v=1.2.1',
+  '../assets/quebec/quebec.js?v=1.2.1', '../assets/quebec/icons.svg?v=1.2.1',
   '../assets/quebec/fonts/Inter-400.woff2', '../assets/quebec/fonts/Inter-500.woff2',
   '../assets/quebec/fonts/Inter-600.woff2', '../assets/quebec/fonts/JetBrainsMono-400.woff2',
   '../assets/quebec/fonts/JetBrainsMono-600.woff2', '../assets/quebec/fonts/TeXGyreAdventor-700.woff2',

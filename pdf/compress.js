@@ -1,5 +1,5 @@
 // Comprimir PDF — interface e modo "Imagens / escaneados". Carregado sob demanda por app.js.
-// Usa window.QB (quebec 1.2.0): QB.drop recebe e valida o arquivo, QB.status mostra mensagens e erros.
+// Usa window.QB (quebec 1.2.1): QB.drop recebe e valida o arquivo, QB.status mostra mensagens e erros.
 // Modo estrutural: Web Worker (compress-worker.js) com pdf-lib (MIT) + CompressionStream('deflate').
 // Modo imagens: PDF.js (Apache-2.0) renderiza cada página em <canvas>, JPEG via toBlob e reconstrução com pdf-lib (MIT).
 import { PRESETS, MAX_BYTES, formatBytes, reductionPercent, formatPercent, renderScale, friendlyError } from './compress-core.js?v=1';
@@ -168,8 +168,7 @@ export function mountCompressor({ getPdfjs }) {
     st.url = URL.createObjectURL(optimized ? st.file : new Blob([result.bytes], { type: 'application/pdf' }));
     el.cmpDownload.href = st.url;
     el.cmpDownload.download = optimized ? st.file.name : `${base}-comprimido.pdf`;
-    // Rótulo como nó de texto: um <span> dentro de .qb-result herdaria o estilo mono/esmaecido do nome do arquivo.
-    el.cmpDownload.lastChild.textContent = optimized ? 'Baixar original' : 'Baixar PDF comprimido';
+    el.cmpDownload.querySelector('[data-qb-label]').textContent = optimized ? 'Baixar original' : 'Baixar PDF comprimido';
     el.cmpResultTitle.textContent = optimized ? 'Nenhuma redução obtida' : 'PDF comprimido';
     el.cmpResultName.textContent = el.cmpDownload.download;
     el.cmpOriginal.textContent = formatBytes(original);

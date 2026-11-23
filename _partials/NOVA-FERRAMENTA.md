@@ -22,7 +22,7 @@ Cada ferramenta é uma **página fina**: a interface vem do quebec (casca, compo
 | Botões, filtros | `.qb-btn--primary/--secondary/--ghost`, `.qb-chip[aria-pressed]` |
 | Layout | `.qb-page` (880 px) ou `.qb-page--wide`, `.qb-page-head`, `.qb-panel`, `.qb-row2`, `.qb-actions`, `.qb-disclosure` |
 | Resultado | `.qb-output` (valor em mono), `.qb-kv` (pares chave/valor), `.qb-result` (arquivo pronto) |
-| Ícones | `<svg class="qb-i"><use href="/assets/quebec/icons.svg?v=1.2.0#nome"/></svg>` — nunca caracteres como ▤ ⚄ ✳ (viram emoji no celular) |
+| Ícones | `<svg class="qb-i"><use href="/assets/quebec/icons.svg?v=1.2.1#nome"/></svg>` — nunca caracteres como ▤ ⚄ ✳ (viram emoji no celular) |
 | Cor própria | `data-qb-accent="violeta"` ou `"ciano"` no `<main>`. Pinta só ícones e destaques (`.qb-accent-text`); botões, links e foco continuam iguais em todas as páginas. Não sobrescreva `--primary`, `--link` ou `--focus`. |
 | Cores no canvas/WebGL | leia os tokens com `getComputedStyle(document.body).getPropertyValue('--accent')` e observe `data-theme` no `<html>` (veja `/3d/app.js`). |
 

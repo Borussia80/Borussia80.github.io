@@ -1,5 +1,5 @@
-/* quebec — gerado de tokens.json do design system (pacote 1.2.0). Não editar à mão: altere o design system e gere de novo.
-   1.2.0: espaços 5/10/20, --accent (realce por ferramenta), --band-border*, --on-success e tokens de movimento. */
+/* quebec — gerado de tokens.json do design system (pacote 1.2.1). Não editar à mão: altere o design system e gere de novo.
+   1.2.1: alinhado ao tokens.json do design system (presets de realce como tokens; seletores [data-qb-accent] e movimento reduzido ficam no bundle.css). */
 @font-face { font-family: 'TeX Gyre Adventor'; src: url('fonts/TeXGyreAdventor-700.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Inter'; src: url('fonts/Inter-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Inter'; src: url('fonts/Inter-500.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
@@ -44,6 +44,10 @@
   --accent-tint: var(--surface-tint);
   --band-border: rgba(255,255,255,0.14);
   --band-border-strong: rgba(255,255,255,0.28);
+  --accent-violeta: #6A3FC1;
+  --accent-violeta-tint: #F0EBFA;
+  --accent-ciano: #0B6A8F;
+  --accent-ciano-tint: #E3F3FA;
   --shadow-sm: 0 1px 2px rgba(16,45,80,0.08);
   --shadow-md: 0 6px 20px rgba(16,45,80,0.10);
   color-scheme: light;
@@ -71,6 +75,10 @@
   --on-success: var(--navy-950);
   --band-border: rgba(255,255,255,0.12);
   --band-border-strong: rgba(255,255,255,0.24);
+  --accent-violeta: #C3AEF5;
+  --accent-violeta-tint: #2A2347;
+  --accent-ciano: var(--cyan-400);
+  --accent-ciano-tint: #0F3144;
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
   --shadow-md: 0 8px 24px rgba(0,0,0,0.45);
   color-scheme: dark;
@@ -103,13 +111,6 @@
   --font-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
-/* Realce por ferramenta: só pinta ícones, sobretítulos e destaques de título. Nunca altera --primary, --link ou --focus.
-   As cores ficam longe de --danger, --warning e --success. Use <main data-qb-accent="violeta">. */
-[data-qb-accent="violeta"] { --accent: #6A3FC1; --accent-tint: #F0EBFA; }
-[data-theme="dark"] [data-qb-accent="violeta"] { --accent: #C3AEF5; --accent-tint: #2A2347; }
-[data-qb-accent="ciano"] { --accent: #0B6A8F; --accent-tint: #E3F3FA; }
-[data-theme="dark"] [data-qb-accent="ciano"] { --accent: var(--cyan-400); --accent-tint: #0F3144; }
-@media (prefers-reduced-motion: reduce) { :root { --dur-1: 0ms; --dur-2: 0ms; } }
 .display-xl { font-family: var(--font-display); font-size: 64px; line-height: 68px; font-weight: 700; letter-spacing: -0.02em; }
 .display-lg { font-family: var(--font-display); font-size: 48px; line-height: 54px; font-weight: 700; letter-spacing: -0.015em; }
 .h1 { font-family: var(--font-display); font-size: 36px; line-height: 42px; font-weight: 700; letter-spacing: -0.01em; }

@@ -1,4 +1,4 @@
-/* quebec — componentes (classes qb-*), pacote 1.2.0. Carrega depois de tokens.css; usa só variáveis de token.
+/* quebec — componentes (classes qb-*), pacote 1.2.1. Carrega depois de tokens.css; usa só variáveis de token.
    Pontos de quebra (convenção, media queries não leem variáveis): 1100 / 860 / 600 px. */
 .qb, .qb * { box-sizing: border-box; }
 .qb { font-family: var(--font-sans); color: var(--text); background: var(--bg); -webkit-font-smoothing: antialiased; }
@@ -257,9 +257,9 @@ a.qb-card:hover { box-shadow: var(--shadow-md); border-color: var(--border-stron
 .qb-actionbar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; padding-top: var(--space-2); border-top: 1px solid var(--border); }
 .qb-result { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4); border-radius: var(--radius-lg); background: var(--surface-sunken); border: 1px solid var(--border); }
 .qb-result .qb-icon-tile { background: var(--surface); color: var(--success); }
-.qb-result div { flex: 1; min-width: 0; }
-.qb-result b { display: block; font: 600 15px/20px var(--font-sans); }
-.qb-result span { font: 400 13px/18px var(--font-mono); color: var(--text-muted); }
+.qb-result > div { flex: 1; min-width: 0; }
+.qb-result > div > b { display: block; font: 600 15px/20px var(--font-sans); }
+.qb-result > div > span { font: 400 13px/18px var(--font-mono); color: var(--text-muted); } /* 1.2.1: só o texto do resultado, não o rótulo de um .qb-btn dentro dele */
 @media (max-width: 860px) {
   .qb-tool-head { padding: var(--space-4); align-items: flex-start; }
   .qb-tool-head h2 { font-size: 22px; line-height: 28px; }
@@ -374,3 +374,11 @@ input[type="color"].qb-control { padding: var(--space-1); cursor: pointer; }
   .qb-row2, .qb-checks { grid-template-columns: 1fr; }
   .qb-disclosure { padding: 0 var(--space-4); }
 }
+
+/* ---------- 1.2.1 · ligações que tokens.json não expressa ---------- */
+/* Realce por ferramenta: <main data-qb-accent="violeta|ciano">. Só pinta ícones e destaques; nunca altera --primary, --link ou --focus.
+   Os valores por tema vêm dos tokens accent-violeta*, accent-ciano*. */
+[data-qb-accent="violeta"] { --accent: var(--accent-violeta); --accent-tint: var(--accent-violeta-tint); }
+[data-qb-accent="ciano"] { --accent: var(--accent-ciano); --accent-tint: var(--accent-ciano-tint); }
+/* Movimento reduzido: as transições ficam instantâneas. */
+@media (prefers-reduced-motion: reduce) { :root { --dur-1: 0ms; --dur-2: 0ms; } }
