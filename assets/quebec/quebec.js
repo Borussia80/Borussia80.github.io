@@ -1,4 +1,5 @@
-/* quebec — comportamento mínimo dos componentes (v1.1). Sem dependências. Carregar com defer, depois de bundle.css. */
+/* quebec — comportamento mínimo dos componentes (v1.2). Sem dependências. Carregar com defer, depois de bundle.css.
+   v1.2: ano do rodapé ([data-qb-year]) e a API window.QB (status, drop, copy) para as páginas de ferramenta. */
 (function () {
   'use strict';
   /* Tema: preferência salva (qb-theme = light | dark) ou a do sistema. */
@@ -69,6 +70,83 @@
   document.addEventListener('dragleave', function (e) { var d = e.target.closest && e.target.closest('.qb-drop'); if (d && !d.contains(e.relatedTarget)) d.classList.remove('is-over'); });
   document.addEventListener('drop', function (e) { var d = e.target.closest && e.target.closest('.qb-drop'); if (d) d.classList.remove('is-over'); });
 
-  function ready() { applyTheme(); document.querySelectorAll('[data-qb-catalog]').forEach(initCatalog); }
+  /* ---------- API para páginas de ferramenta: window.QB ---------- */
+  var QB = window.QB = window.QB || {};
+
+  /* Mensagem em .qb-status (role="status"). kind: 'error' | 'ok' | omitido. */
+  QB.status = function (el, message, kind) {
+    if (typeof el === 'string') el = document.getElementById(el);
+    if (!el) return;
+    el.textContent = message || '';
+    el.classList.toggle('is-error', kind === 'error');
+    el.classList.toggle('is-ok', kind === 'ok');
+  };
+
+  function fmtBytes(n) { return n >= 1048576 ? (n / 1048576).toFixed(n >= 10485760 ? 0 : 1).replace('.', ',') + ' MB' : Math.ceil(n / 1024) + ' KB'; }
+  function accepts(file, accept) {
+    if (!accept) return true;
+    var name = file.name.toLowerCase(), type = (file.type || '').toLowerCase();
+    return accept.split(',').some(function (a) {
+      a = a.trim().toLowerCase(); if (!a) return false;
+      if (a.charAt(0) === '.') return name.slice(-a.length) === a;
+      if (a.slice(-2) === '/*') return type.indexOf(a.slice(0, -1)) === 0;
+      return type === a;
+    });
+  }
+
+  /* Área de arquivos .qb-drop com <input type="file"> dentro.
+     O input cobre a área toda, então clicar ou soltar arquivos usa o seletor nativo; aqui só validamos e entregamos.
+     opts: { onFiles(files), maxBytes, maxFiles, status (elemento ou id de .qb-status) }. O filtro de tipo vem do atributo accept. */
+  QB.drop = function (el, opts) {
+    if (typeof el === 'string') el = document.getElementById(el);
+    opts = opts || {};
+    var input = el.querySelector('input[type="file"]'), accept = input.getAttribute('accept') || '';
+    function take(list) {
+      var ok = [], bad = [];
+      Array.prototype.forEach.call(list, function (f) {
+        if (!accepts(f, accept)) bad.push(f.name + ': tipo não aceito');
+        else if (opts.maxBytes && f.size > opts.maxBytes) bad.push(f.name + ': maior que ' + fmtBytes(opts.maxBytes));
+        else ok.push(f);
+      });
+      if (opts.maxFiles && ok.length > opts.maxFiles) { bad.push('Use até ' + opts.maxFiles + ' arquivo(s) por vez.'); ok = ok.slice(0, opts.maxFiles); }
+      el.classList.toggle('is-error', bad.length > 0 && !ok.length);
+      if (bad.length && opts.status) QB.status(opts.status, bad.join(' · '), 'error');
+      if (ok.length && opts.onFiles) opts.onFiles(ok);
+    }
+    input.addEventListener('change', function () { take(input.files); input.value = ''; });
+    return {
+      input: input,
+      open: function () { input.click(); },
+      busy: function (on) { el.classList.toggle('is-busy', !!on); input.disabled = !!on; },
+      take: take
+    };
+  };
+
+  /* Botão de copiar: escreve no clipboard e mostra o estado confirmado (.is-done) por 2 s.
+     O texto do botão fica num <span data-qb-label>; o ícone, se houver, é mantido. */
+  QB.copy = function (btn, text, labels) {
+    labels = labels || {};
+    var label = btn.querySelector('[data-qb-label]') || btn, idle = label.getAttribute('data-idle') || label.textContent;
+    label.setAttribute('data-idle', idle);
+    function done(ok) {
+      btn.classList.toggle('is-done', ok);
+      label.textContent = ok ? (labels.done || 'Copiado') : (labels.fail || 'Não foi possível copiar');
+      clearTimeout(btn._qbT); btn._qbT = setTimeout(function () { btn.classList.remove('is-done'); label.textContent = idle; }, 2000);
+      return ok;
+    }
+    function legacy() {
+      var t = document.createElement('textarea'); t.value = text; t.setAttribute('readonly', ''); t.style.position = 'fixed'; t.style.opacity = '0';
+      document.body.appendChild(t); t.select(); var ok = false; try { ok = document.execCommand('copy'); } catch (e) {} t.remove(); return ok;
+    }
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text).then(function () { return done(true); }, function () { return done(legacy()); });
+    return Promise.resolve(done(legacy()));
+  };
+
+  function ready() {
+    applyTheme();
+    document.querySelectorAll('[data-qb-catalog]').forEach(initCatalog);
+    var y = String(new Date().getFullYear());
+    document.querySelectorAll('[data-qb-year]').forEach(function (el) { el.textContent = y; });
+  }
   document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', ready) : ready();
 })();

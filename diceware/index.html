@@ -3,111 +3,52 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#F7F9FA" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#08131F" media="(prefers-color-scheme: dark)">
 <meta name="description" content="Gere frases-senha Diceware localmente, com aleatoriedade criptograficamente segura.">
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="canonical" href="https://ferramentas.quebec.com.br/diceware/">
+<title>Diceware | quebec</title>
+<!-- qb:head -->
+<script>(function(){var s;try{s=localStorage.getItem('qb-theme')}catch(e){}document.documentElement.setAttribute('data-theme',s==='light'||s==='dark'?s:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))})()</script>
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/quebec/logos/favicon_16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/quebec/logos/favicon_32.png">
 <link rel="apple-touch-icon" href="/assets/quebec/logos/apple-touch-icon.png">
-<link rel="canonical" href="https://ferramentas.quebec.com.br/diceware/">
-<title>Diceware | quebec</title>
-<script>(function(){var s;try{s=localStorage.getItem('qb-theme')}catch(e){}document.documentElement.setAttribute('data-theme',s==='light'||s==='dark'?s:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))})()</script>
-<link rel="stylesheet" href="/assets/quebec/tokens.css?v=1.1.1">
-<link rel="stylesheet" href="/assets/quebec/bundle.css?v=1.1.1">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,var(--primary) 0%,var(--secondary) 100%);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
-.container{background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.3);padding:40px;max-width:920px;width:100%}
-h1{color:var(--primary);text-align:center;margin-bottom:8px;font-size:2.2em}
-.badge{display:inline-block;background:var(--success);color:#fff;padding:4px 12px;border-radius:12px;font-size:.75em;font-weight:bold;margin-left:8px;vertical-align:middle}
-.subtitle{text-align:center;color:#666;margin-bottom:30px;font-size:.92em}
-.controls{background:#f8f9fa;padding:22px;border-radius:15px;margin-bottom:28px}
-.control-group{display:flex;align-items:center;gap:18px;margin-bottom:16px}
-.control-group:last-child{margin-bottom:0}
-.control-label{font-weight:600;color:#444;min-width:170px}
-input[type=range]{flex:1;height:8px;border-radius:5px;background:#ddd;outline:none;-webkit-appearance:none}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--primary);cursor:pointer}
-input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--primary);cursor:pointer;border:none}
-.value-badge{background:var(--primary);color:#fff;padding:7px 16px;border-radius:14px;font-weight:bold;min-width:55px;text-align:center}
-.separator-group{display:flex;gap:10px}
-.sep-btn{padding:9px 16px;border:2px solid #ddd;background:#fff;border-radius:10px;cursor:pointer;font-weight:600}
-.sep-btn.active{border-color:var(--primary);background:var(--primary);color:#fff}
-.file-btn{padding:9px 16px;border:2px dashed var(--primary);border-radius:10px;cursor:pointer;font-weight:600;color:var(--primary);font-size:.92em;white-space:nowrap}
-.file-btn:hover{background:#eef2ff}
-.restore-list{padding:9px 14px;border:2px solid #cbd5e0;background:#fff;border-radius:10px;cursor:pointer;font-weight:600;color:#4a5568}
-.restore-list:hover{background:#f1f5f9}
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-a:focus-visible,button:focus-visible,input:focus-visible,.file-btn:focus-within{outline:3px solid #111827;outline-offset:3px}
-.load-status{font-size:.85em;color:#718096;font-style:italic}
-.load-status.ok{color:var(--success);font-style:normal;font-weight:600}
-.dice-area{min-height:150px;background:linear-gradient(#fff,#f9fafb);border:3px dashed #cbd5e0;border-radius:16px;padding:30px 20px;margin:25px 0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.dice-row{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
-.dice-row.discreet{filter:blur(10px);opacity:.55;pointer-events:none}
-.discreet-toggle{display:flex;align-items:center;gap:8px;font-size:.88em;color:#718096;font-weight:600;cursor:pointer;margin-bottom:16px}
-.dice{width:70px;height:70px;background:#fff;border:3px solid var(--primary);border-radius:14px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);padding:10px;gap:4px;box-shadow:0 6px 14px rgba(102,126,234,.25)}
-.dice.rolling{animation:shake .4s ease-in-out infinite}
-@keyframes shake{0%,100%{transform:rotate(0) scale(1)}25%{transform:rotate(14deg) scale(1.08)}50%{transform:rotate(0) scale(.95)}75%{transform:rotate(-14deg) scale(1.08)}}
-.dot{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
-.dot::before{content:'';width:10px;height:10px;background:var(--primary);border-radius:50%;opacity:0;transition:opacity .12s}
-.dot.show::before{opacity:1}
-.word-status{font-size:1.3em;font-weight:bold;color:var(--primary);min-height:40px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s}
-.word-status.visible{opacity:1}
-.password-display{background:#f8f9fa;border:3px solid #e2e8f0;border-radius:15px;padding:28px;margin:25px 0;text-align:center;transition:.3s}
-.password-display.active{border-color:var(--primary);background:#fff;box-shadow:0 0 0 5px rgba(102,126,234,.12)}
-.password-text{font-size:1.5em;font-weight:700;color:#1a202c;font-family:'Courier New',monospace;word-break:break-word;line-height:1.6;user-select:all}
-.password-text.password-hidden{filter:blur(12px);user-select:none}
-.password-placeholder{color:#a0aec0;font-style:italic;font-family:'Segoe UI',sans-serif}
-.actions{display:grid;grid-template-columns:2.5fr 1fr;gap:15px;margin:25px 0}
-button{padding:18px;font-size:1.08em;font-weight:bold;border:none;border-radius:13px;cursor:pointer;transition:.25s;text-transform:uppercase;letter-spacing:.8px}
-.btn-generate{background:linear-gradient(135deg,var(--primary) 0%,var(--secondary) 100%);color:#fff;box-shadow:0 5px 18px rgba(102,126,234,.4)}
-.btn-generate:hover:not(:disabled){transform:translateY(-3px);box-shadow:0 8px 26px rgba(102,126,234,.5)}
-.btn-copy{background:#fff;border:3px solid var(--primary);color:var(--primary)}
-.btn-copy:hover:not(:disabled){background:#eef2ff}
-.btn-copy.copied{background:#10b981;border-color:#10b981;color:#fff}
-button:disabled{opacity:.6;cursor:not-allowed;transform:none!important}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;padding:24px 0;border-top:2px solid #e2e8f0;border-bottom:2px solid #e2e8f0;margin:22px 0}
-.stat{text-align:center}
-.stat-val{display:block;font-size:1.4em;font-weight:bold;color:var(--primary);margin-bottom:5px}
-.stat-label{font-size:.82em;color:#718096;text-transform:uppercase;font-weight:600}
-.info{background:linear-gradient(135deg,#eef2ff 0%,#e0e7ff 100%);border-left:5px solid var(--primary);padding:20px;margin:20px 0;border-radius:10px}
-.info h3{color:var(--primary);margin-bottom:12px;font-size:1.1em}
-.info p{color:#4a5568;font-size:.94em;line-height:1.65}
-.info strong{color:#2d3748}
-.panel{border:2px solid #e2e8f0;border-radius:15px;margin:18px 0;padding:0 18px}
-.panel>summary{cursor:pointer;font-weight:700;color:#4a5568;padding:16px 0;list-style-position:inside}
-.panel[open]>summary{border-bottom:1px solid #e2e8f0;margin-bottom:16px}
-.panel .controls{background:none;padding:0 0 18px;margin:0}
-.panel .separator-group{flex-wrap:wrap}
-.panel input[type=range]{align-self:stretch}
-.strength-line{text-align:center;color:#4a5568;margin:-8px 0 8px}
-.strength-line strong{color:var(--primary)}
-.dice-area{min-height:0;padding:18px 20px}
-.exit-link{display:inline-flex;align-items:center;color:#4a5568;font-size:.95em;font-weight:700;text-decoration:none;margin-bottom:20px;padding:8px 10px;border-radius:8px}
-.exit-link:hover{color:var(--primary);background:#eef2ff}
-@media (max-width:750px){.container{padding:24px}h1{font-size:1.6em}.actions{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.dice{width:55px;height:55px}.control-group{flex-direction:column;align-items:flex-start;gap:10px}.control-label{min-width:auto}}
-</style>
-<link rel="stylesheet" href="./style.css?v=1">
-<script src="/assets/quebec/quebec.js?v=1.1.1" defer></script>
+<meta name="theme-color" content="#F7F9FA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#08131F" media="(prefers-color-scheme: dark)">
+<link rel="preload" href="/assets/quebec/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/quebec/fonts/TeXGyreAdventor-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/quebec/tokens.css?v=1.2.0">
+<link rel="stylesheet" href="/assets/quebec/bundle.css?v=1.2.0">
+<script src="/assets/quebec/quebec.js?v=1.2.0" defer></script>
+<!-- /qb:head -->
+<link rel="stylesheet" href="./style.css?v=2">
 </head>
 <body class="qb">
+<!-- qb:header active="diceware" -->
 <a class="qb-btn qb-btn--primary qb-skip" href="#conteudo">Pular para o conteúdo</a>
 <div class="qb-header-wrap">
-<header class="qb-header"><div class="qb-container"><a class="qb-brand" href="/" aria-label="quebec ferramentas, início"><img class="qb-only-light" src="/assets/quebec/logos/nome_quebec.svg" alt="quebec" width="76" height="28"><img class="qb-only-dark" src="/assets/quebec/logos/nome_quebec_branco.svg" alt="quebec" width="76" height="28"><span class="qb-sub">ferramentas</span></a><nav class="qb-nav" aria-label="Principal"><a href="/">Catálogo</a><a href="/pdf/">Ferramentas PDF</a><a href="/diceware/" aria-current="page">Diceware</a><a href="/senhas/">Senhas</a><a href="/unidades/">Unidades</a></nav><button class="qb-menu-btn" type="button" aria-expanded="false" aria-controls="menu-celular-dice" aria-label="Menu"><span class="i-open" aria-hidden="true">☰</span><span class="i-close" aria-hidden="true">×</span></button></div></header>
-<nav class="qb-mobile-nav" id="menu-celular-dice" aria-label="Principal (celular)" hidden><a href="/">Catálogo</a><a href="/pdf/">Ferramentas PDF</a><a href="/diceware/" aria-current="page">Diceware</a><a href="/senhas/">Senhas</a><a href="/unidades/">Unidades</a></nav>
+  <header class="qb-header"><div class="qb-container">
+    <a class="qb-brand" href="/" aria-label="quebec ferramentas, início"><img class="qb-only-light" src="/assets/quebec/logos/nome_quebec.svg" alt="quebec" width="76" height="28"><img class="qb-only-dark" src="/assets/quebec/logos/nome_quebec_branco.svg" alt="quebec" width="76" height="28"><span class="qb-sub">ferramentas</span></a>
+    <nav class="qb-nav" aria-label="Principal"><a href="/">Catálogo</a><a href="/pdf/">PDF</a><a href="/diceware/" aria-current="page">Diceware</a><a href="/senhas/">Senhas</a><a href="/unidades/">Unidades</a><a href="/diagramas/">Diagramas</a><a href="/3d/">3D</a></nav>
+    <button class="qb-menu-btn" type="button" aria-expanded="false" aria-controls="menu-celular" aria-label="Menu"><span class="i-open"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#menu"/></svg></span><span class="i-close"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#close"/></svg></span></button>
+  </div></header>
+  <nav class="qb-mobile-nav" id="menu-celular" aria-label="Principal (celular)" hidden><a href="/">Catálogo</a><a href="/pdf/">PDF</a><a href="/diceware/" aria-current="page">Diceware</a><a href="/senhas/">Senhas</a><a href="/unidades/">Unidades</a><a href="/diagramas/">Diagramas</a><a href="/3d/">3D</a></nav>
 </div>
-<main class="container" id="conteudo">
+<!-- /qb:header -->
+
+<main class="qb-page qb-page--center" id="conteudo">
+<div class="qb-page-head">
 <p class="qb-eyebrow">// segurança · ferramenta local</p>
-<h1>Gerador de frase-senha</h1>
-<p class="subtitle">Cria uma senha forte e fácil de lembrar, feita de palavras sorteadas.<br><small>Tudo acontece no seu aparelho: nada é enviado à internet.</small></p>
+<h1 class="display-lg">Gerador de frase-senha</h1>
+<p class="qb-lead body-lg">Cria uma senha forte e fácil de lembrar, feita de palavras sorteadas. Tudo acontece no seu aparelho: nada é enviado à internet.</p>
+</div>
 
 <div class="password-display" id="passBox">
 <div class="password-text" id="passText" aria-label="Frase-senha gerada"><span class="password-placeholder">Toque em "Gerar senha" para começar</span></div>
 </div>
 
 <div class="actions">
-<button class="btn-generate" id="genBtn">🎲 Gerar senha</button>
-<button class="btn-copy" id="copyBtn" disabled>📋 Copiar</button>
+<button class="qb-btn qb-btn--primary" id="genBtn" type="button"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#dice"/></svg>Gerar senha</button>
+<button class="qb-btn qb-btn--secondary" id="copyBtn" type="button" disabled><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#copy"/></svg><span data-qb-label>Copiar</span></button>
 </div>
 
 <p class="strength-line" id="strengthLine" hidden>Força: <strong id="strength">-</strong> · <span id="words">0</span> palavras · <span id="chars">0</span> caracteres</p>
@@ -117,80 +58,88 @@ button:disabled{opacity:.6;cursor:not-allowed;transform:none!important}
 <div class="word-status" id="status"></div>
 </div>
 
-<details class="panel" id="optionsPanel">
-<summary>⚙️ Opções</summary>
+<details class="qb-disclosure" id="optionsPanel">
+<summary>Opções</summary>
 <div class="controls">
 <div class="control-group">
-<span class="control-label">Número de palavras:</span>
-<input type="range" id="wordSlider" min="4" max="12" value="7" aria-label="Número de palavras da frase-senha" aria-valuemin="4" aria-valuemax="12" aria-valuenow="7">
+<span class="control-label" id="wordLabel">Número de palavras</span>
+<input type="range" id="wordSlider" min="4" max="12" value="7" aria-labelledby="wordLabel" aria-valuemin="4" aria-valuemax="12" aria-valuenow="7">
 <span class="value-badge" id="wordValue">7</span>
 </div>
 <div class="control-group">
-<span class="control-label">Separador:</span>
-<div class="separator-group">
-<button class="sep-btn active" data-sep=" ">Espaço</button>
-<button class="sep-btn" data-sep="-">Hífen</button>
-<button class="sep-btn" data-sep="">Nenhum</button>
+<span class="control-label" id="sepLabel">Separador</span>
+<div class="qb-chips" role="group" aria-labelledby="sepLabel">
+<button class="qb-chip sep-btn active" type="button" data-sep=" " aria-pressed="true">Espaço</button>
+<button class="qb-chip sep-btn" type="button" data-sep="-" aria-pressed="false">Hífen</button>
+<button class="qb-chip sep-btn" type="button" data-sep="" aria-pressed="false">Nenhum</button>
 </div>
 </div>
 <div class="control-group">
-<span class="control-label">Site exige:</span>
-<div class="separator-group">
-<label style="display:flex;align-items:center;gap:6px;font-weight:600;cursor:pointer;"><input type="checkbox" id="reqUpper"> Maiúscula</label>
-<label style="display:flex;align-items:center;gap:6px;font-weight:600;cursor:pointer;"><input type="checkbox" id="reqNumber"> Número</label>
-<label style="display:flex;align-items:center;gap:6px;font-weight:600;cursor:pointer;"><input type="checkbox" id="reqSpecial"> Símbolo</label>
+<span class="control-label" id="reqLabel">Site exige</span>
+<div class="qb-chips" role="group" aria-labelledby="reqLabel">
+<label class="qb-check qb-check--inline"><input type="checkbox" id="reqUpper"> Maiúscula</label>
+<label class="qb-check qb-check--inline"><input type="checkbox" id="reqNumber"> Número</label>
+<label class="qb-check qb-check--inline"><input type="checkbox" id="reqSpecial"> Símbolo</label>
 </div>
 </div>
 <div class="control-group">
-<span class="control-label">Privacidade:</span>
-<label class="discreet-toggle"><input type="checkbox" id="discreetMode" aria-controls="diceRow passText"> 🙈 Modo discreto (esconde os dados e a senha na tela)</label>
+<span class="control-label">Privacidade</span>
+<label class="qb-check qb-check--inline"><input type="checkbox" id="discreetMode" aria-controls="diceRow passText"> Modo discreto (esconde os dados e a senha na tela)</label>
 </div>
 <div class="control-group">
-<span class="control-label">Lista de palavras:</span>
-<select id="listPreset" aria-label="Selecionar lista de palavras" style="padding:9px 12px;border:1px solid #cbd5e0;border-radius:9px;max-width:100%;font-weight:600"><option value="audit7776">Completa — 7.776 palavras (recomendada)</option><option value="audit1296">Curta — 1.296 palavras</option><option value="custom">Lista personalizada</option></select>
+<label class="control-label" for="listPreset">Lista de palavras</label>
+<span class="qb-select"><select class="qb-control" id="listPreset"><option value="audit7776">Completa — 7.776 palavras (recomendada)</option><option value="audit1296">Curta — 1.296 palavras</option><option value="custom">Lista personalizada</option></select></span>
 </div>
-<p id="listNotice" role="note" aria-live="polite" style="margin:-6px 0 16px;font-size:.88em;color:#4a5568"></p>
-<div class="control-group">
-<span class="control-label">Usar minha própria lista:</span>
-<label class="file-btn">📂 Carregar arquivo .txt
-<input type="file" id="wordlistFile" accept=".txt,text/plain" aria-label="Carregar lista de palavras em arquivo de texto" class="sr-only">
-</label>
-<button class="restore-list" id="restoreListBtn" type="button">↩ Voltar à lista selecionada</button>
-<span id="loadStatus" class="load-status" role="status" aria-live="polite"></span>
+<p id="listNotice" class="qb-help list-notice" role="note" aria-live="polite"></p>
+<div class="control-group control-group--stack">
+<span class="control-label">Usar minha própria lista</span>
+<div class="qb-drop is-compact">
+<input type="file" id="wordlistFile" accept=".txt,text/plain" aria-label="Carregar lista de palavras em arquivo de texto">
+<span class="qb-icon-tile" aria-hidden="true"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#upload"/></svg></span>
+<span class="qb-drop-text"><strong>Carregar arquivo .txt</strong><span class="qb-help">Uma palavra por linha · <span class="qb-drop-link">escolher</span> ou arrastar</span></span>
+</div>
+<div class="list-actions"><button class="qb-btn qb-btn--ghost qb-btn--sm" id="restoreListBtn" type="button"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#undo"/></svg>Voltar à lista selecionada</button><span id="loadStatus" class="qb-status" role="status" aria-live="polite"></span></div>
 </div>
 </div>
 </details>
 
-<details class="panel">
-<summary>ℹ️ Como funciona</summary>
-
-<div class="info">
-<h3>🔐 Por que é seguro</h3>
+<details class="qb-disclosure">
+<summary>Como funciona</summary>
+<div class="info-list">
+<section class="info">
+<h3>Por que é seguro</h3>
 <p>Cada palavra é sorteada com o gerador aleatório criptográfico do navegador (<code>crypto.getRandomValues()</code>), com todas as palavras igualmente prováveis. A senha é gerada no seu aparelho e não é enviada a nenhum servidor. O que torna a senha forte é o número de palavras: com a lista completa, 6 palavras já passam de 77 bits; o padrão de 7 dá cerca de 90 bits.</p>
-</div>
-
-<div class="info">
-<h3>🎲 Como os dados funcionam</h3>
+</section>
+<section class="info">
+<h3>Como os dados funcionam</h3>
 <p>Cada palavra corresponde a uma combinação de dados: <strong id="diceInfo">5</strong> dados por palavra com a lista selecionada. As faces são lidas como um número na base 6, que aponta a palavra na lista. As listas embutidas têm exatamente 6⁵ = 7.776 ou 6⁴ = 1.296 palavras, então toda rolagem vale. Numa lista personalizada de outro tamanho, as rolagens que caem fora da lista são refeitas (<strong id="rejectInfo">0%</strong> nesta lista), o que mantém o sorteio justo.</p>
-</div>
-
-<div class="info">
-<h3>⚠️ Cuidado com a tela</h3>
+</section>
+<section class="info">
+<h3>Cuidado com a tela</h3>
 <p>Quem vir os dados e conhecer a lista consegue reconstruir a senha. Evite gerar senhas com a tela compartilhada, gravada ou à vista de outras pessoas, ou ligue o modo discreto em Opções.</p>
-</div>
-
-<div class="info">
-<h3>📚 Sobre as listas</h3>
+</section>
+<section class="info">
+<h3>Sobre as listas</h3>
 <p>A lista <strong>completa</strong> (7.776 palavras) e a <strong>curta</strong> (1.296 palavras, 4–7 letras) foram geradas por um processo reproduzível: só palavras sem acento, nenhum par que difira por uma única letra, nenhuma palavra que seja o começo de outra e remoção de termos ofensivos. São <strong>auditadas (estrutural) + curadoria semântica por proxy automático</strong>: a revisão de conteúdo foi feita por modelos de IA, não por falante nativo. A lista curta tem critérios próprios e não é parte da completa. Detalhes em <code>AUDITORIA-LISTAS.md</code>.</p>
-</div>
-
-<div class="info">
-<h3>📊 Números da lista selecionada</h3>
+</section>
+<section class="info">
+<h3>Números da lista selecionada</h3>
 <p>Lista com <strong id="listSizeInfo">N</strong> palavras, ou <strong id="bitsPerWordInfo">N</strong> bits por palavra. Para chegar a ~77 bits, use pelo menos <strong id="recommendedWords">N</strong> palavras. A última senha gerada tem <strong id="entropy">0</strong> bits. Maiúscula, número e símbolo exigidos por sites não contam como ganho de força.</p>
+</section>
 </div>
 </details>
 </main>
-<footer class="qb-footer"><div class="qb-container qb-foot-inner"><div><img src="/assets/quebec/logos/nome_quebec_branco.svg" alt="quebec" width="65" height="24"><span>Diceware · frases-senha geradas no seu dispositivo</span></div><div class="qb-foot-actions"><a href="/">Catálogo</a><a href="/pdf/">Ferramentas PDF</a><div class="qb-theme" role="group" aria-label="Tema"><button type="button" data-qb-theme-set="system" aria-pressed="true">Sistema</button><button type="button" data-qb-theme-set="light" aria-pressed="false">Claro</button><button type="button" data-qb-theme-set="dark" aria-pressed="false">Escuro</button></div></div></div><div class="qb-container qb-foot-legal">© quebec · Roberto Milet</div></footer>
+
+<!-- qb:footer -->
+<footer class="qb-footer"><div class="qb-container">
+  <div class="qb-foot-grid">
+    <div class="qb-foot-brand"><img src="/assets/quebec/logos/nome_quebec_branco.svg" alt="quebec" width="65" height="24"><p>Ferramentas e aplicativos de engenharia e software.</p></div>
+    <div><h2 class="qb-foot-title">// ferramentas</h2><ul><li><a href="/pdf/">Ferramentas PDF</a></li><li><a href="/diceware/">Diceware</a></li><li><a href="/senhas/">Senhas aleatórias</a></li><li><a href="/unidades/">Conversor de unidades</a></li><li><a href="/diagramas/">Editor de diagramas</a></li><li><a href="/3d/">Visualizador 3D</a></li></ul></div>
+    <div><h2 class="qb-foot-title">// apps</h2><ul><li><a href="https://klipper.quebec.com.br/" rel="noopener noreferrer">Klipper</a></li><li><span class="qb-soon">FlowCalc · em breve</span></li></ul></div>
+  </div>
+  <div class="qb-legal"><span>© <span data-qb-year>2026</span> quebec · Roberto Milet</span><div class="qb-theme" role="group" aria-label="Tema"><button type="button" data-qb-theme-set="system" aria-pressed="true"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#monitor"/></svg>Sistema</button><button type="button" data-qb-theme-set="light" aria-pressed="false"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#sun"/></svg>Claro</button><button type="button" data-qb-theme-set="dark" aria-pressed="false"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#moon"/></svg>Escuro</button></div></div>
+</div></footer>
+<!-- /qb:footer -->
 
 <script src="wordlists.js"></script>
 <script>
@@ -386,7 +335,7 @@ async function generatePassword(){
   const pass = applyRequirements(chosen).join(separator);
   UI.passText.textContent = pass;
   UI.passBox.classList.add('active');
-  UI.status.textContent = '✅ Senha gerada com sucesso!';
+  UI.status.textContent = 'Senha gerada.';
   updateStats(chosen.length, pass.length);
   UI.genBtn.disabled = false;
   UI.copyBtn.disabled = false;
@@ -394,36 +343,13 @@ async function generatePassword(){
 
 UI.wordSlider.addEventListener('input', e=>{ UI.wordValue.textContent = e.target.value; UI.wordSlider.setAttribute('aria-valuenow', e.target.value); });
 UI.genBtn.addEventListener('click', generatePassword);
-UI.copyBtn.addEventListener('click', async ()=>{
-  try {
-    const value = UI.passText.textContent;
-    if (navigator.clipboard && window.isSecureContext) {
-      await navigator.clipboard.writeText(value);
-    } else {
-      const field = document.createElement('textarea');
-      field.value = value;
-      field.setAttribute('readonly', '');
-      field.style.position = 'fixed'; field.style.opacity = '0';
-      document.body.appendChild(field); field.select();
-      const copied = document.execCommand('copy');
-      field.remove();
-      if (!copied) throw new Error('Clipboard indisponível');
-    }
-    UI.copyBtn.textContent = '✓ COPIADO!';
-    UI.copyBtn.classList.add('copied');
-    setTimeout(()=>{
-      UI.copyBtn.textContent = '📋 Copiar';
-      UI.copyBtn.classList.remove('copied');
-    }, 2200);
-  } catch {
-    UI.copyBtn.textContent = '✗ FALHOU';
-    setTimeout(()=>{ UI.copyBtn.textContent = '📋 Copiar'; }, 2200);
-  }
+UI.copyBtn.addEventListener('click', ()=>{
+  // Botão de copiar do sistema: clipboard com alternativa e estado confirmado (.is-done).
+  QB.copy(UI.copyBtn, UI.passText.textContent, { done: 'Copiado', fail: 'Falhou' });
 });
 UI.sepBtns.forEach(btn=>{
   btn.addEventListener('click', ()=>{
-    UI.sepBtns.forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
+    UI.sepBtns.forEach(b=>{ b.classList.toggle('active', b === btn); b.setAttribute('aria-pressed', String(b === btn)); });
     separator = btn.dataset.sep;
   });
 });
@@ -448,7 +374,7 @@ function restoreSelectedList(){
   loadWordlist(preset.words);
   const status = document.getElementById('loadStatus');
   status.textContent = '';
-  status.classList.remove('ok');
+  status.classList.remove('is-ok', 'is-error');
   document.getElementById('wordlistFile').value = '';
 }
 document.getElementById('listPreset').addEventListener('change', restoreSelectedList);
@@ -468,14 +394,14 @@ document.getElementById('wordlistFile').addEventListener('change', async e => {
       activeListId = 'custom'; activeListName = file.name;
       document.getElementById('listNotice').textContent = '';
       status.textContent = `✓ ${file.name} — ${N.toLocaleString('pt-BR')} palavras únicas`;
-      status.classList.add('ok');
+      status.classList.add('is-ok');
     } else {
       status.textContent = '✗ arquivo sem palavras válidas';
-      status.classList.remove('ok');
+      status.classList.remove('is-ok'); status.classList.add('is-error');
     }
   } catch {
     status.textContent = '✗ falha ao ler o arquivo';
-    status.classList.remove('ok');
+    status.classList.remove('is-ok'); status.classList.add('is-error');
   }
 });
 

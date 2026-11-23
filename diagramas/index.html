@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Editor de diagramas | quebec</title>
+  <meta name="description" content="Escreva fluxogramas e diagramas em Mermaid e baixe em SVG ou PNG, no navegador.">
+  <link rel="canonical" href="https://ferramentas.quebec.com.br/diagramas/">
+  <!-- qb:head -->
+<script>(function(){var s;try{s=localStorage.getItem('qb-theme')}catch(e){}document.documentElement.setAttribute('data-theme',s==='light'||s==='dark'?s:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))})()</script>
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/quebec/logos/favicon_16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/quebec/logos/favicon_32.png">
+<link rel="apple-touch-icon" href="/assets/quebec/logos/apple-touch-icon.png">
+<meta name="theme-color" content="#F7F9FA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#08131F" media="(prefers-color-scheme: dark)">
+<link rel="preload" href="/assets/quebec/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/quebec/fonts/TeXGyreAdventor-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/quebec/tokens.css?v=1.2.0">
+<link rel="stylesheet" href="/assets/quebec/bundle.css?v=1.2.0">
+<script src="/assets/quebec/quebec.js?v=1.2.0" defer></script>
+<!-- /qb:head -->
+  <style>
+    .editor { display: grid; margin-top: var(--space-5); grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: var(--space-6); align-items: start; }
+    .editor textarea { min-height: 420px; font: 400 14px/22px var(--font-mono); font-variant-ligatures: none; tab-size: 2; }
+    .qb-panel > .examples { margin-top: 0; }
+    .preview { min-height: 420px; display: grid; place-items: center; padding: var(--space-6); border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface-sunken); overflow: auto; }
+    .preview svg { max-width: 100%; height: auto; }
+    @media (max-width: 860px) { .editor { grid-template-columns: 1fr; } .editor textarea, .preview { min-height: 280px; } }
+  </style>
+  <script type="module" src="./app.js?v=1"></script>
+</head>
+<body class="qb">
+<!-- qb:header active="diagramas" -->
+<a class="qb-btn qb-btn--primary qb-skip" href="#conteudo">Pular para o conteúdo</a>
+<div class="qb-header-wrap">
+  <header class="qb-header"><div class="qb-container">
+    <a class="qb-brand" href="/" aria-label="quebec ferramentas, início"><img class="qb-only-light" src="/assets/quebec/logos/nome_quebec.svg" alt="quebec" width="76" height="28"><img class="qb-only-dark" src="/assets/quebec/logos/nome_quebec_branco.svg" alt="quebec" width="76" height="28"><span class="qb-sub">ferramentas</span></a>
+    <nav class="qb-nav" aria-label="Principal"><a href="/">Catálogo</a><a href="/pdf/">PDF</a><a href="/diceware/">Diceware</a><a href="/senhas/">Senhas</a><a href="/unidades/">Unidades</a><a href="/diagramas/" aria-current="page">Diagramas</a><a href="/3d/">3D</a></nav>
+    <button class="qb-menu-btn" type="button" aria-expanded="false" aria-controls="menu-celular" aria-label="Menu"><span class="i-open"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#menu"/></svg></span><span class="i-close"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#close"/></svg></span></button>
+  </div></header>
+  <nav class="qb-mobile-nav" id="menu-celular" aria-label="Principal (celular)" hidden><a href="/">Catálogo</a><a href="/pdf/">PDF</a><a href="/diceware/">Diceware</a><a href="/senhas/">Senhas</a><a href="/unidades/">Unidades</a><a href="/diagramas/" aria-current="page">Diagramas</a><a href="/3d/">3D</a></nav>
+</div>
+<!-- /qb:header -->
+
+<main class="qb-page qb-page--wide" id="conteudo" data-qb-accent="violeta">
+  <div class="qb-page-head">
+    <p class="qb-eyebrow">// documentos · ferramenta local</p>
+    <h1 class="display-lg">Editor de diagramas</h1>
+    <p class="qb-lead body-lg">Escreva fluxogramas, sequências e diagramas de estado em Mermaid. A prévia atualiza enquanto você digita, e o desenho é gerado no seu dispositivo.</p>
+  </div>
+
+  <div class="qb-panel">
+    <div class="qb-actions examples" role="group" aria-label="Exemplos">
+      <button class="qb-chip" type="button" data-example="fluxo" aria-pressed="true">Fluxograma</button>
+      <button class="qb-chip" type="button" data-example="sequencia" aria-pressed="false">Sequência</button>
+      <button class="qb-chip" type="button" data-example="estado" aria-pressed="false">Estados</button>
+    </div>
+    <div class="editor">
+      <div><label class="qb-label" for="source">Código Mermaid</label><textarea class="qb-control" id="source" spellcheck="false" autocomplete="off" aria-describedby="status"></textarea></div>
+      <div><span class="qb-label" id="previewLabel">Prévia</span><div class="preview" id="preview" role="img" aria-labelledby="previewLabel"></div></div>
+    </div>
+    <div class="qb-actions">
+      <button class="qb-btn qb-btn--primary" type="button" id="svg" disabled><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#download"/></svg>Baixar SVG</button>
+      <button class="qb-btn qb-btn--secondary" type="button" id="png" disabled><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#image-export"/></svg>Baixar PNG</button>
+      <button class="qb-btn qb-btn--secondary" type="button" id="copy"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#copy"/></svg><span data-qb-label>Copiar código</span></button>
+    </div>
+    <p class="qb-status" id="status" role="status" aria-live="polite"></p>
+  </div>
+
+  <p class="qb-help">Sintaxe na <a href="https://mermaid.js.org/intro/syntax-reference.html" target="_blank" rel="noopener noreferrer">referência do Mermaid</a>. O código fica salvo só neste navegador. Motor: <a href="https://mermaid.js.org/" target="_blank" rel="noopener noreferrer">Mermaid</a> (MIT).</p>
+  <p class="qb-page-foot"><a href="/">← Voltar ao catálogo</a></p>
+</main>
+
+<!-- qb:footer -->
+<footer class="qb-footer"><div class="qb-container">
+  <div class="qb-foot-grid">
+    <div class="qb-foot-brand"><img src="/assets/quebec/logos/nome_quebec_branco.svg" alt="quebec" width="65" height="24"><p>Ferramentas e aplicativos de engenharia e software.</p></div>
+    <div><h2 class="qb-foot-title">// ferramentas</h2><ul><li><a href="/pdf/">Ferramentas PDF</a></li><li><a href="/diceware/">Diceware</a></li><li><a href="/senhas/">Senhas aleatórias</a></li><li><a href="/unidades/">Conversor de unidades</a></li><li><a href="/diagramas/">Editor de diagramas</a></li><li><a href="/3d/">Visualizador 3D</a></li></ul></div>
+    <div><h2 class="qb-foot-title">// apps</h2><ul><li><a href="https://klipper.quebec.com.br/" rel="noopener noreferrer">Klipper</a></li><li><span class="qb-soon">FlowCalc · em breve</span></li></ul></div>
+  </div>
+  <div class="qb-legal"><span>© <span data-qb-year>2026</span> quebec · Roberto Milet</span><div class="qb-theme" role="group" aria-label="Tema"><button type="button" data-qb-theme-set="system" aria-pressed="true"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#monitor"/></svg>Sistema</button><button type="button" data-qb-theme-set="light" aria-pressed="false"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#sun"/></svg>Claro</button><button type="button" data-qb-theme-set="dark" aria-pressed="false"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#moon"/></svg>Escuro</button></div></div>
+</div></footer>
+<!-- /qb:footer -->
+</body>
+</html>

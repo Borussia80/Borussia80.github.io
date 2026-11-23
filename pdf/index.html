@@ -3,66 +3,138 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#F7F9FA" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#08131F" media="(prefers-color-scheme: dark)">
-  <meta name="description" content="Ferramentas para unir, dividir, organizar, editar e converter PDFs no navegador.">
   <title>Ferramentas PDF | quebec</title>
+  <meta name="description" content="Ferramentas para unir, dividir, organizar, editar e converter PDFs no navegador.">
   <link rel="canonical" href="https://ferramentas.quebec.com.br/pdf/">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/quebec/logos/favicon_16.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/quebec/logos/favicon_32.png">
-  <link rel="apple-touch-icon" href="/assets/quebec/logos/apple-touch-icon.png">
-  <script>(function(){var s;try{s=localStorage.getItem('qb-theme')}catch(e){}document.documentElement.setAttribute('data-theme',s==='light'||s==='dark'?s:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))})()</script>
-  <link rel="stylesheet" href="/assets/quebec/tokens.css?v=1.1.1">
-  <link rel="stylesheet" href="/assets/quebec/bundle.css?v=1.1.1">
-  <link rel="stylesheet" href="./style.css?v=5">
-  <script src="/assets/quebec/quebec.js?v=1.1.1" defer></script>
+  <!-- qb:head -->
+<script>(function(){var s;try{s=localStorage.getItem('qb-theme')}catch(e){}document.documentElement.setAttribute('data-theme',s==='light'||s==='dark'?s:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))})()</script>
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/quebec/logos/favicon_16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/quebec/logos/favicon_32.png">
+<link rel="apple-touch-icon" href="/assets/quebec/logos/apple-touch-icon.png">
+<meta name="theme-color" content="#F7F9FA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#08131F" media="(prefers-color-scheme: dark)">
+<link rel="preload" href="/assets/quebec/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/quebec/fonts/TeXGyreAdventor-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/quebec/tokens.css?v=1.2.0">
+<link rel="stylesheet" href="/assets/quebec/bundle.css?v=1.2.0">
+<script src="/assets/quebec/quebec.js?v=1.2.0" defer></script>
+<!-- /qb:head -->
+  <link rel="stylesheet" href="./style.css?v=6">
   <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-  <script type="module" src="./app.js?v=3"></script>
+  <script type="module" src="./app.js?v=4"></script>
 </head>
 <body class="qb">
+<!-- qb:header active="pdf" -->
 <a class="qb-btn qb-btn--primary qb-skip" href="#conteudo">Pular para o conteúdo</a>
 <div class="qb-header-wrap">
   <header class="qb-header"><div class="qb-container">
     <a class="qb-brand" href="/" aria-label="quebec ferramentas, início"><img class="qb-only-light" src="/assets/quebec/logos/nome_quebec.svg" alt="quebec" width="76" height="28"><img class="qb-only-dark" src="/assets/quebec/logos/nome_quebec_branco.svg" alt="quebec" width="76" height="28"><span class="qb-sub">ferramentas</span></a>
-    <nav class="qb-nav" aria-label="Principal"><a href="/">Catálogo</a><a href="/pdf/" aria-current="page">Ferramentas PDF</a><a href="/diceware/">Diceware</a><a href="/senhas/">Senhas</a><a href="/unidades/">Unidades</a></nav>
-    
-    <button class="qb-menu-btn" type="button" aria-expanded="false" aria-controls="menu-celular-pdf" aria-label="Menu"><span class="i-open" aria-hidden="true">☰</span><span class="i-close" aria-hidden="true">×</span></button>
+    <nav class="qb-nav" aria-label="Principal"><a href="/">Catálogo</a><a href="/pdf/" aria-current="page">PDF</a><a href="/diceware/">Diceware</a><a href="/senhas/">Senhas</a><a href="/unidades/">Unidades</a><a href="/diagramas/">Diagramas</a><a href="/3d/">3D</a></nav>
+    <button class="qb-menu-btn" type="button" aria-expanded="false" aria-controls="menu-celular" aria-label="Menu"><span class="i-open"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#menu"/></svg></span><span class="i-close"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#close"/></svg></span></button>
   </div></header>
-  <nav class="qb-mobile-nav" id="menu-celular-pdf" aria-label="Principal (celular)" hidden><a href="/">Catálogo</a><a href="/pdf/" aria-current="page">Ferramentas PDF</a><a href="/diceware/">Diceware</a><a href="/senhas/">Senhas</a><a href="/unidades/">Unidades</a></nav>
+  <nav class="qb-mobile-nav" id="menu-celular" aria-label="Principal (celular)" hidden><a href="/">Catálogo</a><a href="/pdf/" aria-current="page">PDF</a><a href="/diceware/">Diceware</a><a href="/senhas/">Senhas</a><a href="/unidades/">Unidades</a><a href="/diagramas/">Diagramas</a><a href="/3d/">3D</a></nav>
 </div>
-  <main class="shell pdf-main" id="conteudo">
-    <section class="hero"><div><p class="eyebrow">// FERRAMENTAS PDF · SEM CONTA</p><h1>Seu PDF pronto em<br><em>poucos passos.</em></h1><p>Escolha uma tarefa, adicione seus arquivos e baixe o resultado. Simples no computador ou no celular.</p><a class="hero-cta" href="#catalog">Escolher ferramenta</a><div class="privacy"><span aria-hidden="true">◈</span> Seus arquivos são processados no navegador, sem envio ao servidor da QUEBEC.</div></div></section>
-    <section class="catalog" id="catalog" aria-label="Catálogo de ferramentas PDF"><div class="catalog-head"><div><p class="eyebrow">ESCOLHA SUA FERRAMENTA</p><h2>O que você quer fazer?</h2></div><span>10 ferramentas disponíveis</span></div><div class="filters" role="group" aria-label="Filtrar ferramentas"><button class="filter active" type="button" data-filter="all" aria-pressed="true">Todas</button><button class="filter" type="button" data-filter="organize" aria-pressed="false">Organizar</button><button class="filter" type="button" data-filter="convert" aria-pressed="false">Converter</button><button class="filter" type="button" data-filter="edit" aria-pressed="false">Editar</button><button class="filter" type="button" data-filter="read" aria-pressed="false">Consultar</button></div><div class="tool-grid">
-      <button class="tool-card" data-tool="merge" data-category="organize" type="button"><span class="tool-icon violet" aria-hidden="true">▤</span><strong>Unir PDF</strong><span>Combine arquivos na ordem que você escolher.</span></button>
-      <button class="tool-card" data-tool="split" data-category="organize" type="button"><span class="tool-icon orange" aria-hidden="true">◫</span><strong>Dividir PDF</strong><span>Separe páginas por intervalos em um ZIP.</span></button>
-      <button class="tool-card" data-tool="organize" data-category="organize" type="button"><span class="tool-icon blue" aria-hidden="true">▦</span><strong>Organizar PDF</strong><span>Reordene ou remova páginas.</span></button>
-      <button class="tool-card" data-tool="extract" data-category="organize" type="button"><span class="tool-icon green" aria-hidden="true">▣</span><strong>Extrair páginas</strong><span>Selecione e baixe só as páginas desejadas.</span></button>
-      <button class="tool-card" data-tool="rotate" data-category="organize" type="button"><span class="tool-icon coral" aria-hidden="true">⟳</span><strong>Girar PDF</strong><span>Corrija a orientação de cada página.</span></button>
-      <button class="tool-card" data-tool="imageToPdf" data-category="convert" type="button"><span class="tool-icon amber" aria-hidden="true">▧</span><strong>Imagem para PDF</strong><span>Transforme JPG e PNG em PDF.</span></button>
-      <button class="tool-card" data-tool="pdfToPng" data-category="convert" type="button"><span class="tool-icon cyan" aria-hidden="true">▥</span><strong>PDF para imagem</strong><span>Exporte páginas em PNG ou JPG, uma ou várias.</span></button>
-      <button class="tool-card" data-tool="edit" data-category="edit" type="button"><span class="tool-icon pink" aria-hidden="true">✎</span><strong>Adicionar texto</strong><span>Insira texto em uma cópia do PDF.</span></button>
-      <button class="tool-card" data-tool="number" data-category="edit" type="button"><span class="tool-icon coral" aria-hidden="true">①</span><strong>Numerar páginas</strong><span>Escolha o número inicial e a posição.</span></button>
-      <button class="tool-card" data-tool="read" data-category="read" type="button"><span class="tool-icon teal" aria-hidden="true">⌕</span><strong>Perguntar ao PDF</strong><span>Encontre trechos com indicação de página.</span></button>
-    </div></section>
-    <section class="workspace" id="workspace" aria-label="Área de trabalho PDF" hidden>
-      <button id="backToTools" class="back-to-tools" type="button">← Ver ferramentas</button>
-      <div class="toolbar"><div><p class="eyebrow">Área de trabalho</p><h2 id="workflowTitle">Unir PDF</h2><p id="workflowDescription">Combine seus arquivos na ordem desejada.</p></div><div class="toolbar-actions"><button class="secondary" id="clear" type="button" disabled>Limpar</button><button class="primary" id="exportAll" type="button" disabled>Baixar PDF</button></div></div>
-      <div class="drop" id="drop"><input type="file" id="files" accept="application/pdf,.pdf" multiple aria-label="Selecionar arquivos"><div class="drop-icon" aria-hidden="true">＋</div><strong id="dropTitle">Selecione os PDFs</strong><span><label for="files">Escolher arquivos</label> ou arraste para cá · <span id="dropHint">PDF até 30 MB por arquivo</span></span></div>
-      <div id="work" class="work" hidden>
-        <div class="work-heading"><div><h3>Páginas <span id="count">0</span></h3><p id="fileInfo">Selecione e organize antes de exportar.</p></div><div class="inline-actions"><button id="selectAll" class="secondary" type="button" hidden>Selecionar todas</button><button id="selectNone" class="secondary" type="button" hidden>Limpar seleção</button><button id="addMore" class="secondary" type="button">Adicionar arquivos</button><button id="exportSelected" class="secondary" type="button">Baixar selecionadas</button></div></div>
-        <div class="page-grid" id="pages" aria-live="polite"></div>
+<!-- /qb:header -->
+
+<main class="qb-page qb-page--wide pdf-main" id="conteudo" data-qb-accent="violeta">
+  <section class="hero">
+    <p class="qb-eyebrow">// ferramentas pdf · sem conta</p>
+    <h1>Seu PDF pronto em<br><span class="qb-accent-text">poucos passos.</span></h1>
+    <p class="qb-lead body-lg">Escolha uma tarefa, adicione seus arquivos e baixe o resultado. Simples no computador ou no celular.</p>
+    <a class="qb-btn qb-btn--primary" href="#catalog">Escolher ferramenta</a>
+    <p class="qb-note privacy"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#shield"/></svg> Seus arquivos são processados no navegador, sem envio ao servidor da quebec.</p>
+  </section>
+
+  <section class="catalog" id="catalog" aria-labelledby="catalog-title">
+    <div class="catalog-head">
+      <div><p class="qb-eyebrow">// escolha sua ferramenta</p><h2 class="h2" id="catalog-title">O que você quer fazer?</h2></div>
+      <span class="qb-help">10 ferramentas disponíveis</span>
+    </div>
+    <div class="qb-chips" role="group" aria-label="Filtrar ferramentas"><button class="qb-chip" type="button" data-filter="all" aria-pressed="true">Todas</button><button class="qb-chip" type="button" data-filter="organize" aria-pressed="false">Organizar</button><button class="qb-chip" type="button" data-filter="convert" aria-pressed="false">Converter</button><button class="qb-chip" type="button" data-filter="edit" aria-pressed="false">Editar</button><button class="qb-chip" type="button" data-filter="read" aria-pressed="false">Consultar</button></div>
+    <div class="qb-grid qb-grid--4">
+      <button class="qb-card" data-tool="merge" data-category="organize" type="button"><span class="qb-icon-tile" aria-hidden="true"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#merge"/></svg></span><strong class="h3">Unir PDF</strong><span class="qb-card-text">Combine arquivos na ordem que você escolher.</span></button>
+      <button class="qb-card" data-tool="split" data-category="organize" type="button"><span class="qb-icon-tile" aria-hidden="true"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#split"/></svg></span><strong class="h3">Dividir PDF</strong><span class="qb-card-text">Separe páginas por intervalos em um ZIP.</span></button>
+      <button class="qb-card" data-tool="organize" data-category="organize" type="button"><span class="qb-icon-tile" aria-hidden="true"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#grid"/></svg></span><strong class="h3">Organizar PDF</strong><span class="qb-card-text">Reordene ou remova páginas.</span></button>
+      <button class="qb-card" data-tool="extract" data-category="organize" type="button"><span class="qb-icon-tile" aria-hidden="true"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#extract"/></svg></span><strong class="h3">Extrair páginas</strong><span class="qb-card-text">Selecione e baixe só as páginas desejadas.</span></button>
+      <button class="qb-card" data-tool="rotate" data-category="organize" type="button"><span class="qb-icon-tile" aria-hidden="true"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#rotate"/></svg></span><strong class="h3">Girar PDF</strong><span class="qb-card-text">Corrija a orientação de cada página.</span></button>
+      <button class="qb-card" data-tool="imageToPdf" data-category="convert" type="button"><span class="qb-icon-tile" aria-hidden="true"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#image"/></svg></span><strong class="h3">Imagem para PDF</strong><span class="qb-card-text">Transforme JPG e PNG em PDF.</span></button>
+      <button class="qb-card" data-tool="pdfToPng" data-category="convert" type="button"><span class="qb-icon-tile" aria-hidden="true"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#image-export"/></svg></span><strong class="h3">PDF para imagem</strong><span class="qb-card-text">Exporte páginas em PNG ou JPG, uma ou várias.</span></button>
+      <button class="qb-card" data-tool="edit" data-category="edit" type="button"><span class="qb-icon-tile" aria-hidden="true"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#text"/></svg></span><strong class="h3">Adicionar texto</strong><span class="qb-card-text">Insira texto em uma cópia do PDF.</span></button>
+      <button class="qb-card" data-tool="number" data-category="edit" type="button"><span class="qb-icon-tile" aria-hidden="true"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#hash"/></svg></span><strong class="h3">Numerar páginas</strong><span class="qb-card-text">Escolha o número inicial e a posição.</span></button>
+      <button class="qb-card" data-tool="read" data-category="read" type="button"><span class="qb-icon-tile" aria-hidden="true"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#chat"/></svg></span><strong class="h3">Perguntar ao PDF</strong><span class="qb-card-text">Encontre trechos com indicação de página.</span></button>
+    </div>
+  </section>
+
+  <section class="qb-tool workspace" id="workspace" aria-label="Área de trabalho PDF" hidden>
+    <button id="backToTools" class="qb-btn qb-btn--ghost qb-btn--sm back-to-tools" type="button"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#arrow-left"/></svg>Ver ferramentas</button>
+    <div class="toolbar">
+      <div><p class="qb-eyebrow">// área de trabalho</p><h2 class="h2" id="workflowTitle">Unir PDF</h2><p class="qb-help" id="workflowDescription">Combine seus arquivos na ordem desejada.</p></div>
+      <div class="qb-actions"><button class="qb-btn qb-btn--secondary" id="clear" type="button" disabled>Limpar</button><button class="qb-btn qb-btn--primary" id="exportAll" type="button" disabled><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#download"/></svg><span data-qb-label>Baixar PDF</span></button></div>
+    </div>
+    <div class="qb-drop" id="drop">
+      <input type="file" id="files" accept="application/pdf,.pdf" multiple aria-label="Selecionar arquivos" aria-describedby="dropHint">
+      <span class="qb-icon-tile" aria-hidden="true"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#upload"/></svg></span>
+      <strong id="dropTitle">Selecione os PDFs</strong>
+      <p class="qb-help"><span class="qb-drop-link">Escolher arquivos</span> ou arraste para cá · <span id="dropHint">PDF até 30 MB por arquivo</span></p>
+    </div>
+    <div id="work" class="work" hidden>
+      <div class="work-heading">
+        <div><h3 class="h3">Páginas <span id="count">0</span></h3><p class="qb-help" id="fileInfo">Selecione e organize antes de exportar.</p></div>
+        <div class="qb-actions"><button id="selectAll" class="qb-btn qb-btn--secondary qb-btn--sm" type="button" hidden>Selecionar todas</button><button id="selectNone" class="qb-btn qb-btn--secondary qb-btn--sm" type="button" hidden>Limpar seleção</button><button id="addMore" class="qb-btn qb-btn--secondary qb-btn--sm" type="button">Adicionar arquivos</button><button id="exportSelected" class="qb-btn qb-btn--secondary qb-btn--sm" type="button">Baixar selecionadas</button></div>
       </div>
-      <div id="splitBox" class="split-box" hidden><label for="splitRanges">Intervalos para dividir</label><input id="splitRanges" type="text" placeholder="Ex.: 1-3, 4-6, 7"><p>Cada intervalo vira um PDF separado dentro de um ZIP. Use a numeração das páginas acima.</p><button id="exportSplit" class="secondary" type="button" disabled>Baixar partes em ZIP</button></div>
-      <p class="status" id="status" role="status" aria-live="polite"></p>
-    </section>
-    <section class="panels" id="tools" hidden>
-      <article class="panel" data-panel="edit" hidden><div class="panel-kicker">01 / EDIÇÃO</div><h2>Adicionar texto</h2><p>Clique em uma página e marque a posição no preview. O texto será inserido na cópia exportada.</p><label for="annotation">Texto</label><textarea id="annotation" rows="3" placeholder="Ex.: Revisado em 20/11/2026" maxlength="500"></textarea><div class="pair"><label>Posição X (%)<input id="x" type="number" min="0" max="95" value="10"></label><label>Posição Y (%)<input id="y" type="number" min="5" max="100" value="15"></label></div><div class="pair"><label>Tamanho<input id="fontSize" type="number" min="8" max="48" value="16"></label><label>Cor<input id="color" type="color" value="#162b47"></label></div><p class="hint">Página ativa: <strong id="activePage">nenhuma</strong>. Coordenadas medidas a partir do canto superior esquerdo. O texto adicionado é incorporado visualmente ao PDF.</p></article>
-      <article class="panel" data-panel="read" hidden><div class="panel-kicker">02 / CONVERSA COM O DOCUMENTO</div><h2>Pergunte ao PDF</h2><p>Encontre trechos relevantes e a página de origem. A consulta usa o texto extraído no seu dispositivo.</p><div class="conversation" id="conversation" aria-live="polite"><div class="message assistant">Carregue um PDF com texto selecionável e pergunte sobre seu conteúdo.</div></div><form id="askForm" class="ask"><label class="sr-only" for="question">Pergunta sobre o PDF</label><input id="question" type="search" placeholder="O que o documento diz sobre…?" maxlength="240" autocomplete="off"><button class="primary" type="submit">Buscar</button></form><p class="hint">Busca contextual, sem IA generativa ou OCR. PDFs digitalizados precisam passar por OCR para que o texto seja consultável.</p></article>
-      <article class="panel" data-panel="pdfToPng" hidden><div class="panel-kicker">CONVERSÃO</div><h2>PDF para imagem</h2><p>Escolha o formato e exporte uma página ou todas. Várias imagens serão entregues em ZIP.</p><div class="pair"><label for="imageFormat">Formato<select id="imageFormat"><option value="png">PNG · sem perda</option><option value="jpeg">JPG · arquivo menor</option></select></label><label for="imageScope">Páginas<select id="imageScope"><option value="all">Todas as páginas</option><option value="active">Página ativa</option><option value="selected">Páginas selecionadas</option></select></label></div><button class="primary wide panel-action" id="exportImages" type="button" disabled>Converter em imagens</button><p class="hint">Clique na miniatura para ativar uma página. Para usar “selecionadas”, marque as caixas nas miniaturas. Limite de 100 imagens por conversão.</p></article>
-      <article class="panel" data-panel="number" hidden><div class="panel-kicker">EDIÇÃO</div><h2>Numerar páginas</h2><p>Adicione números visíveis em uma cópia do PDF.</p><div class="pair"><label for="numberStart">Começar em<input id="numberStart" type="number" min="1" max="999999" value="1"></label><label for="numberPosition">Posição<select id="numberPosition"><option value="bottom-right">Inferior direita</option><option value="bottom-center">Inferior centro</option><option value="bottom-left">Inferior esquerda</option><option value="top-right">Superior direita</option><option value="top-center">Superior centro</option><option value="top-left">Superior esquerda</option></select></label></div><p class="hint">A numeração segue a ordem das miniaturas, inclusive após mover ou remover páginas.</p></article>
-    </section>
-    <div class="credit">Inspirado nos fluxos de trabalho do <a href="https://github.com/Stirling-Tools/Stirling-PDF" target="_blank" rel="noopener noreferrer">Stirling-PDF</a>. Esta implementação é independente e executa um conjunto de operações no navegador.</div>
-  </main>
-  <footer class="qb-footer"><div class="qb-container qb-foot-inner"><div><img src="/assets/quebec/logos/nome_quebec_branco.svg" alt="quebec" width="65" height="24"><span>Ferramentas PDF · arquivos processados no navegador</span></div><div class="qb-foot-actions"><a href="/">Catálogo</a><a href="/diceware/">Diceware</a><div class="qb-theme" role="group" aria-label="Tema"><button type="button" data-qb-theme-set="system" aria-pressed="true">Sistema</button><button type="button" data-qb-theme-set="light" aria-pressed="false">Claro</button><button type="button" data-qb-theme-set="dark" aria-pressed="false">Escuro</button></div></div></div><div class="qb-container qb-foot-legal">© <span id="year"></span> quebec · Roberto Milet</div></footer>
+      <div class="page-grid" id="pages" aria-live="polite"></div>
+    </div>
+    <div id="splitBox" class="split-box" hidden>
+      <label class="qb-label" for="splitRanges">Intervalos para dividir</label>
+      <input class="qb-control" id="splitRanges" type="text" placeholder="Ex.: 1-3, 4-6, 7" aria-describedby="splitHelp">
+      <p class="qb-help" id="splitHelp">Cada intervalo vira um PDF separado dentro de um ZIP. Use a numeração das páginas acima.</p>
+      <button id="exportSplit" class="qb-btn qb-btn--secondary" type="button" disabled>Baixar partes em ZIP</button>
+    </div>
+    <p class="qb-status" id="status" role="status" aria-live="polite"></p>
+  </section>
+
+  <section class="panels" id="tools" hidden>
+    <article class="qb-panel" data-panel="edit" hidden>
+      <p class="qb-eyebrow">// edição</p><h2 class="h2">Adicionar texto</h2>
+      <p class="qb-help">Clique em uma página e marque a posição no preview. O texto será inserido na cópia exportada.</p>
+      <div class="qb-field"><label class="qb-label" for="annotation">Texto</label><textarea class="qb-control" id="annotation" rows="3" placeholder="Ex.: Revisado em 20/11/2026" maxlength="500"></textarea></div>
+      <div class="qb-row2"><div><label class="qb-label" for="x">Posição X (%)</label><input class="qb-control" id="x" type="number" min="0" max="95" value="10"></div><div><label class="qb-label" for="y">Posição Y (%)</label><input class="qb-control" id="y" type="number" min="5" max="100" value="15"></div></div>
+      <div class="qb-row2"><div><label class="qb-label" for="fontSize">Tamanho</label><input class="qb-control" id="fontSize" type="number" min="8" max="48" value="16"></div><div><label class="qb-label" for="color">Cor</label><input class="qb-control" id="color" type="color" value="#162b47"></div></div>
+      <p class="qb-help">Página ativa: <strong id="activePage">nenhuma</strong>. Coordenadas medidas a partir do canto superior esquerdo. O texto adicionado é incorporado visualmente ao PDF.</p>
+    </article>
+    <article class="qb-panel" data-panel="read" hidden>
+      <p class="qb-eyebrow">// consulta ao documento</p><h2 class="h2">Pergunte ao PDF</h2>
+      <p class="qb-help">Encontre trechos relevantes e a página de origem. A consulta usa o texto extraído no seu dispositivo.</p>
+      <div class="conversation" id="conversation" aria-live="polite"><div class="message assistant">Carregue um PDF com texto selecionável e pergunte sobre seu conteúdo.</div></div>
+      <form id="askForm" class="ask"><label class="qb-visually-hidden" for="question">Pergunta sobre o PDF</label><input class="qb-control" id="question" type="search" placeholder="O que o documento diz sobre…?" maxlength="240" autocomplete="off"><button class="qb-btn qb-btn--primary" type="submit">Buscar</button></form>
+      <p class="qb-help">Busca contextual, sem IA generativa ou OCR. PDFs digitalizados precisam passar por OCR para que o texto seja consultável.</p>
+    </article>
+    <article class="qb-panel" data-panel="pdfToPng" hidden>
+      <p class="qb-eyebrow">// conversão</p><h2 class="h2">PDF para imagem</h2>
+      <p class="qb-help">Escolha o formato e exporte uma página ou todas. Várias imagens serão entregues em ZIP.</p>
+      <div class="qb-row2"><div><label class="qb-label" for="imageFormat">Formato</label><span class="qb-select"><select class="qb-control" id="imageFormat"><option value="png">PNG · sem perda</option><option value="jpeg">JPG · arquivo menor</option></select></span></div><div><label class="qb-label" for="imageScope">Páginas</label><span class="qb-select"><select class="qb-control" id="imageScope"><option value="all">Todas as páginas</option><option value="active">Página ativa</option><option value="selected">Páginas selecionadas</option></select></span></div></div>
+      <div class="qb-actions"><button class="qb-btn qb-btn--primary" id="exportImages" type="button" disabled><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#image-export"/></svg>Converter em imagens</button></div>
+      <p class="qb-help">Clique na miniatura para ativar uma página. Para usar “selecionadas”, marque as caixas nas miniaturas. Limite de 100 imagens por conversão.</p>
+    </article>
+    <article class="qb-panel" data-panel="number" hidden>
+      <p class="qb-eyebrow">// edição</p><h2 class="h2">Numerar páginas</h2>
+      <p class="qb-help">Adicione números visíveis em uma cópia do PDF.</p>
+      <div class="qb-row2"><div><label class="qb-label" for="numberStart">Começar em</label><input class="qb-control" id="numberStart" type="number" min="1" max="999999" value="1"></div><div><label class="qb-label" for="numberPosition">Posição</label><span class="qb-select"><select class="qb-control" id="numberPosition"><option value="bottom-right">Inferior direita</option><option value="bottom-center">Inferior centro</option><option value="bottom-left">Inferior esquerda</option><option value="top-right">Superior direita</option><option value="top-center">Superior centro</option><option value="top-left">Superior esquerda</option></select></span></div></div>
+      <p class="qb-help">A numeração segue a ordem das miniaturas, inclusive após mover ou remover páginas.</p>
+    </article>
+  </section>
+  <p class="qb-help credit">Inspirado nos fluxos de trabalho do <a href="https://github.com/Stirling-Tools/Stirling-PDF" target="_blank" rel="noopener noreferrer">Stirling-PDF</a>. Esta implementação é independente e executa um conjunto de operações no navegador.</p>
+</main>
+
+<!-- qb:footer -->
+<footer class="qb-footer"><div class="qb-container">
+  <div class="qb-foot-grid">
+    <div class="qb-foot-brand"><img src="/assets/quebec/logos/nome_quebec_branco.svg" alt="quebec" width="65" height="24"><p>Ferramentas e aplicativos de engenharia e software.</p></div>
+    <div><h2 class="qb-foot-title">// ferramentas</h2><ul><li><a href="/pdf/">Ferramentas PDF</a></li><li><a href="/diceware/">Diceware</a></li><li><a href="/senhas/">Senhas aleatórias</a></li><li><a href="/unidades/">Conversor de unidades</a></li><li><a href="/diagramas/">Editor de diagramas</a></li><li><a href="/3d/">Visualizador 3D</a></li></ul></div>
+    <div><h2 class="qb-foot-title">// apps</h2><ul><li><a href="https://klipper.quebec.com.br/" rel="noopener noreferrer">Klipper</a></li><li><span class="qb-soon">FlowCalc · em breve</span></li></ul></div>
+  </div>
+  <div class="qb-legal"><span>© <span data-qb-year>2026</span> quebec · Roberto Milet</span><div class="qb-theme" role="group" aria-label="Tema"><button type="button" data-qb-theme-set="system" aria-pressed="true"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#monitor"/></svg>Sistema</button><button type="button" data-qb-theme-set="light" aria-pressed="false"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#sun"/></svg>Claro</button><button type="button" data-qb-theme-set="dark" aria-pressed="false"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.0#moon"/></svg>Escuro</button></div></div>
+</div></footer>
+<!-- /qb:footer -->
 </body>
 </html>
