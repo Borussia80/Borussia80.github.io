@@ -17,3 +17,7 @@ jobs:
         run: node tools/shell.mjs --check
       - name: Testes das ferramentas
         run: node tests/tool-smoke.cjs
+      - name: Compressor de PDF (núcleo)
+        run: |
+          npm install --no-save --no-package-lock pdf-lib@1.17.1
+          node tests/compress-core.test.mjs

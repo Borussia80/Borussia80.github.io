@@ -21,6 +21,7 @@ Para atualizar: altere o design system, gere uma nova versão, copie os arquivos
 - **Componentes novos:** `qb-page`, `qb-page-head`, `qb-panel`, `qb-label`, `qb-control`, `qb-select`, `qb-checks`/`qb-check`, `qb-status`, `qb-output`, `qb-disclosure`, `qb-grid--2`/`--4`, `qb-drop-text`, `qb-i` e `icons.svg`.
 - **quebec.js:** ano do rodapé (`[data-qb-year]`) e `window.QB` (`status`, `drop`, `copy`).
 - `tool-pages.css` foi absorvido pelo bundle e removido.
+- Ícone `compress` (documento com setas convergentes) acrescentado ao `icons.svg` para a ferramenta Comprimir PDF. Replique-o no grupo Ícones do design system.
 - Atenção: `tokens.css` declara ser gerado de `tokens.json`. Aplique as mesmas adições no `tokens.json` do design system antes de gerar a próxima versão, ou elas serão perdidas.
 
 Cabeçalho, rodapé e `<head>` das páginas vêm de `_partials/` via `node tools/shell.mjs`. Guia para novas ferramentas: `_partials/NOVA-FERRAMENTA.md`.
