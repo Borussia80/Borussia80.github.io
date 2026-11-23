@@ -1,0 +1,56 @@
+{
+  "version": "1.2.1",
+  "tagline": "Ferramentas e aplicativos de engenharia e software.",
+  "nav": [
+    {
+      "id": "catalogo",
+      "href": "/",
+      "label": "Catálogo"
+    },
+    {
+      "id": "pdf",
+      "href": "/pdf/",
+      "label": "PDF",
+      "footer": "Ferramentas PDF"
+    },
+    {
+      "id": "diceware",
+      "href": "/diceware/",
+      "label": "Diceware",
+      "footer": "Diceware"
+    },
+    {
+      "id": "senhas",
+      "href": "/senhas/",
+      "label": "Senhas",
+      "footer": "Senhas aleatórias"
+    },
+    {
+      "id": "unidades",
+      "href": "/unidades/",
+      "label": "Unidades",
+      "footer": "Conversor de unidades"
+    },
+    {
+      "id": "diagramas",
+      "href": "/diagramas/",
+      "label": "Diagramas",
+      "footer": "Editor de diagramas"
+    },
+    {
+      "id": "3d",
+      "href": "/3d/",
+      "label": "3D",
+      "footer": "Visualizador 3D"
+    }
+  ],
+  "apps": [
+    {
+      "label": "Klipper",
+      "href": "https://klipper.quebec.com.br/"
+    },
+    {
+      "label": "FlowCalc · em breve"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NOME DA FERRAMENTA | quebec</title>
+  <meta name="description" content="UMA FRASE SOBRE O QUE A FERRAMENTA FAZ.">
+  <link rel="canonical" href="https://ferramentas.quebec.com.br/PASTA/">
+  <!-- qb:head -->
+  <!-- /qb:head -->
+  <!-- Motor MIT com versão fixa. Para pacotes ESM use import map; para UMD, <script src> comum. -->
+  <script type="importmap">{ "imports": { "motor": "https://cdn.jsdelivr.net/npm/PACOTE@X.Y.Z/CAMINHO.mjs" } }</script>
+  <script type="module" src="./app.js?v=1"></script>
+</head>
+<body class="qb">
+<!-- qb:header active="PASTA" -->
+<!-- /qb:header -->
+
+<main class="qb-page" id="conteudo">
+  <div class="qb-page-head">
+    <p class="qb-eyebrow">// categoria · ferramenta local</p>
+    <h1 class="display-lg">Nome da ferramenta</h1>
+    <p class="qb-lead body-lg">O que a pessoa consegue fazer aqui, em uma ou duas frases.</p>
+  </div>
+
+  <div class="qb-panel">
+    <div class="qb-drop" id="drop">
+      <input type="file" id="file" accept=".ext" aria-label="Selecionar arquivo" aria-describedby="dropHelp">
+      <span class="qb-icon-tile" aria-hidden="true"><svg class="qb-i"><use href="/assets/quebec/icons.svg?v=1.2.1#upload"/></svg></span>
+      <span class="qb-drop-text"><strong>Selecione o arquivo</strong>
+      <span class="qb-help" id="dropHelp"><span class="qb-drop-link">Escolher arquivo</span> ou arraste para cá · EXT até 30 MB</span></span>
+    </div>
+    <!-- Saída da ferramenta: qb-output, qb-kv, qb-result, canvas… -->
+    <div class="qb-actions"><button class="qb-btn qb-btn--primary" type="button" id="run" disabled>Ação principal</button></div>
+    <p class="qb-status" id="status" role="status" aria-live="polite"></p>
+  </div>
+
+  <p class="qb-help">Limites e créditos. Motor: <a href="URL DO PROJETO" target="_blank" rel="noopener noreferrer">NOME</a> (MIT).</p>
+  <p class="qb-page-foot"><a href="/">← Voltar ao catálogo</a></p>
+</main>
+
+<!-- qb:footer -->
+<!-- /qb:footer -->
+</body>
+</html>

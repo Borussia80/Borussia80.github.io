@@ -66,7 +66,7 @@
     if (!Number.isFinite(n) || !origin || !target) {
       result.textContent = '—'; formula.textContent = '';
       status.textContent = 'Informe um número válido, sem separador de milhar.';
-      status.classList.add('error'); value.setAttribute('aria-invalid', 'true'); return;
+      status.classList.add('is-error'); value.setAttribute('aria-invalid', 'true'); return;
     }
     let converted;
     if (category.value === 'temperature') {
@@ -74,7 +74,7 @@
       if (k < -1e-10) {
         result.textContent = '—'; formula.textContent = '';
         status.textContent = 'A temperatura está abaixo do zero absoluto.';
-        status.classList.add('error'); value.setAttribute('aria-invalid', 'true'); return;
+        status.classList.add('is-error'); value.setAttribute('aria-invalid', 'true'); return;
       }
       converted = fromKelvin(Math.max(0, k), target[0]);
       formula.textContent = 'Via kelvin: K = °C + 273,15; K = (°F + 459,67) × 5/9.';
@@ -82,10 +82,10 @@
       converted = n * origin[2] / target[2];
       formula.textContent = `1 ${origin[0]} = ${factorFmt.format(origin[2] / target[2])} ${target[0]}.`;
     }
-    if (!Number.isFinite(converted)) { result.textContent = '—'; status.textContent = 'Valor fora do intervalo numérico disponível.'; status.classList.add('error'); return; }
+    if (!Number.isFinite(converted)) { result.textContent = '—'; status.textContent = 'Valor fora do intervalo numérico disponível.'; status.classList.add('is-error'); return; }
     result.textContent = `${display(converted)} ${target[0] === 'C' ? '°C' : target[0] === 'F' ? '°F' : target[0]}`;
     status.textContent = 'Conversão realizada no navegador.';
-    status.classList.remove('error'); value.setAttribute('aria-invalid', 'false');
+    status.classList.remove('is-error'); value.setAttribute('aria-invalid', 'false');
   }
   category.addEventListener('change', options);
   [value, from, to].forEach(element => element.addEventListener(element === value ? 'input' : 'change', convert));

@@ -11,7 +11,8 @@ const workflows = {
   pdfToPng: ['PDF para imagem', 'Converta uma página ou várias em PNG ou JPG.'],
   edit: ['Adicionar texto', 'Clique na página e preencha o texto para incluir na cópia exportada.'],
   number: ['Numerar páginas', 'Escolha o número inicial e a posição antes de baixar.'],
-  read: ['Perguntar ao PDF', 'Carregue um PDF com texto selecionável e procure trechos por tema.']
+  read: ['Perguntar ao PDF', 'Carregue um PDF com texto selecionável e procure trechos por tema.'],
+  compress: ['Comprimir PDF', 'Reduza o tamanho do PDF no navegador.']
 };
 const MAX_BYTES = 30 * 1024 * 1024;
 const MAX_PAGES = 300;
@@ -20,7 +21,7 @@ const STOP = new Set('a o as os de da do das dos e em no na nos nas um uma para 
 
 function status(message, error = false) {
   elements.status.textContent = message;
-  elements.status.classList.toggle('error', error);
+  elements.status.classList.toggle('is-error', error);
 }
 
 function nameWithoutExt(name) { return name.replace(/\.[^.]+$/, ''); }
@@ -58,8 +59,33 @@ async function clearDocuments() {
   renderPages();
 }
 
+let compressor = null;
+async function openCompressor() {
+  const section = $('compressor');
+  elements.workspace.hidden = true; elements.tools.hidden = true; section.hidden = false;
+  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (compressor) return;
+  try {
+    const { mountCompressor } = await import('./compress.js?v=2');
+    compressor = mountCompressor({ getPdfjs: () => state.pdfjs });
+  } catch (err) {
+    window.QB?.status('cmpStatus', `Não foi possível carregar o compressor: ${err.message}. Confira sua conexão e atualize a página.`, 'error');
+  }
+}
+function closeCompressor() {
+  $('compressor').hidden = true;
+  compressor?.reset();
+}
+
 async function openTool(mode) {
   if (state.busy || !workflows[mode]) return;
+  if (mode === 'compress') {
+    if (state.pages.length) await clearDocuments();
+    state.mode = mode;
+    await openCompressor();
+    return;
+  }
+  closeCompressor();
   if (state.mode !== mode && state.pages.length) await clearDocuments();
   state.mode = mode;
   const [title, description] = workflows[mode];
@@ -70,7 +96,7 @@ async function openTool(mode) {
   elements.files.multiple = !['split','pdfToPng','rotate','edit','read','extract','number'].includes(mode);
   elements.dropTitle.textContent = images ? 'Selecione imagens JPG ou PNG' : 'Selecione arquivos PDF';
   elements.dropHint.textContent = `${images ? 'JPG ou PNG' : 'PDF'} até 30 MB por arquivo`;
-  elements.exportAll.textContent = images ? 'Converter para PDF' : mode === 'edit' ? 'Baixar PDF editado' : mode === 'number' ? 'Baixar PDF numerado' : 'Baixar PDF';
+  (elements.exportAll.querySelector('[data-qb-label]') || elements.exportAll).textContent = images ? 'Converter para PDF' : mode === 'edit' ? 'Baixar PDF editado' : mode === 'number' ? 'Baixar PDF numerado' : 'Baixar PDF';
   elements.exportAll.hidden = ['split','extract','pdfToPng','read'].includes(mode);
   elements.exportSelected.hidden = mode !== 'extract';
   elements.splitBox.hidden = mode !== 'split';
@@ -440,8 +466,8 @@ async function ask(question) {
 
 elements.files.addEventListener('change', event => addFiles([...event.target.files]));
 elements.addMore.addEventListener('click', () => elements.files.click());
-for (const event of ['dragenter','dragover']) elements.drop.addEventListener(event, e => { e.preventDefault(); elements.drop.classList.add('dragging'); });
-for (const event of ['dragleave','drop']) elements.drop.addEventListener(event, e => { e.preventDefault(); elements.drop.classList.remove('dragging'); });
+for (const event of ['dragenter','dragover']) elements.drop.addEventListener(event, e => { e.preventDefault(); elements.drop.classList.add('is-over'); });
+for (const event of ['dragleave','drop']) elements.drop.addEventListener(event, e => { e.preventDefault(); elements.drop.classList.remove('is-over'); });
 elements.drop.addEventListener('drop', e => addFiles([...e.dataTransfer.files]));
 elements.clear.addEventListener('click', async () => { await clearDocuments(); status('Área de trabalho limpa.'); });
 elements.exportAll.addEventListener('click', () => runExport(state.pages, 'completo'));
@@ -454,15 +480,14 @@ elements.selectNone.addEventListener('click', () => { state.pages.forEach(page =
 for (const button of document.querySelectorAll('[data-tool]')) button.addEventListener('click', () => openTool(button.dataset.tool));
 for (const filter of document.querySelectorAll('[data-filter]')) filter.addEventListener('click', () => {
   for (const button of document.querySelectorAll('[data-filter]')) {
-    button.classList.toggle('active', button === filter);
     button.setAttribute('aria-pressed', String(button === filter));
   }
   for (const card of document.querySelectorAll('[data-tool]')) card.hidden = filter.dataset.filter !== 'all' && card.dataset.category !== filter.dataset.filter;
 });
 elements.backToTools.addEventListener('click', () => { elements.workspace.hidden = true; elements.tools.hidden = true; elements.catalog.scrollIntoView({ behavior: 'smooth' }); });
+$('cmpBack').addEventListener('click', () => { closeCompressor(); elements.catalog.scrollIntoView({ behavior: 'smooth' }); });
 for (const id of ['annotation','x','y','fontSize','color']) elements[id].addEventListener('input', saveAnnotation);
 elements.askForm.addEventListener('submit', async e => { e.preventDefault(); const question = elements.question.value.trim(); if (question) { elements.question.value = ''; await ask(question); } });
-$('year').textContent = new Date().getFullYear();
 updateControls();
 try {
   if (!window.PDFLib) throw Error('pdf-lib indisponível');

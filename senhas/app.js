@@ -6,6 +6,7 @@
   const reveal = document.getElementById('reveal');
   const copy = document.getElementById('copy');
   const status = document.getElementById('status');
+  const revealLabel = (reveal.querySelector && reveal.querySelector('[data-qb-label]')) || reveal;
   const sets = {
     lower: 'abcdefghijklmnopqrstuvwxyz',
     upper: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
@@ -30,7 +31,7 @@
   }
   function message(value, error = false) {
     status.textContent = value;
-    status.classList.toggle('error', error);
+    status.classList.toggle('is-error', error);
   }
   if (!cryptoSource || typeof cryptoSource.getRandomValues !== 'function') {
     form.querySelector('button[type=submit]').disabled = true;
@@ -48,7 +49,7 @@
     while (chars.length < size) chars.push(choose(pool));
     output.value = shuffle(chars);
     output.type = 'password';
-    reveal.textContent = 'Mostrar';
+    revealLabel.textContent = 'Mostrar';
     reveal.setAttribute('aria-pressed', 'false');
     reveal.disabled = copy.disabled = false;
     message('Senha gerada neste dispositivo.');
@@ -56,12 +57,13 @@
   reveal.addEventListener('click', () => {
     const visible = output.type === 'password';
     output.type = visible ? 'text' : 'password';
-    reveal.textContent = visible ? 'Ocultar' : 'Mostrar';
+    revealLabel.textContent = visible ? 'Ocultar' : 'Mostrar';
     reveal.setAttribute('aria-pressed', String(visible));
   });
   copy.addEventListener('click', async () => {
     try {
-      await navigator.clipboard.writeText(output.value);
+      if (globalThis.QB && QB.copy) { if (!(await QB.copy(copy, output.value))) throw Error('copy'); }
+      else await navigator.clipboard.writeText(output.value);
       message('Senha copiada.');
     } catch {
       message('Não foi possível copiar automaticamente. Selecione a senha e copie pelo navegador.', true);

@@ -1,1 +1,90 @@
-<!doctype html><html lang="pt-BR" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Gere senhas aleatórias no navegador com fonte criptográfica."><title>Senhas aleatórias | quebec</title><link rel="canonical" href="https://ferramentas.quebec.com.br/senhas/"><link rel="icon" sizes="32x32" href="/assets/quebec/logos/favicon_32.png"><link rel="apple-touch-icon" href="/assets/quebec/logos/apple-touch-icon.png"><script>(function(){var s;try{s=localStorage.getItem('qb-theme')}catch(e){}document.documentElement.setAttribute('data-theme',s==='light'||s==='dark'?s:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))})()</script><link rel="stylesheet" href="/assets/quebec/tokens.css?v=1.1.1"><link rel="stylesheet" href="/assets/quebec/bundle.css?v=1.1.1"><link rel="stylesheet" href="/assets/quebec/tool-pages.css?v=1"><script src="/assets/quebec/quebec.js?v=1.1.1" defer></script><script src="./app.js?v=1" defer></script></head><body class="qb"><a class="qb-btn qb-btn--primary qb-skip" href="#conteudo">Pular para o conteúdo</a><div class="qb-header-wrap"><header class="qb-header"><div class="qb-container"><a class="qb-brand" href="/" aria-label="quebec ferramentas, início"><img class="qb-only-light" src="/assets/quebec/logos/nome_quebec.svg" alt="quebec" width="76" height="28"><img class="qb-only-dark" src="/assets/quebec/logos/nome_quebec_branco.svg" alt="quebec" width="76" height="28"><span class="qb-sub">ferramentas</span></a><nav class="qb-nav" aria-label="Principal"><a href="/">Catálogo</a><a href="/pdf/">PDF</a><a href="/diceware/">Diceware</a><a href="/senhas/" aria-current="page">Senhas</a><a href="/unidades/">Unidades</a></nav><button class="qb-menu-btn" type="button" aria-expanded="false" aria-controls="menu-tool" aria-label="Menu"><span class="i-open" aria-hidden="true">☰</span><span class="i-close" aria-hidden="true">×</span></button></div></header><nav class="qb-mobile-nav" id="menu-tool" aria-label="Principal (celular)" hidden><a href="/">Catálogo</a><a href="/pdf/">PDF</a><a href="/diceware/">Diceware</a><a href="/senhas/" aria-current="page">Senhas</a><a href="/unidades/">Unidades</a></nav></div><main class="tool-page" id="conteudo"><p class="qb-eyebrow">// segurança · ferramenta local</p><h1 class="display-lg">Senhas aleatórias</h1><p class="intro body-lg">Escolha o tamanho e os tipos de caractere. A senha é criada no seu dispositivo com a fonte criptográfica do navegador.</p><div class="tool-panel"><form id="password-form"><label for="length">Quantidade de caracteres (8 a 64)</label><input id="length" name="length" type="number" min="8" max="64" step="1" value="20" required><fieldset><legend>Incluir caracteres</legend><div class="options"><label><input type="checkbox" name="lower" checked> Minúsculas</label><label><input type="checkbox" name="upper" checked> Maiúsculas</label><label><input type="checkbox" name="digits" checked> Números</label><label><input type="checkbox" name="symbols" checked> Símbolos</label></div></fieldset><div class="tool-actions"><button class="qb-btn qb-btn--primary" type="submit">Gerar senha</button></div></form><div class="result-box"><h2 class="h3">Sua senha</h2><label for="password">Resultado</label><input id="password" type="password" readonly autocomplete="off" spellcheck="false" placeholder="Clique em Gerar senha"><div class="tool-actions"><button class="qb-btn qb-btn--secondary" id="reveal" type="button" disabled aria-pressed="false">Mostrar</button><button class="qb-btn qb-btn--secondary" id="copy" type="button" disabled>Copiar</button></div><p id="status" class="status" role="status" aria-live="polite"></p></div></div><p class="hint">A senha não é enviada ao servidor. Use um gerenciador de senhas para guardá-la.</p><p class="tool-foot"><a href="/">← Voltar ao catálogo</a></p></main><footer class="qb-footer"><div class="qb-container"><div class="qb-foot-grid"><div><img src="/assets/quebec/logos/nome_quebec_branco.svg" alt="quebec" width="65" height="24"><p>Ferramentas simples no navegador.</p></div><div><h2>// ferramentas</h2><ul><li><a href="/pdf/">PDF</a></li><li><a href="/diceware/">Diceware</a></li><li><a href="/senhas/">Senhas</a></li><li><a href="/unidades/">Unidades</a></li></ul></div></div><div class="qb-legal"><span>© 2026 quebec · Roberto Milet</span><div class="qb-theme" role="group" aria-label="Tema"><button type="button" data-qb-theme-set="system" aria-pressed="true">Sistema</button><button type="button" data-qb-theme-set="light" aria-pressed="false">Claro</button><button type="button" data-qb-theme-set="dark" aria-pressed="false">Escuro</button></div></div></div></footer></body></html>
+<!doctype html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Senhas aleatórias | quebec</title>
+  <meta name="description" content="Gere senhas aleatórias no navegador com fonte criptográfica.">
+  <link rel="canonical" href="https://ferramentas.quebec.com.br/senhas/">
+  <!-- qb:head -->
+<script>(function(){var s;try{s=localStorage.getItem('qb-theme')}catch(e){}document.documentElement.setAttribute('data-theme',s==='light'||s==='dark'?s:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))})()</script>
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/quebec/logos/favicon_16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/quebec/logos/favicon_32.png">
+<link rel="apple-touch-icon" href="/assets/quebec/logos/apple-touch-icon.png">
+<meta name="theme-color" content="#F7F9FA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#08131F" media="(prefers-color-scheme: dark)">
+<link rel="preload" href="/assets/quebec/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/quebec/fonts/TeXGyreAdventor-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/quebec/tokens.css?v=1.2.1">
+<link rel="stylesheet" href="/assets/quebec/bundle.css?v=1.2.1">
+<script src="/assets/quebec/quebec.js?v=1.2.1" defer></script>
+<!-- /qb:head -->
+  <script src="./app.js?v=2" defer></script>
+</head>
+<body class="qb">
+<!-- qb:header active="senhas" -->
+<a class="qb-btn qb-btn--primary qb-skip" href="#conteudo">Pular para o conteúdo</a>
+<div class="qb-header-wrap">
+  <header class="qb-header"><div class="qb-container">
+    <a class="qb-brand" href="/" aria-label="quebec ferramentas, início"><img class="qb-only-light" src="/assets/quebec/logos/nome_quebec.svg" alt="quebec" width="76" height="28"><img class="qb-only-dark" src="/assets/quebec/logos/nome_quebec_branco.svg" alt="quebec" width="76" height="28"><span class="qb-sub">ferramentas</span></a>
+    <nav class="qb-nav" aria-label="Principal"><a href="/">Catálogo</a><a href="/pdf/">PDF</a><a href="/diceware/">Diceware</a><a href="/senhas/" aria-current="page">Senhas</a><a href="/unidades/">Unidades</a><a href="/diagramas/">Diagramas</a><a href="/3d/">3D</a></nav>
+    <button class="qb-menu-btn" type="button" aria-expanded="false" aria-controls="menu-celular" aria-label="Menu"><span class="i-open"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.1#menu"/></svg></span><span class="i-close"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.1#close"/></svg></span></button>
+  </div></header>
+  <nav class="qb-mobile-nav" id="menu-celular" aria-label="Principal (celular)" hidden><a href="/">Catálogo</a><a href="/pdf/">PDF</a><a href="/diceware/">Diceware</a><a href="/senhas/" aria-current="page">Senhas</a><a href="/unidades/">Unidades</a><a href="/diagramas/">Diagramas</a><a href="/3d/">3D</a></nav>
+</div>
+<!-- /qb:header -->
+
+<main class="qb-page" id="conteudo">
+  <div class="qb-page-head">
+    <p class="qb-eyebrow">// segurança · ferramenta local</p>
+    <h1 class="display-lg">Senhas aleatórias</h1>
+    <p class="qb-lead body-lg">Escolha o tamanho e os tipos de caractere. A senha é criada no seu dispositivo com a fonte criptográfica do navegador.</p>
+  </div>
+
+  <div class="qb-panel">
+    <form id="password-form">
+      <div class="qb-field">
+        <label class="qb-label" for="length">Quantidade de caracteres (8 a 64)</label>
+        <input class="qb-control" id="length" name="length" type="number" min="8" max="64" step="1" value="20" required>
+      </div>
+      <fieldset class="qb-fieldset">
+        <legend>Incluir caracteres</legend>
+        <div class="qb-checks">
+          <label class="qb-check"><input type="checkbox" name="lower" checked> Minúsculas</label>
+          <label class="qb-check"><input type="checkbox" name="upper" checked> Maiúsculas</label>
+          <label class="qb-check"><input type="checkbox" name="digits" checked> Números</label>
+          <label class="qb-check"><input type="checkbox" name="symbols" checked> Símbolos</label>
+        </div>
+      </fieldset>
+      <div class="qb-actions"><button class="qb-btn qb-btn--primary" type="submit">Gerar senha</button></div>
+    </form>
+
+    <hr class="qb-divider">
+    <h2 class="h3">Sua senha</h2>
+    <div class="qb-field">
+      <label class="qb-label" for="password">Resultado</label>
+      <input class="qb-control qb-control--mono" id="password" type="password" readonly autocomplete="off" spellcheck="false" placeholder="Clique em Gerar senha">
+    </div>
+    <div class="qb-actions">
+      <button class="qb-btn qb-btn--secondary" id="reveal" type="button" disabled aria-pressed="false"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.1#eye"/></svg><span data-qb-label>Mostrar</span></button>
+      <button class="qb-btn qb-btn--secondary" id="copy" type="button" disabled><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.1#copy"/></svg><span data-qb-label>Copiar</span></button>
+    </div>
+    <p id="status" class="qb-status" role="status" aria-live="polite"></p>
+  </div>
+
+  <p class="qb-help">A senha não é enviada ao servidor. Use um gerenciador de senhas para guardá-la.</p>
+  <p class="qb-page-foot"><a href="/">← Voltar ao catálogo</a></p>
+</main>
+
+<!-- qb:footer -->
+<footer class="qb-footer"><div class="qb-container">
+  <div class="qb-foot-grid">
+    <div class="qb-foot-brand"><img src="/assets/quebec/logos/nome_quebec_branco.svg" alt="quebec" width="65" height="24"><p>Ferramentas e aplicativos de engenharia e software.</p></div>
+    <div><h2 class="qb-foot-title">// ferramentas</h2><ul><li><a href="/pdf/">Ferramentas PDF</a></li><li><a href="/diceware/">Diceware</a></li><li><a href="/senhas/">Senhas aleatórias</a></li><li><a href="/unidades/">Conversor de unidades</a></li><li><a href="/diagramas/">Editor de diagramas</a></li><li><a href="/3d/">Visualizador 3D</a></li></ul></div>
+    <div><h2 class="qb-foot-title">// apps</h2><ul><li><a href="https://klipper.quebec.com.br/" rel="noopener noreferrer">Klipper</a></li><li><span class="qb-soon">FlowCalc · em breve</span></li></ul></div>
+  </div>
+  <div class="qb-legal"><span>© <span data-qb-year>2026</span> quebec · Roberto Milet</span><div class="qb-theme" role="group" aria-label="Tema"><button type="button" data-qb-theme-set="system" aria-pressed="true"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.1#monitor"/></svg>Sistema</button><button type="button" data-qb-theme-set="light" aria-pressed="false"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.1#sun"/></svg>Claro</button><button type="button" data-qb-theme-set="dark" aria-pressed="false"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.1#moon"/></svg>Escuro</button></div></div>
+</div></footer>
+<!-- /qb:footer -->
+</body>
+</html>

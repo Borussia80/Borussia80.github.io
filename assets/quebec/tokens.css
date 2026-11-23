@@ -1,4 +1,5 @@
-/* quebec — gerado de tokens.json do design system (pacote 1.1.1). Não editar à mão: altere o design system e gere de novo. */
+/* quebec — gerado de tokens.json do design system (pacote 1.2.1). Não editar à mão: altere o design system e gere de novo.
+   1.2.1: alinhado ao tokens.json do design system (presets de realce como tokens; seletores [data-qb-accent] e movimento reduzido ficam no bundle.css). */
 @font-face { font-family: 'TeX Gyre Adventor'; src: url('fonts/TeXGyreAdventor-700.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Inter'; src: url('fonts/Inter-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Inter'; src: url('fonts/Inter-500.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
@@ -38,6 +39,15 @@
   --success: #1E7B4F;
   --warning: #8F5410;
   --danger: #B42318;
+  --on-success: #FFFFFF;
+  --accent: var(--primary);
+  --accent-tint: var(--surface-tint);
+  --band-border: rgba(255,255,255,0.14);
+  --band-border-strong: rgba(255,255,255,0.28);
+  --accent-violeta: #6A3FC1;
+  --accent-violeta-tint: #F0EBFA;
+  --accent-ciano: #0B6A8F;
+  --accent-ciano-tint: #E3F3FA;
   --shadow-sm: 0 1px 2px rgba(16,45,80,0.08);
   --shadow-md: 0 6px 20px rgba(16,45,80,0.10);
   color-scheme: light;
@@ -62,6 +72,13 @@
   --success: #5CCB93;
   --warning: #F0B45A;
   --danger: #F28B82;
+  --on-success: var(--navy-950);
+  --band-border: rgba(255,255,255,0.12);
+  --band-border-strong: rgba(255,255,255,0.24);
+  --accent-violeta: #C3AEF5;
+  --accent-violeta-tint: #2A2347;
+  --accent-ciano: var(--cyan-400);
+  --accent-ciano-tint: #0F3144;
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
   --shadow-md: 0 8px 24px rgba(0,0,0,0.45);
   color-scheme: dark;
@@ -71,10 +88,13 @@
   --space-2: 8px;
   --space-3: 12px;
   --space-4: 16px;
+  --space-5: 20px;
   --space-6: 24px;
   --space-8: 32px;
+  --space-10: 40px;
   --space-12: 48px;
   --space-16: 64px;
+  --space-20: 80px;
   --space-24: 96px;
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -84,6 +104,9 @@
   --container: 1200px;
   --container-narrow: 760px;
   --header-height: 64px;
+  --dur-1: 120ms;
+  --dur-2: 200ms;
+  --ease: cubic-bezier(.2,0,0,1);
   --font-display: "TeX Gyre Adventor", "Century Gothic", "Avenir Next", system-ui, sans-serif;
   --font-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;

@@ -1,0 +1,23 @@
+name: checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Tokens CSS definidos
+        run: node tools/check-tokens.mjs
+      - name: Casca compartilhada em sincronia
+        run: node tools/shell.mjs --check
+      - name: Testes das ferramentas
+        run: node tests/tool-smoke.cjs
+      - name: Compressor de PDF (núcleo)
+        run: |
+          npm install --no-save --no-package-lock pdf-lib@1.17.1
+          node tests/compress-core.test.mjs
