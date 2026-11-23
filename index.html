@@ -24,6 +24,11 @@
 <!-- /qb:head -->
   <style>
     .page-head { padding: var(--space-16) 0 var(--space-8); }
+    .page-head .qb-container { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: var(--space-16); align-items: center; }
+    /* Monograma: o mapa de produtos é o lugar dele (o cabeçalho leva só o nome; regra da marca). */
+    .brand-map li .n { color: var(--text); text-decoration: none; }
+    .brand-map li .n:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .brand-map .qb-tree-top .qb-mono { font-weight: 600; }
     .page-head h1 { margin: 0 0 var(--space-3); }
     .page-head .lead { margin: 0 0 var(--space-8); max-width: 620px; color: var(--text-muted); }
     .search { max-width: 620px; margin-bottom: var(--space-4); }
@@ -34,7 +39,8 @@
     .product-strip p { color: var(--text-muted); margin: 0 0 var(--space-5); }
     .product-links { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
     .product-links span { color: var(--text-muted); font-size: 14px; }
-    @media (max-width: 860px) { .page-head { padding-top: var(--space-12); } .page-head h1 { font-size: 40px; line-height: 46px; } }
+    @media (max-width: 1100px) { .page-head .qb-container { gap: var(--space-10); } .brand-map li { grid-template-columns: 28px 110px 1fr; } }
+    @media (max-width: 860px) { .page-head { padding-top: var(--space-12); } .page-head h1 { font-size: 40px; line-height: 46px; } .page-head .qb-container { grid-template-columns: 1fr; } .brand-map { order: -1; padding: var(--space-4) var(--space-5); border-radius: var(--radius-lg); box-shadow: none; } .brand-map ul { display: none; } .brand-map .qb-tree-top { margin: 0; } }
     @media (max-width: 600px) { .catalog .qb-card { min-height: 0; } }
   </style>
 </head>
@@ -54,12 +60,25 @@
 <main id="conteudo">
 <div data-qb-catalog>
 <section class="page-head"><div class="qb-container">
-  <p class="qb-eyebrow">// ferramentas.quebec.com.br</p>
+  <div class="page-intro">
+  <p class="qb-eyebrow">// no navegador · sem conta</p>
   <h1 class="display-lg">Ferramentas para usar agora</h1>
   <p class="lead body-lg">Documentos, senhas e conversões em um só lugar. Escolha uma ferramenta e comece no navegador, sem criar conta.</p>
   <div class="qb-input qb-input--search search"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.1#search"/></svg><input type="search" placeholder="Buscar ferramenta" aria-label="Buscar ferramenta" data-qb-search autocomplete="off"><span class="qb-kbd" aria-hidden="true">/</span></div>
   <div class="qb-chips" role="group" aria-label="Filtrar por categoria"><button class="qb-chip" type="button" data-qb-filter="todas" aria-pressed="true">Todas <span class="qb-count" aria-hidden="true">6</span></button><button class="qb-chip" type="button" data-qb-filter="documentos" aria-pressed="false">Documentos <span class="qb-count" aria-hidden="true">2</span></button><button class="qb-chip" type="button" data-qb-filter="seguranca" aria-pressed="false">Segurança <span class="qb-count" aria-hidden="true">2</span></button><button class="qb-chip" type="button" data-qb-filter="conversao" aria-pressed="false">Conversão <span class="qb-count" aria-hidden="true">1</span></button><button class="qb-chip" type="button" data-qb-filter="engenharia" aria-pressed="false">Engenharia <span class="qb-count" aria-hidden="true">1</span></button></div>
   <p class="qb-visually-hidden" aria-live="polite" data-qb-status></p>
+  </div>
+  <aside class="qb-tree brand-map" aria-label="Mapa das ferramentas quebec">
+    <div class="qb-tree-top"><img class="qb-only-light" src="/assets/quebec/logos/simbolo_qb.svg?v=1.2.1" alt="" width="40" height="40"><img class="qb-only-dark" src="/assets/quebec/logos/simbolo_qb_invertido.svg?v=1.2.1" alt="" width="40" height="40"><span class="qb-mono">ferramentas.quebec.com.br</span></div>
+    <ul>
+      <li><span class="b" aria-hidden="true">├─</span><a class="n" href="/pdf/">pdf</a><span class="d">unir, dividir, comprimir</span></li>
+      <li><span class="b" aria-hidden="true">├─</span><a class="n" href="/diagramas/">diagramas</a><span class="d">fluxogramas em Mermaid</span></li>
+      <li><span class="b" aria-hidden="true">├─</span><a class="n" href="/3d/">3d</a><span class="d">STL, OBJ e medidas</span></li>
+      <li><span class="b" aria-hidden="true">├─</span><a class="n" href="/diceware/">diceware</a><span class="d">frases-senha</span></li>
+      <li><span class="b" aria-hidden="true">├─</span><a class="n" href="/senhas/">senhas</a><span class="d">senhas aleatórias</span></li>
+      <li><span class="b" aria-hidden="true">└─</span><a class="n" href="/unidades/">unidades</a><span class="d">conversão de medidas</span></li>
+    </ul>
+  </aside>
 </div></section>
 <section class="catalog" aria-label="Catálogo"><div class="qb-container"><div class="qb-grid qb-grid--2">
 <a class="qb-card" href="/pdf/" data-qb-item data-category="documentos" data-search="PDF unir dividir organizar editar converter comprimir compactar reduzir tamanho imagem documento"><div class="qb-card-top"><span class="qb-icon-tile" aria-hidden="true"><svg class="qb-i"><use href="/assets/quebec/icons.svg?v=1.2.1#doc"/></svg></span><span class="qb-badge qb-badge--success">no navegador</span></div><h3 class="h3">Ferramentas PDF</h3><p class="body-sm">Una, divida, comprima, edite e converta arquivos PDF.</p><div class="qb-card-foot"><span>// documentos</span><span class="qb-go">Abrir <svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.1#arrow-right"/></svg></span></div></a>
