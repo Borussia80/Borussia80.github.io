@@ -123,16 +123,18 @@ const LARGURAS = [1280, 1100, 860, 600, 375];
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'eis-'));
     fs.writeFileSync(path.join(tmp, 'ruim.json'), '{"x":1}');
     await page.setInputFiles('#importar', path.join(tmp, 'ruim.json'));
-    assert.match(await page.locator('#status').innerText(), /não importado/);
+    await page.waitForFunction(() => /não importado/.test(document.getElementById('status').textContent), null, { timeout: 5000 });
     assert.deepEqual(await page.locator('.eis-item').allInnerTexts(), antes, 'arquivo inválido não altera');
     const outro = { versao: 1, tarefas: [{ titulo: 'Do backup', quadrante: 3 }] };
     fs.writeFileSync(path.join(tmp, 'bom.json'), JSON.stringify(outro));
     await page.setInputFiles('#importar', path.join(tmp, 'bom.json'));
+    await page.waitForSelector('#confirmar:not([hidden])');
     assert.match(await page.locator('#confirmar-titulo').innerText(), /Substituir 3 tarefas por 1/);
     await page.click('#confirmar-sim');
     assert.deepEqual(await titulos(page, 3), ['Do backup']);
     fs.writeFileSync(path.join(tmp, 'volta.json'), backup);
-    await page.setInputFiles('#importar', path.join(tmp, 'volta.json')); await page.click('#confirmar-sim');
+    await page.setInputFiles('#importar', path.join(tmp, 'volta.json'));
+    await page.waitForSelector('#confirmar:not([hidden])'); await page.click('#confirmar-sim');
     assert.deepEqual(await page.locator('.eis-item').allInnerTexts(), antes, 'backup restaurado');
 
     // 10. Delete apaga e o foco vai para a vizinha
