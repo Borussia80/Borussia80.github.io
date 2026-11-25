@@ -3,29 +3,14 @@
 // Sobe um servidor estático na raiz do repositório. As bibliotecas vêm do jsDelivr (versões fixas);
 // sem acesso à internet, defina CDN_MIRROR=<pasta node_modules com pdf-lib@1.17.1 e pdfjs-dist@4.10.38>
 // para servir as mesmas versões localmente (as URLs do CDN são interceptadas).
-const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 const assert = require('node:assert/strict');
 const { chromium } = require('playwright');
 
-const ROOT = path.resolve(__dirname, '..');
+const { ROOT, serve } = require('./_e2e-base.cjs');
 const MIRROR = process.env.CDN_MIRROR;
 const SHOTS = process.env.SCREENSHOT_DIR;
-const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.woff2': 'font/woff2', '.json': 'application/json' };
-
-function serve() {
-  const server = http.createServer((req, res) => {
-    let file = path.join(ROOT, decodeURIComponent(new URL(req.url, 'http://x').pathname));
-    if (!file.startsWith(ROOT)) { res.writeHead(403).end(); return; }
-    if (fs.existsSync(file) && fs.statSync(file).isDirectory()) file = path.join(file, 'index.html');
-    fs.readFile(file, (err, data) => {
-      if (err) { res.writeHead(404).end('not found'); return; }
-      res.writeHead(200, { 'Content-Type': TYPES[path.extname(file)] || 'application/octet-stream' }).end(data);
-    });
-  });
-  return new Promise(resolve => server.listen(0, '127.0.0.1', () => resolve(server)));
-}
 
 async function mirrorCdn(context) {
   if (!MIRROR) return;

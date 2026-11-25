@@ -1,0 +1,15 @@
+{
+  "descricao": "Correções sobre o date-holidays, revisadas em 25/11/2026 a partir da conferência cruzada (tests/relatorio-feriados.md). Cada item tem fonte. acao: remover (por mmdd, ou por nome em todos os anos) | adicionar; uf: sigla ou null (nacional); desde/ate: anos inclusivos.",
+  "itens": [
+    { "uf": "PE", "acao": "remover", "nome": "Revolução Pernambucana de 1817", "fonte": "date-holidays usa o 1º domingo de março; a lei fixa 6 de março" },
+    { "uf": "PE", "acao": "adicionar", "mmdd": "03-06", "nome": "Data Magna de Pernambuco", "desde": 2018, "fonte": "Lei estadual PE 16.059/2017 (legis.alepe.pe.gov.br, id 28224)" },
+    { "uf": "AC", "acao": "remover", "nome": "Dia do evangélico", "fonte": "date-holidays usa data móvel; a lei fixa 23 de janeiro" },
+    { "uf": "AC", "acao": "adicionar", "mmdd": "01-20", "nome": "Dia do Católico", "desde": 2017, "fonte": "Lei estadual AC 3.137/2016; Decreto AC 11.808/2025 (calendário 2026)" },
+    { "uf": "AC", "acao": "adicionar", "mmdd": "01-23", "nome": "Dia do Evangélico", "fonte": "Lei estadual AC 1.538/2004; Decreto AC 11.808/2025 (calendário 2026)" },
+    { "uf": "AL", "acao": "adicionar", "mmdd": "11-30", "nome": "Dia Estadual do Evangélico", "desde": 2018, "fonte": "Decretos AL de calendário (ex.: Decreto 95.021/2023, inciso XIX)" },
+    { "uf": "AM", "acao": "adicionar", "mmdd": "12-08", "nome": "Nossa Senhora da Conceição", "fonte": "Feriado estadual do Amazonas (padroeira do estado); confirmado por joaopbini/feriados-brasil e feriados-dev-oss" },
+    { "uf": "MA", "acao": "adicionar", "mmdd": "12-08", "nome": "Nossa Senhora da Conceição", "fonte": "Feriado estadual do Maranhão (imprensa: Folha de Pernambuco, 'Por que 8 de dezembro é feriado em parte do Brasil?')" },
+    { "uf": "AP", "acao": "adicionar", "mmdd": "05-15", "nome": "Dia de Cabralzinho", "fonte": "Feriado estadual do Amapá (Portaria SJAP/TRF1; joaopbini/feriados-brasil)" },
+    { "uf": "AP", "acao": "adicionar", "mmdd": "07-25", "nome": "Dia de São Tiago", "fonte": "Feriado estadual do Amapá (joaopbini/feriados-brasil e feriados-dev-oss)" }
+  ]
+}

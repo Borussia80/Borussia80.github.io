@@ -11,6 +11,21 @@ Cada ferramenta é uma **página fina**: a interface vem do quebec (casca, compo
 5. Rode as verificações (as mesmas do CI):
    `node tools/check-tokens.mjs && node tools/shell.mjs --check && node tests/tool-smoke.cjs`
 
+## Beta (burn-in) antes do catálogo
+
+Toda ferramenta nova entra em produção como beta por 5 a 7 dias de uso real, antes de ganhar card e menu:
+
+- `<meta name="robots" content="noindex">` no `<head>` e `<span class="qb-badge qb-badge--brand">beta</span>` no eyebrow;
+- `<!-- qb:header active="" -->` (sem entrada em `site.json` enquanto for beta);
+- sem card no `index.html`.
+
+No aceite: retire o `noindex` e o selo, registre em `site.json`, rode `node tools/shell.mjs` e adicione o card. O checklist do burn-in fica no repositório `gestao_sites` (`sites/ferramentas-quebec/burn-in/`).
+
+## Código compartilhado e testes
+
+- Módulos usados por mais de uma ferramenta ficam em `lib/` (ES modules sem DOM, testáveis em Node). Ex.: `lib/dias-uteis.js`.
+- Testes de navegador usam `tests/_e2e-base.cjs` (servidor estático) e Playwright. Ex.: `tests/dias-uteis.e2e.cjs`.
+
 ## O que a página fina usa do sistema
 
 | Precisa de | Use |

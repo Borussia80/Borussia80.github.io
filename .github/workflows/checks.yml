@@ -21,3 +21,33 @@ jobs:
         run: |
           npm install --no-save --no-package-lock pdf-lib@1.17.1
           node tests/compress-core.test.mjs
+      - name: Base de feriados em sincronia com o date-holidays
+        run: |
+          npm install --no-save --no-package-lock date-holidays@3.39.2
+          node tools/build-feriados.mjs --check
+      - name: Motor de dias úteis
+        run: node tests/dias-uteis.test.mjs
+      - name: Conferência cruzada de feriados (joaopbini/feriados-brasil)
+        run: |
+          git clone --quiet https://github.com/joaopbini/feriados-brasil /tmp/feriados-ref
+          git -C /tmp/feriados-ref checkout --quiet f89f5bd7eac7397b477beb0dd5ce26d5d2449919
+          FERIADOS_REF=/tmp/feriados-ref node tests/feriados-cruzado.mjs --check
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Playwright
+        run: |
+          npm install --no-save --no-package-lock playwright@1.63.0
+          npx playwright install --with-deps chromium
+      - name: Dias úteis (ponta a ponta)
+        run: SCREENSHOT_DIR=test-results/capturas node tests/dias-uteis.e2e.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: capturas-dias-uteis
+          path: test-results/capturas
+          if-no-files-found: ignore
