@@ -9,6 +9,22 @@ const { serve } = require('./_e2e-base.cjs');
 const SHOTS = process.env.SCREENSHOT_DIR;
 const LARGURAS = [1280, 1100, 860, 600, 375];
 
+/** Leitor de CSV conforme a RFC 4180 (aspas, aspas duplicadas, separador dentro de aspas, CRLF). */
+function lerCSV(texto, sep) {
+  const linhas = []; let campo = '', linha = [], aspas = false;
+  for (let i = 0; i < texto.length; i++) {
+    const c = texto[i];
+    if (aspas) { if (c === '"' && texto[i + 1] === '"') { campo += '"'; i++; } else if (c === '"') aspas = false; else campo += c; }
+    else if (c === '"') aspas = true;
+    else if (c === sep) { linha.push(campo); campo = ''; }
+    else if (c === '\r' && texto[i + 1] === '\n') { linha.push(campo); linhas.push(linha); linha = []; campo = ''; i++; }
+    else campo += c;
+  }
+  assert.equal(aspas, false, 'CSV sem aspas abertas');
+  if (campo || linha.length) { linha.push(campo); linhas.push(linha); }
+  return linhas;
+}
+
 (async () => {
   const server = await serve();
   const base = `http://127.0.0.1:${server.address().port}`;
@@ -87,6 +103,23 @@ const LARGURAS = [1280, 1100, 860, 600, 375];
     assert.match(icsTxt, /END:VCALENDAR\r\n$/);
     assert.equal((icsTxt.match(/BEGIN:VEVENT/g) || []).length, linhas, 'um evento por feriado');
     assert.match(icsTxt, /DTSTART;VALUE=DATE:20260702\r\nDTEND;VALUE=DATE:20260703/);
+    // Validação por parsers reais: ical.js (o mesmo motor de leitura do Thunderbird) e CSV RFC 4180
+    const ICAL = (await import('ical.js')).default;
+    const cal = new ICAL.Component(ICAL.parse(icsTxt));
+    assert.equal(cal.getFirstPropertyValue('version'), '2.0');
+    const eventos = cal.getAllSubcomponents('vevent').map(v => new ICAL.Event(v));
+    assert.equal(eventos.length, linhas);
+    for (const ev of eventos) {
+      assert.ok(ev.summary && ev.uid, 'evento com título e UID');
+      assert.equal(ev.startDate.isDate, true, 'evento de dia inteiro');
+      assert.equal(ev.endDate.toJSDate() - ev.startDate.toJSDate(), 86400000, 'dura um dia');
+    }
+    assert.equal(new Set(eventos.map(e => e.uid)).size, eventos.length, 'UIDs únicos');
+    assert.equal(eventos.find(e => e.startDate.toString() === '2026-07-02').summary, 'Independência da Bahia');
+    const registros = lerCSV(csvTxt.slice(1), ';');
+    assert.deepEqual(registros[0], ['data', 'dia_da_semana', 'feriado', 'tipo', 'dia_util']);
+    assert.equal(registros.length - 1, linhas, 'uma linha por feriado');
+    for (const r of registros.slice(1)) { assert.equal(r.length, 5, `5 colunas: ${r}`); assert.match(r[0], /^\d{2}\/\d{2}\/2026$/); assert.match(r[4], /^(sim|não)$/); }
 
     // 5. Persistência e URL
     await page.reload(); await page.waitForSelector('html[data-du-pronto="1"]');

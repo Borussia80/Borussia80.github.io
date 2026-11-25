@@ -16,7 +16,9 @@ const part = name => readFileSync(join(root, '_partials', name), 'utf8').trimEnd
 const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 
 function fill(tpl, vars) { return tpl.replace(/\{\{(\w+)\}\}/g, (_, k) => { if (!(k in vars)) throw Error(`variável sem valor: ${k}`); return vars[k]; }); }
-function nav(active) { return site.nav.map(n => `<a href="${n.href}"${n.id === active ? ' aria-current="page"' : ''}>${esc(n.label)}</a>`).join(''); }
+// Itens com "menu": "celular" ficam fora do menu do computador (que não cabe mais que ~7 itens entre 861 e 1100 px)
+// e aparecem no menu do celular, no rodapé e no catálogo.
+function nav(active, celular = false) { return site.nav.filter(n => celular || n.menu !== 'celular').map(n => `<a href="${n.href}"${n.id === active ? ' aria-current="page"' : ''}>${esc(n.label)}</a>`).join(''); }
 const tools = site.nav.filter(n => n.footer).map(n => `<li><a href="${n.href}">${esc(n.footer)}</a></li>`).join('');
 const apps = site.apps.map(a => a.href ? `<li><a href="${a.href}" rel="noopener noreferrer">${esc(a.label)}</a></li>` : `<li><span class="qb-soon">${esc(a.label)}</span></li>`).join('');
 
@@ -25,7 +27,7 @@ const blocks = {
   header: attrs => {
     const active = /active="([^"]*)"/.exec(attrs)?.[1] ?? '';
     if (active && !site.nav.some(n => n.id === active)) throw Error(`active="${active}" não existe em site.json`);
-    return fill(part('header.html'), { v: site.version, nav: nav(active) });
+    return fill(part('header.html'), { v: site.version, nav: nav(active), navCelular: nav(active, true) });
   },
   footer: () => fill(part('footer.html'), { v: site.version, tagline: esc(site.tagline), tools, apps })
 };

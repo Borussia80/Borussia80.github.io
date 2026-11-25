@@ -19,7 +19,7 @@ Toda ferramenta nova entra em produção como beta por 5 a 7 dias de uso real, a
 - `<!-- qb:header active="" -->` (sem entrada em `site.json` enquanto for beta);
 - sem card no `index.html`.
 
-No aceite: retire o `noindex` e o selo, registre em `site.json`, rode `node tools/shell.mjs` e adicione o card. O checklist do burn-in fica no repositório `gestao_sites` (`sites/ferramentas-quebec/burn-in/`).
+No aceite: retire o `noindex` e o selo, registre em `site.json` (com `"menu": "celular"` enquanto o menu do computador estiver cheio: o item vai para o menu do celular, o rodapé e o catálogo), rode `node tools/shell.mjs` e adicione o card. O checklist do burn-in fica no repositório `gestao_sites` (`sites/ferramentas-quebec/burn-in/`).
 
 ## Código compartilhado e testes
 
