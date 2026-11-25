@@ -42,6 +42,20 @@
       "href": "/3d/",
       "label": "3D",
       "footer": "Visualizador 3D"
+    },
+    {
+      "id": "dias-uteis",
+      "href": "/dias-uteis/",
+      "label": "Dias úteis",
+      "footer": "Dias úteis e feriados",
+      "menu": "celular"
+    },
+    {
+      "id": "eisenhower",
+      "href": "/eisenhower/",
+      "label": "Eisenhower",
+      "footer": "Matriz de Eisenhower",
+      "menu": "celular"
     }
   ],
   "apps": [
