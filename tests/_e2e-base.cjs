@@ -2,19 +2,26 @@
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
+const zlib = require('node:zlib');
 
 const ROOT = path.resolve(__dirname, '..');
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.woff2': 'font/woff2', '.json': 'application/json' };
 
-/** Sobe um servidor estático em porta livre de 127.0.0.1. Devolve o http.Server já escutando. */
-function serve(root = ROOT) {
+/**
+ * Sobe um servidor estático em porta livre de 127.0.0.1. Devolve o http.Server já escutando.
+ * { gzip: true } comprime as respostas de texto, como o GitHub Pages faz (usado pelo Lighthouse).
+ */
+function serve(root = ROOT, { gzip = false } = {}) {
   const server = http.createServer((req, res) => {
     let file = path.join(root, decodeURIComponent(new URL(req.url, 'http://x').pathname));
     if (!file.startsWith(root)) { res.writeHead(403).end(); return; }
     if (fs.existsSync(file) && fs.statSync(file).isDirectory()) file = path.join(file, 'index.html');
     fs.readFile(file, (err, data) => {
       if (err) { res.writeHead(404).end('not found'); return; }
-      res.writeHead(200, { 'Content-Type': TYPES[path.extname(file)] || 'application/octet-stream' }).end(data);
+      const type = TYPES[path.extname(file)] || 'application/octet-stream';
+      if (gzip && /text|javascript|json|svg/.test(type) && /gzip/.test(req.headers['accept-encoding'] || '')) {
+        res.writeHead(200, { 'Content-Type': type, 'Content-Encoding': 'gzip', 'Cache-Control': 'max-age=600' }).end(zlib.gzipSync(data));
+      } else res.writeHead(200, { 'Content-Type': type, ...(gzip ? { 'Cache-Control': 'max-age=600' } : {}) }).end(data);
     });
   });
   return new Promise(resolve => server.listen(0, '127.0.0.1', () => resolve(server)));

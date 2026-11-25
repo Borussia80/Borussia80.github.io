@@ -29,6 +29,8 @@ jobs:
         run: node tests/dias-uteis.test.mjs
       - name: Matriz de Eisenhower (modelo)
         run: node tests/eisenhower.test.mjs
+      - name: Mini-Gantt (núcleo)
+        run: node tests/gantt.test.mjs
       - name: Conferência cruzada de feriados (joaopbini/feriados-brasil)
         run: |
           git clone --quiet https://github.com/joaopbini/feriados-brasil /tmp/feriados-ref
@@ -43,7 +45,7 @@ jobs:
           node-version: 22
       - name: Playwright
         run: |
-          npm install --no-save --no-package-lock playwright@1.63.0 axe-core@4.14.1
+          npm install --no-save --no-package-lock playwright@1.63.0 axe-core@4.14.1 ical.js@2.2.1
           npx playwright install --with-deps chromium
       - name: Dias úteis (ponta a ponta)
         run: SCREENSHOT_DIR=test-results/capturas node tests/dias-uteis.e2e.cjs
@@ -56,4 +58,23 @@ jobs:
         with:
           name: capturas-ferramentas
           path: test-results/capturas
+          if-no-files-found: ignore
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Lighthouse e Chromium
+        run: |
+          npm install --no-save --no-package-lock lighthouse@12.8.2 puppeteer-core@24 playwright@1.63.0
+          npx playwright install --with-deps chromium
+      - name: Lighthouse no celular (desempenho ≥ 90, acessibilidade ≥ 95)
+        run: LH_SAIDA=test-results/lighthouse node tools/lighthouse.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse
+          path: test-results/lighthouse
           if-no-files-found: ignore
