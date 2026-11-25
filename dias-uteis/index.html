@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dias úteis e feriados | quebec</title>
+  <meta name="description" content="Some ou conte dias úteis com os feriados nacionais e estaduais de cada estado. Escolha o estado no mapa do Brasil.">
+  <link rel="canonical" href="https://ferramentas.quebec.com.br/dias-uteis/">
+  <!-- Beta (burn-in): fora do catálogo e dos buscadores até o aceite. -->
+  <meta name="robots" content="noindex">
+  <!-- qb:head -->
+<script>(function(){var s;try{s=localStorage.getItem('qb-theme')}catch(e){}document.documentElement.setAttribute('data-theme',s==='light'||s==='dark'?s:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))})()</script>
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/quebec/logos/favicon_16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/quebec/logos/favicon_32.png">
+<link rel="apple-touch-icon" href="/assets/quebec/logos/apple-touch-icon.png">
+<meta name="theme-color" content="#F7F9FA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#08131F" media="(prefers-color-scheme: dark)">
+<link rel="preload" href="/assets/quebec/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/quebec/fonts/TeXGyreAdventor-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/quebec/tokens.css?v=1.2.1">
+<link rel="stylesheet" href="/assets/quebec/bundle.css?v=1.2.1">
+<script src="/assets/quebec/quebec.js?v=1.2.1" defer></script>
+<!-- /qb:head -->
+  <link rel="stylesheet" href="./style.css?v=2">
+  <script type="module" src="./app.js?v=2"></script>
+</head>
+<body class="qb">
+<!-- qb:header active="" -->
+<a class="qb-btn qb-btn--primary qb-skip" href="#conteudo">Pular para o conteúdo</a>
+<div class="qb-header-wrap">
+  <header class="qb-header"><div class="qb-container">
+    <a class="qb-brand" href="/" aria-label="quebec ferramentas, início"><img class="qb-only-light" src="/assets/quebec/logos/nome_quebec.svg" alt="quebec" width="76" height="28"><img class="qb-only-dark" src="/assets/quebec/logos/nome_quebec_branco.svg" alt="quebec" width="76" height="28"><span class="qb-sub">ferramentas</span></a>
+    <nav class="qb-nav" aria-label="Principal"><a href="/">Catálogo</a><a href="/pdf/">PDF</a><a href="/diceware/">Diceware</a><a href="/senhas/">Senhas</a><a href="/unidades/">Unidades</a><a href="/diagramas/">Diagramas</a><a href="/3d/">3D</a></nav>
+    <button class="qb-menu-btn" type="button" aria-expanded="false" aria-controls="menu-celular" aria-label="Menu"><span class="i-open"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.1#menu"/></svg></span><span class="i-close"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.1#close"/></svg></span></button>
+  </div></header>
+  <nav class="qb-mobile-nav" id="menu-celular" aria-label="Principal (celular)" hidden><a href="/">Catálogo</a><a href="/pdf/">PDF</a><a href="/diceware/">Diceware</a><a href="/senhas/">Senhas</a><a href="/unidades/">Unidades</a><a href="/diagramas/">Diagramas</a><a href="/3d/">3D</a></nav>
+</div>
+<!-- /qb:header -->
+
+<main class="qb-page qb-page--wide" id="conteudo" data-qb-accent="ciano">
+  <div class="qb-page-head">
+    <p class="qb-eyebrow">// controle · ferramenta local <span class="qb-badge qb-badge--brand">beta</span></p>
+    <h1 class="display-lg">Dias úteis e feriados</h1>
+    <p class="qb-lead body-lg">Escolha o estado no mapa, veja os feriados do ano e calcule prazos em dias úteis.</p>
+  </div>
+
+  <section class="qb-panel du-topo" aria-labelledby="t-estado">
+    <div class="du-mapa-col">
+      <h2 class="h3" id="t-estado">Estado</h2>
+      <div class="du-mapa" id="mapa" aria-busy="true"><p class="qb-help">Carregando o mapa…</p></div>
+      <div class="qb-row2 du-selects">
+        <div>
+          <label class="qb-label" for="uf">Estado</label>
+          <span class="qb-select"><select class="qb-control" id="uf"><option value="">Só feriados nacionais</option></select></span>
+        </div>
+        <div>
+          <label class="qb-label" for="ano">Ano</label>
+          <span class="qb-select"><select class="qb-control" id="ano"></select></span>
+        </div>
+      </div>
+    </div>
+    <div class="du-lista-col">
+      <div class="du-lista-head">
+        <h2 class="h3" id="t-feriados">Feriados</h2>
+        <p class="du-total" id="total" aria-live="polite"></p>
+      </div>
+      <div class="du-tabela-wrap" tabindex="0" role="region" aria-label="Lista de feriados do ano (role para ver todos)">
+        <table class="du-tabela" aria-labelledby="t-feriados">
+          <thead><tr><th scope="col">Data</th><th scope="col">Dia</th><th scope="col">Feriado</th><th scope="col">Tipo</th></tr></thead>
+          <tbody id="lista"></tbody>
+        </table>
+      </div>
+      <div class="du-meses" id="meses" aria-label="Dias úteis por mês"></div>
+      <div class="qb-actions">
+        <button class="qb-btn qb-btn--secondary qb-btn--sm" type="button" id="csv"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.1#download"/></svg>Baixar CSV</button>
+        <button class="qb-btn qb-btn--secondary qb-btn--sm" type="button" id="ics"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.1#download"/></svg>Baixar calendário (.ics)</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="qb-grid qb-grid--2 du-calcs">
+    <section class="qb-panel" aria-labelledby="t-somar">
+      <h2 class="h3" id="t-somar">Somar dias úteis</h2>
+      <p class="qb-help">Data inicial + N dias úteis. Use N negativo para voltar no tempo.</p>
+      <div class="qb-row2">
+        <div><label class="qb-label" for="s-inicio">Data inicial</label><input class="qb-control" type="date" id="s-inicio" min="2020-01-01" max="2035-12-31"></div>
+        <div><label class="qb-label" for="s-n">Dias úteis</label><input class="qb-control" type="number" id="s-n" value="10" step="1" min="-2000" max="2000" inputmode="numeric"></div>
+      </div>
+      <output class="qb-output du-out" id="s-out" for="s-inicio s-n" aria-live="polite"></output>
+      <ul class="du-no-meio" id="s-meio"></ul>
+      <div class="qb-actions"><button class="qb-btn qb-btn--ghost qb-btn--sm" type="button" id="s-copiar" disabled><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.1#copy"/></svg><span data-qb-label>Copiar resultado</span></button></div>
+    </section>
+
+    <section class="qb-panel" aria-labelledby="t-contar">
+      <h2 class="h3" id="t-contar">Contar dias úteis</h2>
+      <p class="qb-help">Quantos dias úteis há entre duas datas.</p>
+      <div class="qb-row2">
+        <div><label class="qb-label" for="c-inicio">Data inicial</label><input class="qb-control" type="date" id="c-inicio" min="2020-01-01" max="2035-12-31"></div>
+        <div><label class="qb-label" for="c-fim">Data final</label><input class="qb-control" type="date" id="c-fim" min="2020-01-01" max="2035-12-31"></div>
+      </div>
+      <output class="qb-output du-out" id="c-out" for="c-inicio c-fim" aria-live="polite"></output>
+      <ul class="du-no-meio" id="c-meio"></ul>
+      <div class="qb-actions"><button class="qb-btn qb-btn--ghost qb-btn--sm" type="button" id="c-copiar" disabled><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.1#copy"/></svg><span data-qb-label>Copiar resultado</span></button></div>
+    </section>
+  </div>
+
+  <details class="qb-disclosure du-opcoes" id="opcoes">
+    <summary>Opções de contagem</summary>
+    <div class="du-opcoes-body">
+      <div class="qb-checks">
+        <label class="qb-check"><input type="checkbox" id="o-inicio"> Contar o dia inicial</label>
+        <label class="qb-check"><input type="checkbox" id="o-cinzas"> Quarta-feira de Cinzas como dia não útil</label>
+      </div>
+      <div class="qb-field">
+        <label class="qb-label" for="o-extras">Folgas extras (uma por linha: data e nome)</label>
+        <textarea class="qb-control du-extras" id="o-extras" rows="3" placeholder="24/12/2026 Recesso&#10;31/12/2026 Recesso" aria-describedby="o-extras-ajuda"></textarea>
+        <p class="qb-help" id="o-extras-ajuda">Ex.: recesso da empresa, feriado municipal. Ficam salvas só neste navegador.</p>
+      </div>
+    </div>
+  </details>
+
+  <p class="qb-status" id="status" role="status" aria-live="polite"></p>
+
+  <div class="qb-help du-notas">
+    <p><b>Como contamos.</b> O dia inicial não conta, a menos que você marque a opção. Sábados, domingos e feriados não são dias úteis. Carnaval (segunda e terça) e Corpus Christi são pontos facultativos na lei federal, mas aqui contam como feriado, porque é assim que a maioria das empresas e órgãos trabalha. A Quarta-feira de Cinzas conta como dia útil, salvo se você marcar a opção. Feriados municipais não estão incluídos: acrescente-os em "Folgas extras". Feriados transferidos por decreto em um ano específico não são considerados.</p>
+    <p>A ferramenta não substitui a orientação de um advogado sobre prazos processuais ou contratuais. Cálculo feito no seu navegador; nada é enviado.</p>
+    <p>Fontes: feriados de <a href="https://github.com/commenthol/date-holidays" target="_blank" rel="noopener noreferrer">date-holidays</a> (código ISC; dados <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.pt-br" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>, derivados da Wikipédia), com correções conferidas em leis estaduais e em <a href="https://github.com/joaopbini/feriados-brasil" target="_blank" rel="noopener noreferrer">joaopbini/feriados-brasil</a> (MIT). A base de feriados desta página (<a href="./feriados-br.json">feriados-br.json</a>) fica sob CC BY-SA 4.0. Mapa: <a href="https://github.com/jeanoliveirawork/mapa-brasil-dinamico-svg" target="_blank" rel="noopener noreferrer">mapa-brasil-dinamico-svg</a> (MIT). Cobertura: 2020 a 2035.</p>
+  </div>
+  <p class="qb-page-foot"><a href="/">← Voltar ao catálogo</a></p>
+</main>
+
+<!-- qb:footer -->
+<footer class="qb-footer"><div class="qb-container">
+  <div class="qb-foot-grid">
+    <div class="qb-foot-brand"><img src="/assets/quebec/logos/nome_quebec_branco.svg" alt="quebec" width="65" height="24"><p>Ferramentas e aplicativos de engenharia e software.</p></div>
+    <div><h2 class="qb-foot-title">// ferramentas</h2><ul><li><a href="/pdf/">Ferramentas PDF</a></li><li><a href="/diceware/">Diceware</a></li><li><a href="/senhas/">Senhas aleatórias</a></li><li><a href="/unidades/">Conversor de unidades</a></li><li><a href="/diagramas/">Editor de diagramas</a></li><li><a href="/3d/">Visualizador 3D</a></li></ul></div>
+    <div><h2 class="qb-foot-title">// apps</h2><ul><li><a href="https://klipper.quebec.com.br/" rel="noopener noreferrer">Klipper</a></li><li><span class="qb-soon">FlowCalc · em breve</span></li></ul></div>
+  </div>
+  <div class="qb-legal"><span>© <span data-qb-year>2026</span> quebec · Roberto Milet</span><div class="qb-theme" role="group" aria-label="Tema"><button type="button" data-qb-theme-set="system" aria-pressed="true"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.1#monitor"/></svg>Sistema</button><button type="button" data-qb-theme-set="light" aria-pressed="false"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.1#sun"/></svg>Claro</button><button type="button" data-qb-theme-set="dark" aria-pressed="false"><svg class="qb-i" aria-hidden="true"><use href="/assets/quebec/icons.svg?v=1.2.1#moon"/></svg>Escuro</button></div></div>
+</div></footer>
+<!-- /qb:footer -->
+</body>
+</html>

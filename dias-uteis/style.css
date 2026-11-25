@@ -1,0 +1,67 @@
+/* Dias úteis — só o que é próprio desta ferramenta. Casca, campos, painéis e botões vêm de bundle.css (quebec 1.2.1). */
+
+.du-topo { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: var(--space-8); align-items: start; }
+.du-calcs { margin-top: var(--space-4); align-items: start; }
+.du-calcs > .qb-panel + .qb-panel { margin-top: 0; }
+.du-opcoes { margin-top: var(--space-4); }
+.du-opcoes-body { padding: 0 0 var(--space-6); }
+.du-opcoes-body .qb-field { margin-top: var(--space-4); }
+.du-extras { min-height: 88px; padding-top: var(--space-3); resize: vertical; font-family: var(--font-mono); }
+.du-selects { margin-top: var(--space-4); }
+
+/* Mapa */
+.du-mapa { margin-top: var(--space-3); }
+.mapa-br { display: block; width: 100%; height: auto; max-height: 460px; overflow: visible; }
+.mapa-br .uf { cursor: pointer; outline: none; }
+.mapa-br .uf path, .mapa-br .uf .uf-alvo { fill: var(--surface-sunken); stroke: var(--border-strong); stroke-width: .8; stroke-linejoin: round; transition: fill var(--dur-1) var(--ease); }
+.mapa-br .uf .uf-alvo { fill: transparent; stroke: none; }
+.mapa-br .uf:hover path { fill: var(--accent-tint); }
+.mapa-br .uf:focus-visible path { stroke: var(--focus); stroke-width: 2.2; }
+.mapa-br .uf[aria-pressed="true"] path { fill: var(--accent); stroke: var(--text); stroke-width: 1.2; }
+.mapa-br .uf-sigla { font: 600 9px/1 var(--font-mono); fill: var(--text-muted); pointer-events: none; }
+.mapa-br .uf[aria-pressed="true"] .uf-sigla { fill: var(--text); }
+.mapa-br .uf[data-uf="DF"] .uf-sigla { font-size: 7px; }
+
+/* Lista de feriados */
+.du-lista-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-2) var(--space-4); }
+.du-total { margin: 0; font: 400 13px/18px var(--font-mono); color: var(--text-muted); }
+.du-tabela-wrap:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.du-tabela-wrap { margin-top: var(--space-3); max-height: 400px; overflow: auto; border: 1px solid var(--border); border-radius: var(--radius-md); }
+.du-tabela { width: 100%; border-collapse: collapse; font: 400 14px/20px var(--font-sans); }
+.du-tabela th { position: sticky; top: 0; z-index: 1; background: var(--surface-sunken); text-align: left; font: 600 12px/16px var(--font-sans); color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
+.du-tabela th, .du-tabela td { padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--border); vertical-align: top; }
+.du-tabela tr:last-child td { border-bottom: 0; }
+.du-tabela td:first-child { white-space: nowrap; }
+.du-tabela tr.is-fds td, .du-tabela tr.is-util td { color: var(--text-muted); }
+.du-tipo { display: inline-block; padding: 0 var(--space-2); border-radius: var(--radius-full); border: 1px solid var(--border); font: 500 12px/20px var(--font-sans); white-space: nowrap; }
+.du-tipo--e { background: var(--accent-tint); border-color: transparent; }
+.du-tipo--f { border-style: dashed; }
+.du-tipo--x { background: var(--surface-tint); border-color: transparent; }
+
+/* Dias úteis por mês */
+.du-meses { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--space-1); margin-top: var(--space-4); }
+.du-mes { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 76px; padding-bottom: var(--space-1); font: 400 11px/14px var(--font-mono); color: var(--text-muted); }
+.du-mes b { position: relative; font-weight: 600; color: var(--text); }
+.du-mes span:last-child { position: relative; }
+.du-mes-barra { position: absolute; left: 15%; right: 15%; bottom: 30px; height: calc((100% - 36px) * var(--h, 0)); border-radius: var(--radius-sm) var(--radius-sm) 0 0; background: var(--accent-tint); }
+
+/* Calculadoras */
+.du-out { margin-top: var(--space-4); min-height: 64px; }
+.du-out .du-data { display: block; font: 600 26px/34px var(--font-mono); color: var(--text); }
+.du-out .du-sub { display: block; margin-top: var(--space-1); font: 400 14px/20px var(--font-sans); color: var(--text-muted); }
+.du-no-meio { margin: var(--space-3) 0 0; padding: 0 0 0 var(--space-5); font: 400 13px/20px var(--font-sans); color: var(--text-muted); }
+.du-no-meio:empty { display: none; }
+.du-notas { margin-top: var(--space-6); }
+.du-notas p { margin: 0 0 var(--space-3); }
+
+@media (max-width: 1100px) { .du-topo { gap: var(--space-6); } }
+@media (max-width: 860px) {
+  .du-topo { grid-template-columns: minmax(0, 1fr); }
+  .mapa-br { max-height: 380px; }
+}
+@media (max-width: 600px) {
+  .du-meses { grid-template-columns: repeat(6, minmax(0, 1fr)); row-gap: var(--space-3); }
+  .du-tabela th:nth-child(2), .du-tabela td:nth-child(2) { display: none; }
+  .du-out .du-data { font-size: 22px; line-height: 30px; }
+}
+@media (max-width: 600px) { .du-tipo { white-space: normal; line-height: 16px; padding: 2px var(--space-2); } }
