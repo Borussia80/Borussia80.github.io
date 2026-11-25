@@ -21,8 +21,8 @@
 <link rel="stylesheet" href="/assets/quebec/bundle.css?v=1.2.1">
 <script src="/assets/quebec/quebec.js?v=1.2.1" defer></script>
 <!-- /qb:head -->
-  <link rel="stylesheet" href="./style.css?v=1">
-  <script type="module" src="./app.js?v=1"></script>
+  <link rel="stylesheet" href="./style.css?v=2">
+  <script type="module" src="./app.js?v=2"></script>
 </head>
 <body class="qb">
 <!-- qb:header active="" -->
@@ -64,7 +64,7 @@
         <h2 class="h3" id="t-feriados">Feriados</h2>
         <p class="du-total" id="total" aria-live="polite"></p>
       </div>
-      <div class="du-tabela-wrap">
+      <div class="du-tabela-wrap" tabindex="0" role="region" aria-label="Lista de feriados do ano (role para ver todos)">
         <table class="du-tabela" aria-labelledby="t-feriados">
           <thead><tr><th scope="col">Data</th><th scope="col">Dia</th><th scope="col">Feriado</th><th scope="col">Tipo</th></tr></thead>
           <tbody id="lista"></tbody>
