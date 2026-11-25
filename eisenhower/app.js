@@ -97,7 +97,7 @@ function render(foco) {
   const c = M.contagem(estado);
   for (const q of [1, 2, 3, 4]) {
     listas[q].replaceChildren(...g[q].map(item));
-    if (!g[q].length) { const v = document.createElement('li'); v.className = 'eis-vazio'; v.textContent = 'Arraste uma tarefa para cá ou adicione abaixo.'; listas[q].append(v); }
+    if (!g[q].length) { const v = document.createElement('li'); v.className = 'eis-vazio'; v.textContent = 'Solte uma tarefa aqui ou adicione abaixo.'; listas[q].append(v); }
     $(`q${q}-c`).textContent = String(c[q]);
   }
   el.resumo.textContent = `${c.abertas} ${c.abertas === 1 ? 'aberta' : 'abertas'} · ${c.concluidas} ${c.concluidas === 1 ? 'concluída' : 'concluídas'}`;
@@ -200,18 +200,50 @@ async function importarArquivo() {
 }
 
 // ---------- Arrastar (SortableJS) ----------
+// O quadrante inteiro aceita o cartão: soltar no espaço vazio de um quadrante (fora da lista) leva para o fim dele.
+let ponteiro = null;
+const guardarPonteiro = e => {
+  const t = e.touches?.[0] ?? e.changedTouches?.[0] ?? e; ponteiro = [t.clientX, t.clientY];
+  const q = quadranteSobPonteiro(); if (q) marcarDestino(listas[q]);
+};
+function quadranteSobPonteiro() {
+  if (!ponteiro) return null;
+  const sob = document.elementsFromPoint(ponteiro[0], ponteiro[1]).find(x => !x.closest('.is-drag') && x.closest('.eis-q'));
+  return sob ? +sob.closest('.eis-q').dataset.q : null;
+}
+function marcarDestino(lista) {
+  el.matriz.querySelectorAll('.eis-q.is-target').forEach(q => q.classList.remove('is-target'));
+  lista?.closest('.eis-q')?.classList.add('is-target');
+}
 async function ligarArrastar() {
   try { ({ default: Sortable } = await import('sortablejs')); }
   catch { status('O arrastar e soltar não carregou (sem conexão?). Use o menu "Mover para" ou as teclas 1 a 4.', 'error'); return; }
   for (const q of [1, 2, 3, 4]) {
     Sortable.create(listas[q], {
-      group: 'eisenhower', animation: 150, forceFallback: true, fallbackTolerance: 4,
+      group: 'eisenhower', animation: 160, easing: 'cubic-bezier(.2, 0, 0, 1)',
+      // Mouse: arrasta o cartão inteiro depois de 4 px. Toque: pressão de 180 ms, para a rolagem da página continuar livre.
+      forceFallback: true, fallbackTolerance: 4, fallbackOnBody: true, delay: 180, delayOnTouchOnly: true, touchStartThreshold: 6,
       draggable: '.eis-item:not(.is-editing)', filter: 'input, select, button, .eis-vazio', preventOnFilter: false,
-      ghostClass: 'is-ghost', chosenClass: 'is-chosen', dragClass: 'is-drag',
+      ghostClass: 'is-ghost', chosenClass: 'is-chosen', dragClass: 'is-drag', fallbackClass: 'is-drag',
+      scroll: true, bubbleScroll: true, scrollSensitivity: 80, scrollSpeed: 14,
+      onStart: () => {
+        el.matriz.classList.add('is-dragging'); navigator.vibrate?.(10);
+        for (const t of ['mousemove', 'touchmove', 'pointermove']) document.addEventListener(t, guardarPonteiro, { passive: true });
+      },
+      onMove: ev => { marcarDestino(ev.to); },
       onEnd: ev => {
-        const id = ev.item.dataset.id; const destino = +ev.to.dataset.q;
-        const indice = [...ev.to.querySelectorAll('.eis-item')].indexOf(ev.item);
+        el.matriz.classList.remove('is-dragging'); marcarDestino(null);
+        for (const t of ['mousemove', 'touchmove', 'pointermove']) document.removeEventListener(t, guardarPonteiro);
+        const id = ev.item.dataset.id; let destino = +ev.to.dataset.q;
+        let indice = [...ev.to.querySelectorAll('.eis-item')].indexOf(ev.item);
+        const sob = quadranteSobPonteiro();
+        if (sob && sob !== destino) { destino = sob; indice = Infinity; }
+        ponteiro = null;
+        // O SortableJS descarta o próximo clique depois de soltar. Se o botão foi solto fora do cartão, esse clique
+        // nunca vem e o primeiro clique real do usuário (ex.: "Salvar") seria engolido. Um clique sintético limpa a marca.
+        setTimeout(() => document.body.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true })), 0);
         aplicar(s => M.mover(s, id, destino, indice, visivel), id);
+        status(`Movida para ${M.QUADRANTES[destino].nome}.`, 'ok');
       }
     });
   }

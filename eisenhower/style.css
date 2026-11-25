@@ -38,9 +38,24 @@
 .eis-item { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-2) var(--space-2) var(--space-1); background: var(--surface-sunken); border: 1px solid var(--border); border-radius: var(--radius-md); outline: none; }
 .eis-item:focus-visible { box-shadow: 0 0 0 2px var(--focus); }
 .eis-item.is-done .eis-titulo { text-decoration: line-through; color: var(--text-muted); }
-.eis-item.is-ghost { opacity: .4; }
-.eis-item.is-drag { box-shadow: var(--shadow-md); }
-.eis-arrastar { flex: none; align-self: stretch; width: 14px; cursor: grab; border-radius: var(--radius-sm);
+.eis-item:not(.is-editing) { cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; transition: border-color var(--dur-1) var(--ease), box-shadow var(--dur-1) var(--ease); }
+.eis-item:not(.is-editing):hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
+.eis-item .eis-titulo, .eis-item .eis-prazo { user-select: text; -webkit-user-select: text; }
+.eis-item.is-chosen { cursor: grabbing; border-color: var(--accent); }
+/* Lugar onde o cartão vai cair */
+.eis-item.is-ghost { opacity: 1; background: var(--accent-tint); border: 1px dashed var(--accent); box-shadow: none; }
+.eis-item.is-ghost > * { visibility: hidden; }
+/* Cartão que segue o cursor/dedo */
+/* Sem transição: o SortableJS posiciona o clone com transform a cada movimento; animar atrasaria o cartão em relação ao cursor. */
+.eis-item.is-drag { cursor: grabbing; opacity: .96 !important; background: var(--surface); border-color: var(--accent); box-shadow: var(--shadow-md); transition: none !important; }
+/* Quadrantes durante o arrasto */
+.eis-matriz.is-dragging .eis-q { transition: border-color var(--dur-1) var(--ease), background var(--dur-1) var(--ease); }
+.eis-matriz.is-dragging .eis-lista { border-radius: var(--radius-md); outline: 1px dashed var(--border); outline-offset: 4px; }
+.eis-matriz.is-dragging .eis-q.is-target { background: var(--surface-tint); border-color: var(--accent); }
+.eis-matriz.is-dragging .eis-q.is-target .eis-lista { outline-color: var(--accent); }
+.eis-matriz.is-dragging .eis-vazio { border-color: var(--accent); color: var(--text); }
+body:has(.is-drag) { cursor: grabbing; }
+.eis-arrastar { flex: none; align-self: stretch; width: 14px; border-radius: var(--radius-sm);
   background-image: radial-gradient(circle, var(--text-muted) 1.2px, transparent 1.6px); background-size: 6px 6px; background-position: center; opacity: .6; }
 .eis-ok { flex: none; width: 20px; height: 20px; margin: 0; accent-color: var(--primary); }
 .eis-texto { flex: 1; min-width: 0; display: flex; flex-direction: column; }

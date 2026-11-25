@@ -52,19 +52,36 @@ const LARGURAS = [1280, 1100, 860, 600, 375];
     await page.mouse.move(o.x + o.width / 2, o.y + o.height / 2);
     await page.mouse.down();
     for (let i = 1; i <= 12; i++) await page.mouse.move(o.x + (d.x + d.width / 2 - o.x) * i / 12, o.y + (d.y + 20 - o.y) * i / 12);
+    assert.equal(await page.locator('.eis-matriz.is-dragging').count(), 1, 'matriz em modo de arrasto');
+    assert.equal(await page.locator('.eis-q--3.is-target').count(), 1, 'quadrante de destino destacado');
     await page.mouse.up();
+    assert.equal(await page.locator('.eis-matriz.is-dragging, .eis-q.is-target').count(), 0, 'destaques removidos ao soltar');
     await page.waitForFunction(() => document.querySelectorAll('#q3-l .eis-item').length === 1);
     assert.deepEqual(await titulos(page, 3), ['Rede social'], 'arrastou para Q3');
     assert.deepEqual(await titulos(page, 4), [], 'saiu do Q4');
 
-    // 3. Reordenar arrastando dentro do Q1
-    const seg = await page.locator('#q1-l .eis-item').nth(1).locator('.eis-arrastar').boundingBox();
+    // 3. Reordenar arrastando dentro do Q1, segurando o texto do cartão (não a alça)
+    const seg = await page.locator('#q1-l .eis-item').nth(1).locator('.eis-texto').boundingBox();
     const pri = await page.locator('#q1-l .eis-item').nth(0).boundingBox();
     await page.mouse.move(seg.x + seg.width / 2, seg.y + seg.height / 2); await page.mouse.down();
     for (let i = 1; i <= 10; i++) await page.mouse.move(seg.x + seg.width / 2, seg.y + (pri.y + 4 - seg.y) * i / 10);
     await page.mouse.up();
-    await page.waitForTimeout(250);
+    await page.waitForFunction(() => document.querySelector('#q1-l .eis-titulo')?.textContent === 'Ligar para o cliente', null, { timeout: 3000 });
     assert.deepEqual(await titulos(page, 1), ['Ligar para o cliente', 'Relatório mensal'], 'reordenou no Q1');
+
+    // 3b. Soltar em qualquer parte do quadrante (aqui, no título do Q4) leva o cartão para o fim dele
+    {
+      const c = await page.locator('#q3-l .eis-item').first().locator('.eis-texto').boundingBox();
+      const h = await page.locator('.eis-q--4 .eis-q-head').boundingBox();
+      await page.mouse.move(c.x + 10, c.y + 8); await page.mouse.down();
+      for (let i = 1; i <= 10; i++) await page.mouse.move(c.x + 10 + (h.x + 60 - c.x) * i / 10, c.y + 8 + (h.y + 10 - c.y) * i / 10);
+      assert.equal(await page.locator('.eis-q--4.is-target').count(), 1, 'título do quadrante destaca o destino');
+      await page.mouse.up();
+      await page.waitForFunction(() => document.querySelectorAll('#q4-l .eis-item').length === 1, null, { timeout: 3000 });
+      assert.deepEqual(await titulos(page, 4), ['Rede social'], 'soltou no título do Q4');
+      await page.locator('#q4-l .eis-item').focus(); await page.keyboard.press('3');
+      assert.deepEqual(await titulos(page, 3), ['Rede social']);
+    }
 
     // 4. Teclado: 1–4 move, Alt+↓ reordena, Espaço conclui, Enter edita, Delete apaga
     await page.locator('#q1-l .eis-item', { hasText: 'Ligar para o cliente' }).focus();
@@ -142,6 +159,41 @@ const LARGURAS = [1280, 1100, 860, 600, 375];
     assert.equal(await page.locator('#q1-l .eis-item').count(), 0);
     await ctx.close();
 
+    // 10b. Toque (celular): pressão longa arrasta; deslizar rápido não arrasta (a página rola)
+    {
+      const c = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, deviceScaleFactor: 2 }); await mirrorCdn(c);
+      await c.addInitScript(() => { if (!localStorage.getItem('qb.eisenhower.v1')) localStorage.setItem('qb.eisenhower.v1', JSON.stringify({ versao: 1, tarefas: [
+        { id: 'a', titulo: 'Cartão A', quadrante: 1 }, { id: 'b', titulo: 'Cartão B', quadrante: 2 }] })); });
+      const p = await c.newPage(); p.on('pageerror', e => erros.push(`pageerror (toque): ${e.message}`));
+      await p.goto(base + '/eisenhower/'); await p.waitForSelector('html[data-eis-pronto="1"]');
+      const cdp = await c.newCDPSession(p);
+      const toque = (type, x, y) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x, y, id: 1 }] });
+      const centro = async sel => { const b = await p.locator(sel).boundingBox(); return [b.x + b.width / 2, b.y + b.height / 2]; };
+      // Deslizar rápido sobre o cartão: não arrasta
+      await p.locator('#q1-l .eis-item').scrollIntoViewIfNeeded();
+      let [x, y] = await centro('#q1-l .eis-item .eis-texto');
+      await toque('touchStart', x, y);
+      for (let i = 1; i <= 6; i++) await toque('touchMove', x, y - 20 * i);
+      await toque('touchEnd');
+      await p.waitForTimeout(250);
+      assert.equal(await p.locator('#q1-l .eis-item').count(), 1, 'deslizar rápido não move o cartão');
+      // Pressão longa e arrasto até o Q2
+      await p.locator('#q1-l .eis-item').scrollIntoViewIfNeeded();
+      [x, y] = await centro('#q1-l .eis-item .eis-texto');
+      const alvo = await p.locator('#q2-l').boundingBox();
+      await toque('touchStart', x, y);
+      await p.waitForTimeout(450);
+      const passos = 14, ty = alvo.y + alvo.height - 6;
+      for (let i = 1; i <= passos; i++) { await toque('touchMove', x, y + (ty - y) * i / passos); await p.waitForTimeout(16); }
+      await toque('touchEnd', x, ty);
+      await p.waitForFunction(() => document.querySelectorAll('#q2-l .eis-item').length === 2, null, { timeout: 3000 });
+      assert.deepEqual((await p.locator('#q2-l .eis-titulo').allInnerTexts()).sort(), ['Cartão A', 'Cartão B'], 'pressão longa arrasta no toque');
+      assert.equal(await p.locator('#q1-l .eis-item').count(), 0);
+      await p.reload(); await p.waitForSelector('html[data-eis-pronto="1"]');
+      assert.equal(await p.locator('#q2-l .eis-item').count(), 2, 'movimento por toque salvo');
+      await c.close();
+    }
+
     // 11. Sem localStorage: funciona e avisa
     ({ ctx, page } = await abrir({}, () => { Object.defineProperty(window, 'localStorage', { get() { throw new Error('bloqueado'); } }); }));
     assert.match(await page.locator('#status').innerText(), /não permite salvar/);
@@ -203,7 +255,7 @@ const LARGURAS = [1280, 1100, 860, 600, 375];
     }
 
     assert.deepEqual(erros, [], 'sem erros no console');
-    console.log('Eisenhower (e2e): adicionar, arrastar entre quadrantes e reordenar, teclado, menu, concluídas, Markdown, persistência, backup, sem storage, dados corrompidos, sem CDN, 500 tarefas, 5 larguras × 2 temas: OK');
+    console.log('Eisenhower (e2e): adicionar, arrastar (mouse e toque com pressão longa) entre quadrantes e reordenar, teclado, menu, concluídas, Markdown, persistência, backup, sem storage, dados corrompidos, sem CDN, 500 tarefas, 5 larguras × 2 temas: OK');
   } finally {
     await browser.close();
     server.close();
