@@ -20,4 +20,23 @@ function serve(root = ROOT) {
   return new Promise(resolve => server.listen(0, '127.0.0.1', () => resolve(server)));
 }
 
-module.exports = { ROOT, TYPES, serve };
+/**
+ * Sem internet: com CDN_MIRROR=<pasta node_modules>, serve localmente os pacotes pedidos ao jsDelivr
+ * (https://cdn.jsdelivr.net/npm/<pacote>@<versão>/<caminho>). A versão instalada precisa ser a mesma da página.
+ */
+async function mirrorCdn(context, mirror = process.env.CDN_MIRROR) {
+  if (!mirror) return;
+  await context.route(/^https:\/\/cdn\.jsdelivr\.net\/npm\//, route => {
+    const m = route.request().url().match(/\/npm\/((?:@[^/]+\/)?[^@/]+)@([^/]+)\/([^?#]+)/);
+    if (!m) return route.fulfill({ status: 404, body: 'formato de URL não reconhecido' });
+    const [, pacote, versao, resto] = m;
+    const dir = path.join(mirror, pacote);
+    const pkg = JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf8'));
+    if (pkg.version !== versao) return route.fulfill({ status: 404, body: `espelho tem ${pacote}@${pkg.version}, página pede ${versao}` });
+    const file = path.join(dir, resto);
+    if (!fs.existsSync(file)) return route.fulfill({ status: 404, body: 'missing' });
+    route.fulfill({ status: 200, contentType: TYPES[path.extname(file)] || 'text/javascript', body: fs.readFileSync(file), headers: { 'Access-Control-Allow-Origin': '*' } });
+  });
+}
+
+module.exports = { ROOT, TYPES, serve, mirrorCdn };

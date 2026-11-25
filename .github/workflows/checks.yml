@@ -27,6 +27,8 @@ jobs:
           node tools/build-feriados.mjs --check
       - name: Motor de dias úteis
         run: node tests/dias-uteis.test.mjs
+      - name: Matriz de Eisenhower (modelo)
+        run: node tests/eisenhower.test.mjs
       - name: Conferência cruzada de feriados (joaopbini/feriados-brasil)
         run: |
           git clone --quiet https://github.com/joaopbini/feriados-brasil /tmp/feriados-ref
@@ -41,13 +43,17 @@ jobs:
           node-version: 22
       - name: Playwright
         run: |
-          npm install --no-save --no-package-lock playwright@1.63.0
+          npm install --no-save --no-package-lock playwright@1.63.0 axe-core@4.14.1
           npx playwright install --with-deps chromium
       - name: Dias úteis (ponta a ponta)
         run: SCREENSHOT_DIR=test-results/capturas node tests/dias-uteis.e2e.cjs
+      - name: Matriz de Eisenhower (ponta a ponta)
+        run: SCREENSHOT_DIR=test-results/capturas node tests/eisenhower.e2e.cjs
+      - name: Acessibilidade (axe-core, WCAG 2.1 AA)
+        run: node tests/a11y.e2e.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: capturas-dias-uteis
+          name: capturas-ferramentas
           path: test-results/capturas
           if-no-files-found: ignore
