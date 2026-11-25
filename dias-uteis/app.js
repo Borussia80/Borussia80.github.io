@@ -60,7 +60,7 @@ function escolherUF(uf) {
 }
 async function carregarMapa() {
   try {
-    const r = await fetch('./mapa-br.svg?v=1');
+    const r = await fetch('./mapa-br.svg?v=2');
     if (!r.ok) throw new Error(r.status);
     el.mapa.innerHTML = await r.text();
     el.mapa.removeAttribute('aria-busy');
